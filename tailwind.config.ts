@@ -4,7 +4,6 @@ const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './common/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
@@ -15,13 +14,11 @@ const config: Config = {
       fontSize: {
       },
 
-      // 다크 모드용 색상 추가
       backgroundColor: {
       },
       textColor: {
       },
-
-      // 폰트 패밀리 추가
+      
       fontFamily: {
         pretendard: ['var(--font-pretendard)'],
       },
