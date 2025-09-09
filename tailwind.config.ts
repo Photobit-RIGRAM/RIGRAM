@@ -8,22 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors: {
-      },
-
-      fontSize: {
-      },
-
-      backgroundColor: {
-      },
-      textColor: {
-      },
-      
+      colors: {},
+      fontSize: {},
+      backgroundColor: {},
+      textColor: {},
       fontFamily: {
-        pretendard: ['var(--font-pretendard)'],
+        pretendard: 'var(--font-pretendard)',
       },
     },
   },
-}
+};
 
 export default config;

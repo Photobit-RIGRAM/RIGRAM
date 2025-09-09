@@ -5,6 +5,7 @@
   --white: #ffffff;
   --red: #d15252;
   --green: #a9e695;
+  --blue: #001b63;
 
   --primary-700: #2b73e7;
   --primary-400: #d8e4f8;
@@ -33,11 +34,12 @@
   --font-size-32: 2rem;
 }
 
-@theme inline {
+@theme {
   --color-black: var(--black);
   --color-white: var(--white);
   --color-red: var(--red);
   --color-green: var(--green);
+  --color-blue: var(--blue);
 
   --color-primary-700: var(--primary-700);
   --color-primary-400: var(--primary-400);
@@ -52,39 +54,17 @@
   --color-gray-300: var(--gray-300);
   --color-gray-200: var(--gray-200);
   --color-gray-100: var(--gray-100);
-}
 
-@layer utilities {
-  .fs-14 {
-    font-size: var(--font-size-14);
-  }
-  .fs-16 {
-    font-size: var(--font-size-16);
-  }
-  .fs-17 {
-    font-size: var(--font-size-17);
-  }
-  .fs-18 {
-    font-size: var(--font-size-18);
-  }
-  .fs-20 {
-    font-size: var(--font-size-20);
-  }
-  .fs-22 {
-    font-size: var(--font-size-22);
-  }
-  .fs-24 {
-    font-size: var(--font-size-24);
-  }
-  .fs-26 {
-    font-size: var(--font-size-26);
-  }
-  .fs-28 {
-    font-size: var(--font-size-28);
-  }
-  .fs-32 {
-    font-size: var(--font-size-32);
-  }
+  --text-14: var(--font-size-14);
+  --text-16: var(--font-size-16);
+  --text-17: var(--font-size-17);
+  --text-18: var(--font-size-18);
+  --text-20: var(--font-size-20);
+  --text-22: var(--font-size-22);
+  --text-24: var(--font-size-24);
+  --text-26: var(--font-size-26);
+  --text-28: var(--font-size-28);
+  --text-32: var(--font-size-32);
 }
 
 * {
