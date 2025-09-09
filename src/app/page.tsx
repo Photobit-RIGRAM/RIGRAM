@@ -10,7 +10,6 @@ export default function Home() {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log('ok');
       router.push('/login');
     }, 3000);
   }, []);
