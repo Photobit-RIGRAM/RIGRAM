@@ -65,6 +65,12 @@
   --text-26: var(--font-size-26);
   --text-28: var(--font-size-28);
   --text-32: var(--font-size-32);
+
+  --shadow-dropdown: 0 1px 8px 0 rgba(0, 0, 0, 0.05);
+}
+
+@utility shadow-dropdown {
+  box-shadow: var(--shadow-dropdown);
 }
 
 * {
