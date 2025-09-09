@@ -1,0 +1,66 @@
+'use client';
+
+import { Image } from 'lucide-react';
+import { useState } from 'react';
+
+interface FileInputProps {
+  id?: string;
+  name?: string;
+  accept?: string;
+  multiple?: boolean;
+  onChange?: (files: FileList | File | null) => void;
+}
+
+export default function FileInput({
+  id = 'fileInput',
+  name = 'fileInput',
+  accept = 'image/*, video/*',
+  multiple = false,
+  onChange,
+}: FileInputProps) {
+  const [fileName, setFileName] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setFileName(
+        multiple ? `${files[0].name}외 ${files.length - 1}개 파일 선택됨` : files[0].name
+      );
+    } else {
+      setFileName(null);
+    }
+    onChange?.(files);
+  };
+
+  return (
+    <div className="w-full">
+      <label
+        htmlFor={id}
+        className="flex justify-start items-center gap-4 w-full p-3 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100"
+      >
+        <div className="bg-primary-100 rounded-lg p-5">
+          <Image className="w-6 h-6 text-gray-500" />
+        </div>
+        <div>
+          {fileName ? (
+            <p className="text-16 text-gray-600">{fileName}</p>
+          ) : (
+            <>
+              <p className="text-16 text-gray-600">여기를 클릭하거나 이미지를 올려주세요</p>
+              <p className="text-14 text-gray-500">파일 형식은 SVG 또는 PNG로 업로드해 주세요</p>
+            </>
+          )}
+        </div>
+      </label>
+      <input
+        id={id}
+        name={name}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        className="hidden"
+        onChange={handleChange}
+      />
+    </div>
+  );
+}
