@@ -81,7 +81,7 @@
 html,
 body {
   font-family: var(--font-pretendard);
-  background-color: var(--color-primary-100);
+  background-color: #fdfdfe;
 }
 
 h1,
