@@ -9,6 +9,7 @@ interface FileInputProps {
   accept?: string;
   multiple?: boolean;
   onChange?: (files: FileList | File | null) => void;
+  className?: string;
 }
 
 export default function FileInput({
@@ -17,6 +18,7 @@ export default function FileInput({
   accept = 'image/*, video/*',
   multiple = false,
   onChange,
+  className,
 }: FileInputProps) {
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -33,7 +35,7 @@ export default function FileInput({
   };
 
   return (
-    <div className="w-full">
+    <div className={`${className || ''}`}>
       <label
         htmlFor={id}
         className="flex justify-start items-center gap-4 w-full p-3 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100"
