@@ -3,9 +3,10 @@ interface InputProps {
   id?: string;
   name?: string;
   placeholder?: string;
+  className?: string;
 }
 
-export default function Input({ purpose, id, name, placeholder }: InputProps) {
+export default function Input({ purpose, id, name, placeholder, className }: InputProps) {
   const getConfig = () => {
     switch (purpose) {
       case 'id':
@@ -52,7 +53,9 @@ export default function Input({ purpose, id, name, placeholder }: InputProps) {
           purpose === 'id' || purpose === 'password' || purpose === 'search'
             ? 'bg-white'
             : 'bg-gray-100'
-        }`}
+        }
+        ${className || ''}
+        `}
     />
   );
 }
