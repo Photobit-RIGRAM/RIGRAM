@@ -31,11 +31,32 @@ const mockData = [
     imgSrc: 'https://cdn.pixabay.com/photo/2021/12/14/09/37/animal-6870176_1280.jpg',
     href: '#',
   },
+  {
+    id: '5',
+    title: '학과명1',
+    subTitle: '학과 영문명',
+    imgSrc: 'https://cdn.pixabay.com/photo/2018/10/01/09/21/pets-3715733_1280.jpg',
+    href: '#',
+  },
+  {
+    id: '6',
+    title: '학과명2',
+    subTitle: '학과 영문명',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    href: '#',
+  },
+  {
+    id: '7',
+    title: '학과명3',
+    subTitle: '학과 영문명',
+    imgSrc: 'https://cdn.pixabay.com/photo/2021/12/14/09/37/animal-6870176_1280.jpg',
+    href: '#',
+  },
 ];
 
 export default function DepartmentPage() {
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col w-full gap-4 max-h-[620px] md:max-h-[700px]">
       <header className="flex justify-between items-center">
         <h3>학과 리스트</h3>
         <Button className="flex items-center gap-1 px-3 py-2 text-16 text-primary-700 font-semibold">
@@ -43,7 +64,7 @@ export default function DepartmentPage() {
           학과 추가하기
         </Button>
       </header>
-      <div className="grid grid-col-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-col-1 gap-6 md:grid-cols-3 overflow-y-scroll scrollbar-hide">
         {mockData.map((department) => (
           <div key={department.id}>
             <Card

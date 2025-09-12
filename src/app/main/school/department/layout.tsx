@@ -13,7 +13,7 @@ export default function DepartmentLayout({ children }: { children: React.ReactNo
       <header className="flex justify-center md:justify-end items-center mt-4">
         <TopTab />
       </header>
-      <main className="flex flex-col items-center gap-4 w-full h-full m-auto md:max-w-[1080px] md:gap-6">
+      <main className="flex flex-col items-center gap-4 w-full h-full m-auto overflow-hidden md:max-w-[1080px] md:gap-6">
         {children}
         {hasPathname && <BottomTab purpose="department" />}
       </main>
