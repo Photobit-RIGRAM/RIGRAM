@@ -36,7 +36,7 @@ const DETAIL_DATA = [
 
 export default function DepartmentDetail() {
   return (
-    <section className="relative w-full h-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10">
+    <section className="relative w-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10">
       <div className="relative mb-4 md:absolute md:left-0 md:top-0 md:transform md:-translate-y-12 flex justify-start items-center gap-1 text-gray-900">
         <Button href={'/main/school/department'}>
           <ArrowLeft className="w-8 h-8" />
