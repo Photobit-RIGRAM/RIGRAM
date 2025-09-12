@@ -25,7 +25,13 @@ const BOTTOM_TAB = {
   ],
 };
 
-export default function BottomTab({ purpose }: { purpose: keyof typeof BOTTOM_TAB }) {
+export default function BottomTab({
+  purpose,
+  className,
+}: {
+  purpose: keyof typeof BOTTOM_TAB;
+  className?: string;
+}) {
   const [activeTab, setActiveTab] = useState('0');
 
   const handleTab = (id: string) => {
@@ -39,7 +45,9 @@ export default function BottomTab({ purpose }: { purpose: keyof typeof BOTTOM_TA
   const tabData = getTabData();
 
   return (
-    <ul className="inline-flex items-center gap-1 w-fit p-1 bg-tab-bg-bottom rounded-4xl">
+    <ul
+      className={`inline-flex items-center gap-1 w-fit p-1 bg-tab-bg-bottom rounded-4xl ${className || ''}`}
+    >
       {tabData.map((tab) => (
         <li key={tab.id} className="inline-flex">
           <Link
