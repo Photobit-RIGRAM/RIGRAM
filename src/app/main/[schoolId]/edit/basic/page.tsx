@@ -1,6 +1,6 @@
-import FileInput from '@/components/FileInput';
 import Badge from '@/components/badge';
 import Button from '@/components/button';
+import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import { ArrowLeft, Asterisk, ChevronRight } from 'lucide-react';
 
