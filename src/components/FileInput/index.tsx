@@ -10,6 +10,7 @@ interface FileInputProps {
   multiple?: boolean;
   onChange?: (files: FileList | File | null) => void;
   className?: string;
+  size?: 'sm' | 'lg';
 }
 
 export default function FileInput({
@@ -19,6 +20,7 @@ export default function FileInput({
   multiple = false,
   onChange,
   className,
+  size = 'sm',
 }: FileInputProps) {
   const [fileName, setFileName] = useState<string | null>(null);
 
@@ -40,7 +42,9 @@ export default function FileInput({
         htmlFor={id}
         className="flex justify-start items-center gap-4 w-full p-3 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100"
       >
-        <div className="bg-primary-100 rounded-lg p-5">
+        <div
+          className={`flex justify-center items-center bg-primary-100 p-5 rounded-lg ${size === 'sm' ? '' : 'w-34 h-40'}`}
+        >
           <Image className="w-6 h-6 text-gray-500" />
         </div>
         <div>
