@@ -2,9 +2,9 @@ import Header from '@/components/header';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col w-screen h-screen overflow-hidden">
       <Header hasSchool />
-      <main className="px-5 py-5 md:px-0 md:py-0 flex justify-center items-center flex-1">
+      <main className="flex justify-center items-center flex-1 px-5 pt-5 pb-14 md:px-10 md:pb-17">
         {children}
       </main>
     </div>

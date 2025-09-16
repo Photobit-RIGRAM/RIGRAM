@@ -1,4 +1,6 @@
 import Button from '@/components/button';
+import Select from '@/components/select';
+import Textarea from '@/components/textarea';
 import { Calendar, GraduationCap, Mail, PencilLine, Phone, User } from 'lucide-react';
 import Link from 'next/link';
 
@@ -68,35 +70,8 @@ const InfoConfig = [
 
 export default function MainPage() {
   return (
-    // <section className="w-full h-full flex flex-col justify-center items-center">
-    //   <h1 className="sr-only">학교 등록이 안되어 있을 경우의 메인페이지</h1>
-    //   <figure className="flex flex-col items-center gap-6 mb-8 md:gap-7.5 md:mb-12">
-    //     <img
-    //       src="/images/mainImg.png"
-    //       alt="등록된 학교가 없습니다."
-    //       className="w-24 h-24 md:w-54 md:h-54"
-    //     />
-    //     <figcaption className="flex flex-col items-center gap-2.5">
-    //       <h3 className="text-20 md:text-24 font-semibold text-gray-900">
-    //         등록된 학교가 없습니다.
-    //       </h3>
-    //       <p className="text-16 md:text-17 font-medium text-gray-500 text-center">
-    //         앨범 생성을 위해 아래 버튼을 클릭하고
-    //         <br />
-    //         학교를 생성하여 시작해 보세요
-    //       </p>
-    //     </figcaption>
-    //   </figure>
-    //   <Button
-    //     className="text-16 md:text-18 font-semibold bg-primary-300 text-primary-700 rounded-md px-4 py-3 md:px-6 md:py-4 max-w-fit"
-    //     href="/school-add"
-    //   >
-    //     학교 추가하기
-    //   </Button>
-    // </section>
-
     <section className="flex flex-col justify-center items-center gap-5 w-full md:flex-row md:gap-4">
-      <h1 className="sr-only">학교 등록이 되어있을 경우 메인 페이지</h1>
+      <h1 className="sr-only">학교 등록이 되어있을 경우</h1>
       <div className="w-full md:w-[532px] h-full flex flex-col gap-13 bg-white p-6 md:px-18 shadow-dropdown md:pt-[52px] md:pb-[120px] rounded-xl">
         <div className="flex flex-col items-center gap-6">
           <figure className="flex flex-col items-center gap-6">
