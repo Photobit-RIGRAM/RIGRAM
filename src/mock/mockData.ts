@@ -63,3 +63,106 @@ export const STUDENT_DATA = {
   created: '2022-01-01',
   updated: '2025-01-01',
 };
+
+export type PhotoItem = {
+  id: string;
+  type: 'photo' | 'video';
+  title: string;
+  imgSrc: string;
+  category: 'all' | 'team' | 'organization' | 'club' | 'event';
+  created: string;
+  updated: string;
+};
+
+export const PHOTO_DATA: PhotoItem[] = [
+  {
+    id: '1',
+    type: 'photo',
+    title: '팀플 단체사진',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'team',
+    created: '2025-09-01',
+    updated: '2025-09-01',
+  },
+  {
+    id: '2',
+    type: 'video',
+    title: '동아리 공연',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'club',
+    created: '2025-09-05',
+    updated: '2025-09-06',
+  },
+  {
+    id: '3',
+    type: 'photo',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'event',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '4',
+    type: 'photo',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'event',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '5',
+    type: 'photo',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'club',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '6',
+    type: 'video',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'event',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '7',
+    type: 'video',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'event',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '8',
+    type: 'photo',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'event',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '9',
+    type: 'photo',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'club',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+  {
+    id: '10',
+    type: 'photo',
+    title: '체육대회',
+    imgSrc: 'https://cdn.pixabay.com/photo/2023/08/18/15/02/dog-8198719_1280.jpg',
+    category: 'event',
+    created: '2025-09-10',
+    updated: '2025-09-10',
+  },
+];
