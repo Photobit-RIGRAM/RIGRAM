@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/button';
+import BottomTab from '@/components/tab/bottom';
 import { PHOTO_DATA } from '@/mock/mockData';
 import { Image, Images, Play } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
@@ -13,7 +14,7 @@ export default function PhotoListPage() {
     currentTab === 'all' ? PHOTO_DATA : PHOTO_DATA.filter((item) => item.category === currentTab);
 
   return (
-    <section className="flex flex-col gap-2 w-full h-full bg-white rounded-xl p-5 overflow-y-scroll scrollbar-hide md:p-6">
+    <section className="relative flex flex-col gap-2 w-full h-full bg-white rounded-xl p-5 overflow-y-scroll scrollbar-hide md:p-6">
       <header className="relative flex justify-between items-center md:px-6 md:py-4">
         <div className="flex flex-col gap-1.5">
           <h3 className="text-16 text-gray-900 font-semibold md:text-20">
@@ -43,6 +44,9 @@ export default function PhotoListPage() {
             )}
           </div>
         ))}
+      </div>
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 min-w-fit">
+        <BottomTab purpose="organization" />
       </div>
     </section>
   );

@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@/components/button';
-import BottomTab from '@/components/tab/bottom';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -22,10 +21,6 @@ export default function PhotoListLayout({ children }: { children: React.ReactNod
       <main className="flex flex-col items-center gap-4 w-full h-full m-auto md:max-w-[1080px] md:gap-6">
         {children}
       </main>
-
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 min-w-fit">
-        <BottomTab purpose="organization" />
-      </div>
     </div>
   );
 }
