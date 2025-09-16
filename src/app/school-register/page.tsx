@@ -1,0 +1,32 @@
+import Button from '@/components/button';
+import PageHeader from '@/components/pageHeader';
+
+export default function SchoolRegisterPage() {
+  return (
+    <section className="w-full h-full flex flex-col justify-center items-center gap-8 md:gap-12">
+      <h1 className="sr-only">학교 등록이 안되어 있을 경우</h1>
+
+      <figure className="flex flex-col items-center gap-6 md:gap-7.5">
+        <img
+          src="/images/mainImg.png"
+          alt="등록된 학교가 없습니다."
+          className="w-24 h-24 md:w-54 md:h-54"
+        />
+        <figcaption className="flex flex-col items-center gap-2.5">
+          <h2 className="text-20 font-bold text-gray-900 md:text-24">등록된 학교가 없습니다.</h2>
+          <p className="text-16 font-medium text-gray-500 text-center md:text-18">
+            앨범 생성을 위해 아래 버튼을 클릭하고
+            <br />
+            학교를 생성하여 시작해 보세요
+          </p>
+        </figcaption>
+      </figure>
+      <Button
+        className={`text-16 font-semibold bg-primary-300 text-primary-700 rounded-md px-4 py-3 md:text-18 md:px-6 md:py-4`}
+        href="/school-register/add"
+      >
+        학교 추가하기
+      </Button>
+    </section>
+  );
+}
