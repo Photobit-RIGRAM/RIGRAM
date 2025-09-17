@@ -6,6 +6,7 @@ import Divider from '@/components/divider';
 import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
+import Select from '@/components/select';
 import { Asterisk, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
@@ -81,12 +82,14 @@ export default function SchoolAddPage() {
                   <Asterisk className="text-red w-4 h-4" />
                 </label>
                 <div className="flex-1 min-w-0">
-                  <select className="w-full">
-                    <option>졸업 연도를 선택해 주세요.</option>
-                  </select>
+                  <Select
+                    purpose="year"
+                    defaultValue="졸업 연도를 선택해주세요."
+                    SelectClass="w-full"
+                  />
                 </div>
               </div>
-              <div className="flex justify-start items-center">
+              <div className="flex justify-start items-start">
                 <label
                   htmlFor="school-logo"
                   className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
