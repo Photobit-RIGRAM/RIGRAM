@@ -4,6 +4,7 @@ import { Asterisk } from 'lucide-react';
 import { useState } from 'react';
 
 interface SelectProps {
+  purpose?: 'year' | 'category';
   id?: string;
   name?: string;
   label?: string;
@@ -14,6 +15,7 @@ interface SelectProps {
 }
 
 export default function Select({
+  purpose,
   id,
   name,
   label,
@@ -23,9 +25,14 @@ export default function Select({
   OptionClass,
 }: SelectProps) {
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i);
+  const years = Array.from({ length: 30 }, (_, i) => currentYear - 20 + i);
+  const categories = ['팀', '단체', '동아리', '행사'];
+  const [selectedValue, setSelectedValue] = useState<string>('');
 
-  const [selectedYear, setSelectedYear] = useState<number | undefined>();
+  const options =
+    purpose === 'year'
+      ? years.map((year) => ({ value: String(year), label: `${year}년` }))
+      : categories.map((category) => ({ value: category, label: category }));
 
   return (
     <div className="flex justify-start items-center">
@@ -39,16 +46,20 @@ export default function Select({
       )}
       <select
         id={id}
-        value={selectedYear ?? ''}
-        onChange={(e) => setSelectedYear(Number(e.target.value))}
-        className={`bg-gray-100 border border-border rounded-lg px-4.5 py-3 ${SelectClass || ''}`}
+        value={selectedValue}
+        onChange={(e) => setSelectedValue(e.target.value)}
+        className={`border border-gray-500 rounded-lg text-18 text-gray-500 font-medium px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700 ${SelectClass || ''}`}
       >
         <option value="" disabled>
           {defaultValue}
         </option>
-        {years.map((year) => (
-          <option key={year} value={year} className={`${OptionClass || ''}`}>
-            {year}년
+        {options.map((opt) => (
+          <option
+            key={opt.value}
+            value={opt.value}
+            className={`text-gray-900 ${OptionClass || ''}`}
+          >
+            {opt.label}
           </option>
         ))}
       </select>
