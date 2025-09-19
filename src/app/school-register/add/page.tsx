@@ -7,13 +7,56 @@ import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
 import Select from '@/components/select';
+import { supabase } from '@/utils/supabase/client';
 import { Asterisk, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\W-]+/g, '-');
 
 export default function SchoolAddPage() {
   const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
   const GO_NEXT_STEP = () => setCurrentStep('admin');
   const GO_PREV_STEP = () => setCurrentStep('basic');
+  const [schoolName, setSchoolName] = useState('');
+  const [schoolNameEn, setSchoolNameEn] = useState('');
+  // const [graduationYear, setGraduationYear] = useState('');
+  // const [schoolLogo, setSchoolLogo] = useState<File | null>(null);
+  // const [adminName, setAdminName] = useState('');
+  // const [adminPhone, setAdminPhone] = useState('');
+  // const [adminEmail, setAdminEmail] = useState('');
+  const router = useRouter();
+
+  const handleSchoolRegister = async () => {
+    try {
+      // 현재 로그인 유저 확인
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error('로그인이 필요합니다.');
+
+      const baseSlug = slugify(schoolNameEn);
+      const schoolId = `${baseSlug}`;
+
+      const { error: schoolError } = await supabase
+        .from('schools')
+        .update({
+          school_name: schoolName,
+          school_en_name: schoolNameEn,
+        })
+        .eq('id', user.id);
+      if (schoolError) throw schoolError;
+
+      router.push(`/${schoolId}`);
+    } catch (error) {
+      console.error(error);
+      alert('학교 추가에 실패했습니다.');
+    }
+  };
 
   const RenderStep = () => {
     switch (currentStep) {
@@ -54,6 +97,7 @@ export default function SchoolAddPage() {
                     id="school-name"
                     placeholder="학교 이름을 입력해 주세요 (80자 제한)"
                     className="w-full"
+                    onChange={(e) => setSchoolName(e.target.value)}
                   />
                 </div>
               </div>
@@ -70,6 +114,7 @@ export default function SchoolAddPage() {
                     id="school-name-en"
                     placeholder="학교 이름을 입력해 주세요 (80자 제한)"
                     className="w-full"
+                    onChange={(e) => setSchoolNameEn(e.target.value)}
                   />
                 </div>
               </div>
@@ -125,14 +170,17 @@ export default function SchoolAddPage() {
                 >
                   뒤로 가기
                 </Button>
-                <Button className="text-white bg-primary-700 rounded-lg px-3 py-1.5">
+                <Button
+                  className="text-white bg-primary-700 rounded-lg px-3 py-1.5"
+                  onClick={handleSchoolRegister}
+                >
                   추가 하기
                 </Button>
               </div>
             </header>
             <Divider gap={6} mdGap={8} />
             <div className="flex flex-col gap-6">
-              <div className="flex justify-start items-center w-full">
+              {/* <div className="flex justify-start items-center w-full">
                 <label
                   htmlFor="school-admin-name"
                   className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
@@ -194,7 +242,7 @@ export default function SchoolAddPage() {
                     className="w-full"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         );
