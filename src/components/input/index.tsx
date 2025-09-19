@@ -5,9 +5,20 @@ interface InputProps {
   placeholder?: string;
   className?: string;
   value?: string;
+  required?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function Input({ purpose, id, name, placeholder, value, className }: InputProps) {
+export default function Input({
+  purpose,
+  id,
+  name,
+  placeholder,
+  value,
+  className,
+  required = false,
+  onChange,
+}: InputProps) {
   const getConfig = () => {
     switch (purpose) {
       case 'id':
@@ -16,6 +27,7 @@ export default function Input({ purpose, id, name, placeholder, value, className
           placeholder: '아이디',
           defaultId: 'userId',
           defaultName: 'userId',
+          required: true,
         };
       case 'password':
         return {
@@ -23,6 +35,7 @@ export default function Input({ purpose, id, name, placeholder, value, className
           placeholder: '비밀번호',
           defaultId: 'userPassword',
           defaultName: 'userPassword',
+          required: true,
         };
       case 'search':
         return {
@@ -50,6 +63,8 @@ export default function Input({ purpose, id, name, placeholder, value, className
       type={config.type}
       placeholder={config.placeholder}
       defaultValue={value}
+      required={required}
+      onChange={onChange}
       className={`border border-gray-500 rounded-lg px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700  
         ${
           purpose === 'id' || purpose === 'password' || purpose === 'search'
