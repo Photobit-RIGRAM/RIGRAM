@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 
 const BOTTOM_TAB = {
   department: [
-    { id: '0', title: '기본 정보', url: '#' },
-    { id: '1', title: '소개', url: '#' },
-    { id: '2', title: '교직원', url: '#' },
-    { id: '3', title: '학생회', url: '#' },
+    { id: '0', title: '기본 정보', url: 'detail' },
+    { id: '1', title: '소개', url: 'intro' },
+    { id: '2', title: '교직원', url: 'staff' },
+    { id: '3', title: '학생회', url: 'union' },
   ],
   organization: [
     { id: '0', title: '전체', url: 'all' },

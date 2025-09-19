@@ -48,7 +48,7 @@ export default function Select({
         id={id}
         value={selectedValue}
         onChange={(e) => setSelectedValue(e.target.value)}
-        className={`border border-gray-500 rounded-lg text-18 text-gray-500 font-medium px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700 ${SelectClass || ''}`}
+        className={`border border-gray-500 rounded-lg text-gray-500 font-medium px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700 ${SelectClass || ''}`}
       >
         <option value="" disabled>
           {defaultValue}
