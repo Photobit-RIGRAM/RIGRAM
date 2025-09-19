@@ -24,9 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${pretendard.variable} antialiased`}>
-      <body className="w-screen h-screen">
-        <main className="w-full h-full">{children}</main>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
