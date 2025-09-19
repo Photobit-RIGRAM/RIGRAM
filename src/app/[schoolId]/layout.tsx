@@ -1,12 +1,23 @@
-import Header from '@/components/header';
+'use client';
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+import Header from '@/components/header';
+import { usePathname } from 'next/navigation';
+
+export default function SchoolLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const currentPage = segments[1];
+  console.log(currentPage);
+
+  let mainClass = 'flex justify-center items-start flex-1 p-5 md:px-10 md:pb-0';
+  if (currentPage === 'department') {
+    mainClass += ' md:pt-5';
+  }
+
   return (
-    <div className="flex flex-col w-screen h-screen overflow-hidden">
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
       <Header hasSchool />
-      <main className="flex justify-center items-center flex-1 px-5 pt-5 pb-14 md:px-10 md:pb-17">
-        {children}
-      </main>
+      <main className={mainClass}>{children}</main>
     </div>
   );
 }
