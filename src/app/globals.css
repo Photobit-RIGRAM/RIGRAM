@@ -26,6 +26,7 @@
   --gray-100: #fdfdfe;
 
   --border: #e9e9e9;
+  --border-section: #f4f4f4;
 
   --tab-bg-bottom: rgba(61, 63, 84, 0.7);
   --tab-bg-bottom-active: rgba(255, 255, 255, 0.15);
@@ -64,6 +65,7 @@
   --color-gray-100: var(--gray-100);
 
   --color-border: var(--border);
+  --color-border-section: var(--border-section);
 
   --color-tab-bg-bottom: var(--tab-bg-bottom);
   --color-tab-bg-bottom-active: var(--tab-bg-bottom-active);
@@ -87,14 +89,22 @@
 }
 
 * {
-  box-sizing: border-box;
   font-family: var(--font-pretendard);
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
 body {
+  margin: 0;
+  padding: 0;
   font-family: var(--font-pretendard);
   background-color: #fdfdfe;
+  width: 100%;
+  height: 100%;
 }
 
 h1,
