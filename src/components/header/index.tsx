@@ -1,12 +1,23 @@
 'use client';
 
 import Button from '@/components/button';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
+  const school = useSchoolStore((state) => state.school);
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const handleMenuDrop = () => {
     setIsOpen(!isOpen);
+  };
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
   };
 
   return (
@@ -28,7 +39,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
             <Button href={'/main'}>학교 페이지로 이동</Button>
           </li>
           <li className="flex justify-center items-center w-full px-3 py-2 hover:bg-gray-200">
-            <Button>로그아웃</Button>
+            <Button onClick={handleLogout}>로그아웃</Button>
           </li>
         </ul>
       </div>
@@ -39,8 +50,8 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
             <span className="text-14 md:text-18 text-gray-500 font-medium">관리 중</span>
             <span className="w-1 h-1 rounded-full bg-green" aria-hidden="true"></span>
             <div className="text-14 md:text-18 text-gray-700 font-medium flex items-center gap-1 max-w-[150px] md:max-w-full overflow-hidden">
-              <span className="truncate">인천의이름이엄청나게긴대학교</span>
-              <span className="shrink-0">(졸업연도)</span>
+              <span className="truncate">{school[0]?.school_name}</span>
+              <span className="shrink-0">({school[0]?.graduation_year})</span>
             </div>
           </>
         ) : (
