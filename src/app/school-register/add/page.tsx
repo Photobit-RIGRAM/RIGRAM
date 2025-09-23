@@ -7,6 +7,7 @@ import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
 import Select from '@/components/select';
+import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -22,35 +23,83 @@ export default function SchoolAddPage() {
   const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
   const GO_NEXT_STEP = () => setCurrentStep('admin');
   const GO_PREV_STEP = () => setCurrentStep('basic');
-  const [schoolName, setSchoolName] = useState('');
-  const [schoolNameEn, setSchoolNameEn] = useState('');
-  // const [graduationYear, setGraduationYear] = useState('');
-  // const [schoolLogo, setSchoolLogo] = useState<File | null>(null);
-  // const [adminName, setAdminName] = useState('');
-  // const [adminPhone, setAdminPhone] = useState('');
-  // const [adminEmail, setAdminEmail] = useState('');
+  const {
+    schoolName,
+    schoolNameEn,
+    graduationYear,
+    schoolLogo,
+    adminName,
+    adminPhone,
+    adminEmail,
+    setSchoolName,
+    setSchoolNameEn,
+    setGraduationYear,
+    setSchoolLogo,
+    setAdminName,
+    setAdminPhone,
+    setAdminEmail,
+    addSchool,
+  } = useSchoolStore();
   const router = useRouter();
+
+  const handleFileSelect = (file: File | null) => {
+    if (!file) return;
+    setSchoolLogo(file); // state에 File객체 저장
+  };
 
   const handleSchoolRegister = async () => {
     try {
-      // 현재 로그인 유저 확인
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error('로그인이 필요합니다.');
 
+      let logoUrl: string | null = null;
+
+      // schoolLogo가 File 타입이면 업로드 실행
+      if (schoolLogo instanceof File) {
+        const fileExt = schoolLogo.name.split('.').pop();
+        const fileName = schoolNameEn || 'default-school';
+        const filePath = `school-logos/${fileName}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('school-logos')
+          .upload(filePath, schoolLogo, { upsert: true });
+
+        if (uploadError) throw uploadError;
+
+        const { data: urlData } = supabase.storage.from('school-logos').getPublicUrl(filePath);
+        logoUrl = urlData.publicUrl;
+      } else if (typeof schoolLogo === 'string') {
+        // 이미 URL이 있는 경우 (예: 수정 시)
+        logoUrl = schoolLogo;
+      }
+
       const baseSlug = slugify(schoolNameEn);
       const schoolId = `${baseSlug}`;
 
-      const { error: schoolError } = await supabase
-        .from('schools')
-        .update({
+      await addSchool(
+        {
           school_name: schoolName,
           school_en_name: schoolNameEn,
+          graduation_year: graduationYear,
+          school_img_url: logoUrl,
+          manager_name: adminName,
+          manager_contact: adminPhone,
+          manager_email: adminEmail,
+        },
+        user.id
+      );
+
+      const { error: usersError } = await supabase
+        .from('users')
+        .update({
+          school_id: schoolId,
         })
         .eq('id', user.id);
-      if (schoolError) throw schoolError;
+      if (usersError) throw usersError;
 
+      alert('학교 추가를 했습니다. 메인 페이지로 이동합니다.');
       router.push(`/${schoolId}`);
     } catch (error) {
       console.error(error);
@@ -85,7 +134,7 @@ export default function SchoolAddPage() {
             <div className="flex flex-col gap-6">
               <div className="flex justify-start items-center w-full">
                 <label
-                  htmlFor="school-name"
+                  htmlFor="schoolName"
                   className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
                 >
                   학교 이름
@@ -94,16 +143,17 @@ export default function SchoolAddPage() {
                 <div className="flex-1 min-w-0">
                   <Input
                     purpose="text"
-                    id="school-name"
+                    id="schoolName"
                     placeholder="학교 이름을 입력해 주세요 (80자 제한)"
                     className="w-full"
+                    value={schoolName}
                     onChange={(e) => setSchoolName(e.target.value)}
                   />
                 </div>
               </div>
               <div className="flex justify-start items-center w-full">
                 <label
-                  htmlFor="school-name-en"
+                  htmlFor="schoolNameEn"
                   className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
                 >
                   학교 영어 이름
@@ -111,9 +161,10 @@ export default function SchoolAddPage() {
                 <div className="flex-1 min-w-0">
                   <Input
                     purpose="text"
-                    id="school-name-en"
+                    id="schoolNameEn"
                     placeholder="학교 이름을 입력해 주세요 (80자 제한)"
                     className="w-full"
+                    value={schoolNameEn}
                     onChange={(e) => setSchoolNameEn(e.target.value)}
                   />
                 </div>
@@ -131,6 +182,7 @@ export default function SchoolAddPage() {
                     purpose="year"
                     defaultValue="졸업 연도를 선택해주세요."
                     SelectClass="w-full"
+                    onChange={(value) => setGraduationYear(value)}
                   />
                 </div>
               </div>
@@ -143,7 +195,15 @@ export default function SchoolAddPage() {
                   <Asterisk className="text-red w-4 h-4" />
                 </label>
                 <div className="flex-1 min-w-0">
-                  <FileInput id="school-logo" className="w-full" />
+                  <FileInput
+                    id="school-logo"
+                    className="w-full"
+                    onChange={(files) => {
+                      if (!files) return;
+                      const file = files instanceof FileList ? files[0] : files;
+                      handleFileSelect(file);
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -180,7 +240,7 @@ export default function SchoolAddPage() {
             </header>
             <Divider gap={6} mdGap={8} />
             <div className="flex flex-col gap-6">
-              {/* <div className="flex justify-start items-center w-full">
+              <div className="flex justify-start items-center w-full">
                 <label
                   htmlFor="school-admin-name"
                   className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
@@ -194,6 +254,8 @@ export default function SchoolAddPage() {
                     id="school-admin-name"
                     placeholder="담당자 이름을 입력해 주세요."
                     className="w-full"
+                    value={adminName}
+                    onChange={(e) => setAdminName(e.target.value)}
                   />
                 </div>
               </div>
@@ -211,18 +273,26 @@ export default function SchoolAddPage() {
                     id="school-admin-contact"
                     placeholder="010"
                     className="w-full"
+                    value={adminPhone.slice(0, 3)}
+                    onChange={(e) => setAdminPhone(e.target.value) + adminPhone.slice(3)}
                   />
                   <Input
                     purpose="text"
                     id="school-admin-contact"
                     placeholder="1234"
                     className="w-full"
+                    value={adminPhone.slice(3, 7)}
+                    onChange={(e) =>
+                      setAdminPhone(adminPhone.slice(0, 3) + e.target.value + adminPhone.slice(7))
+                    }
                   />
                   <Input
                     purpose="text"
                     id="school-admin-contact"
                     placeholder="5678"
                     className="w-full"
+                    value={adminPhone.slice(7)}
+                    onChange={(e) => setAdminPhone(adminPhone.slice(0, 7) + e.target.value)}
                   />
                 </div>
               </div>
@@ -240,9 +310,11 @@ export default function SchoolAddPage() {
                     id="school-admin-email"
                     placeholder="예) example@univ.com"
                     className="w-full"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
                   />
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         );
