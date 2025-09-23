@@ -12,6 +12,7 @@ interface SelectProps {
   labelClass?: string;
   SelectClass?: string;
   OptionClass?: string;
+  onChange?: (value: string) => void;
 }
 
 export default function Select({
@@ -23,6 +24,7 @@ export default function Select({
   labelClass,
   SelectClass,
   OptionClass,
+  onChange,
 }: SelectProps) {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) => currentYear - 20 + i);
@@ -47,7 +49,10 @@ export default function Select({
       <select
         id={id}
         value={selectedValue}
-        onChange={(e) => setSelectedValue(e.target.value)}
+        onChange={(e) => {
+          setSelectedValue(e.target.value);
+          onChange?.(e.target.value);
+        }}
         className={`border border-gray-500 rounded-lg text-gray-500 font-medium px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700 ${SelectClass || ''}`}
       >
         <option value="" disabled>

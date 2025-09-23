@@ -30,10 +30,11 @@ export default function FileInput({
       setFileName(
         multiple ? `${files[0].name}외 ${files.length - 1}개 파일 선택됨` : files[0].name
       );
+      onChange?.(multiple ? files : files[0]);
     } else {
       setFileName(null);
+      onChange?.(files);
     }
-    onChange?.(files);
   };
 
   return (
