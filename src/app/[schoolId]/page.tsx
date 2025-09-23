@@ -7,33 +7,33 @@ import { Calendar, GraduationCap, Mail, PencilLine, Phone, User } from 'lucide-r
 import Link from 'next/link';
 import { useEffect } from 'react';
 
-const MenuConfig = [
+const MENU_LIST = [
   {
     id: '0',
     title: '학과 관리',
     subTitle: '학과 추가, 소개 관리',
-    url: '/department',
+    url: 'department',
     img_url: '/images/menu01.png',
   },
   {
     id: '1',
     title: '졸업생 관리',
     subTitle: '졸업생 추가, 정보 관리',
-    url: '/graduate',
+    url: 'graduate',
     img_url: '/images/menu02.png',
   },
   {
     id: '2',
     title: '단체 사진',
     subTitle: '학과별 단체, 사진 관리',
-    url: '/단체사진',
+    url: 'photo',
     img_url: '/images/menu03.png',
   },
   {
     id: '3',
     title: '학과 소개 관리',
     subTitle: '전경 / 연혁 / 상진 / 운영진',
-    url: '/학과소개관리',
+    url: 'introduction',
     img_url: '/images/menu04.png',
   },
 ];
@@ -42,6 +42,13 @@ export default function SchoolMainPage() {
   const fetchSchool = useSchoolStore((state) => state.fetchSchool);
   // const isLoading = useSchoolStore((state) => state.isLoading);
   const school = useSchoolStore((state) => state.school);
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
+  const schoolId = slugify(school?.school_en_name ?? '');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,7 +107,11 @@ export default function SchoolMainPage() {
           <figure className="flex flex-col items-center gap-6">
             <div className="border border-gray-200 rounded-4xl p-4 md:p-6">
               <img
-                src={school?.school_img_url}
+                src={
+                  school?.school_img_url instanceof File
+                    ? URL.createObjectURL(school.school_img_url)
+                    : (school?.school_img_url ?? undefined)
+                }
                 alt={`${school?.school_name}학교 로고`}
                 className="w-13 h-13"
               />
@@ -145,9 +156,9 @@ export default function SchoolMainPage() {
         </div>
       </div>
       <div className="w-full md:w-[532px] h-full flex flex-col gap-4 md:grid md:grid-cols-2 justify-center items-center">
-        {MenuConfig.map((menu) => (
+        {MENU_LIST.map((menu) => (
           <Link
-            href={menu.url}
+            href={`/${schoolId}/${menu.url}`}
             key={menu.id}
             className="w-full flex flex-row justify-center gap-4 md:flex-col items-center md:gap-12 bg-primary-200 px-6 py-6 md:py-21 shadow-dropdown rounded-xl hover:bg-primary-300 focus:bg-primary-300 focus:outline-primary-700 active:bg-primary-300 active:outline-primary-700"
           >
