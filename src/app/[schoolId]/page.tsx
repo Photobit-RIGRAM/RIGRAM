@@ -1,8 +1,11 @@
+'use client';
+
 import Button from '@/components/button';
-import Select from '@/components/select';
-import Textarea from '@/components/textarea';
+import { useSchoolStore } from '@/store/useSchoolStore';
+import { supabase } from '@/utils/supabase/client';
 import { Calendar, GraduationCap, Mail, PencilLine, Phone, User } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 const MenuConfig = [
   {
@@ -35,40 +38,60 @@ const MenuConfig = [
   },
 ];
 
-const InfoConfig = [
-  {
-    id: '0',
-    icon: <User />,
-    title: '담당자',
-    content: '김OO',
-  },
-  {
-    id: '1',
-    icon: <Mail />,
-    title: '이메일',
-    content: 'icheonuniv@.gmail.com',
-  },
-  {
-    id: '2',
-    icon: <Phone />,
-    title: '연락처',
-    content: '010-1234-5678',
-  },
-  {
-    id: '3',
-    icon: <Calendar />,
-    title: '생성일',
-    content: '2022-01-01',
-  },
-  {
-    id: '4',
-    icon: <Calendar />,
-    title: '수정일',
-    content: '2025-01-01',
-  },
-];
+export default function SchoolMainPage() {
+  const fetchSchool = useSchoolStore((state) => state.fetchSchool);
+  // const isLoading = useSchoolStore((state) => state.isLoading);
+  const school = useSchoolStore((state) => state.school);
 
-export default function MainPage() {
+  useEffect(() => {
+    const fetchData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        fetchSchool(user.id);
+      } else {
+        console.log('로그인이 되지 않았습니다. 다시 한 번 확인해 주세요.');
+      }
+    };
+
+    fetchData();
+  }, [fetchSchool]);
+
+  const InfoConfig = [
+    {
+      id: '0',
+      icon: <User />,
+      title: '담당자',
+      content: `${school?.manager_name}`,
+    },
+    {
+      id: '1',
+      icon: <Mail />,
+      title: '이메일',
+      content: `${school?.manager_email}`,
+    },
+    {
+      id: '2',
+      icon: <Phone />,
+      title: '연락처',
+      content: `${school?.manager_contact}`,
+    },
+    {
+      id: '3',
+      icon: <Calendar />,
+      title: '생성일',
+      content: `${school?.created_at?.slice(0, 10)}`,
+    },
+    {
+      id: '4',
+      icon: <Calendar />,
+      title: '수정일',
+      content: `${school?.updated_at?.slice(0, 10)}`,
+    },
+  ];
+
   return (
     <section className="flex flex-col justify-center items-center gap-5 w-full md:flex-row md:gap-4">
       <h1 className="sr-only">학교 등록이 되어있을 경우</h1>
@@ -77,21 +100,23 @@ export default function MainPage() {
           <figure className="flex flex-col items-center gap-6">
             <div className="border border-gray-200 rounded-4xl p-4 md:p-6">
               <img
-                src="https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FMGisk%2FbtrUgPi42Au%2FAAAAAAAAAAAAAAAAAAAAANDK3flsSQjwFGPl4Ku8rZupcHOLyd3GFmF5fli2-ugm%2Fimg.png%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1759244399%26allow_ip%3D%26allow_referer%3D%26signature%3DmnRqAYdJRdGIC0G48o9GqI2GMXY%253D"
-                alt="인천대학교"
+                src={school?.school_img_url}
+                alt={`${school?.school_name}학교 로고`}
                 className="w-13 h-13"
               />
             </div>
             <figcaption className="flex flex-col items-center gap-1">
-              <h3 className="text-20 md:text-24 font-semibold text-gray-900">인천대학교</h3>
+              <h3 className="text-20 md:text-24 font-semibold text-gray-900">
+                {school?.school_name}
+              </h3>
               <span className="text-16 md:text-20 font-regular text-gray-700">
-                Incheon National University
+                {school?.school_en_name}
               </span>
             </figcaption>
           </figure>
           <div className="flex items-center text-16 md:text-18 text-gray-800 gap-1">
             <GraduationCap />
-            <span>2025 졸업</span>
+            <span>{school?.graduation_year} 졸업</span>
           </div>
         </div>
         <span className="w-full h-px bg-gray-400"></span>
@@ -100,7 +125,7 @@ export default function MainPage() {
             <h3 className="text-18 text-gray-900 font-semibold">상세 정보</h3>
             <Button
               className="flex items-center text-16 text-gray-600 gap-1 hover:text-gray-700 hover:font-bold focus:text-gray-700 focus:font-bold focus:outline-gray-700 active:text-gray-700 active:font-bold"
-              href={'#'}
+              href={`/school-register/edit`}
             >
               <PencilLine className="w-4 h-4" />
               <span>정보 수정하기</span>

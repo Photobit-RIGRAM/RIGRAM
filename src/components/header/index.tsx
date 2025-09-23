@@ -50,8 +50,8 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
             <span className="text-14 md:text-18 text-gray-500 font-medium">관리 중</span>
             <span className="w-1 h-1 rounded-full bg-green" aria-hidden="true"></span>
             <div className="text-14 md:text-18 text-gray-700 font-medium flex items-center gap-1 max-w-[150px] md:max-w-full overflow-hidden">
-              <span className="truncate">{school[0]?.school_name}</span>
-              <span className="shrink-0">({school[0]?.graduation_year})</span>
+              <span className="truncate">{school?.school_name}</span>
+              <span className="shrink-0">({school?.graduation_year})</span>
             </div>
           </>
         ) : (
