@@ -20,6 +20,13 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
     router.push('/login');
   };
 
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
+  const schoolId = slugify(school?.school_en_name ?? '');
+
   return (
     <header className="flex flex-row-reverse justify-between items-center w-full min-h-14 bg-gray-100 px-5 shadow-dropdown md:min-h-16 md:px-10">
       <div className="relative shrink-0">
@@ -36,7 +43,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
           className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center bg-white border border-gray-500 rounded-lg overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
         >
           <li className="flex justify-center items-center whitespace-nowrap px-3 py-2 border-b border-b-gray-500 hover:bg-gray-200">
-            <Button href={'/main'}>학교 페이지로 이동</Button>
+            <Button href={`/${schoolId}`}>학교 페이지로 이동</Button>
           </li>
           <li className="flex justify-center items-center w-full px-3 py-2 hover:bg-gray-200">
             <Button onClick={handleLogout}>로그아웃</Button>
