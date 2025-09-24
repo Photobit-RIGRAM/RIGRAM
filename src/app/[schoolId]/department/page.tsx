@@ -1,10 +1,37 @@
+'use client';
+
 import Button from '@/components/button';
 import Card from '@/components/card';
-import { DepartmentList } from '@/mock/mockData';
+import { useCollegeStore } from '@/store/useCollegeStore';
+import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
 import { Plus } from 'lucide-react';
+import { useEffect } from 'react';
 
 export default function DepartmentPage() {
-  const schoolId = '예시schoolId';
+  const school = useSchoolStore((state) => state.school);
+  const colleges = useCollegeStore((state) => state.colleges);
+  const fetchColleges = useCollegeStore((state) => state.fetchColleges);
+  const departments = useDepartmentStore((state) => state.departments);
+  const fetchDepartments = useDepartmentStore((state) => state.fetchDepartments);
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
+  const schoolId = slugify(school?.school_en_name ?? '');
+  const school_id = school?.id;
+
+  useEffect(() => {
+    if (!school_id) return;
+    fetchColleges(school_id);
+  }, [school_id, fetchColleges]);
+
+  useEffect(() => {
+    colleges.forEach((college) => {
+      fetchDepartments(college.id);
+    });
+  }, [colleges, fetchDepartments]);
 
   return (
     <section className="flex flex-col w-full gap-4 md:max-h-[700px]">
@@ -20,15 +47,14 @@ export default function DepartmentPage() {
         </Button>
       </header>
       <div className="grid grid-col-1 gap-6 md:grid-cols-3 h-full overflow-y-scroll scrollbar-hide">
-        {DepartmentList.map((dept) => (
-          <div key={dept.id}>
-            <Card
-              title={dept.title}
-              subTitle={dept.subTitle}
-              imgSrc={dept.imgSrc}
-              href={dept.href}
-            />
-          </div>
+        {departments.map((dept) => (
+          <Card
+            key={dept.id}
+            title={dept.name}
+            subTitle={dept.name_en}
+            imgSrc={dept.img_url || undefined}
+            // href={dept.href}
+          />
         ))}
         <Card variant="add" href={`/${schoolId}/department/add`} />
       </div>
