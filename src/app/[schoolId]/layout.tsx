@@ -7,7 +7,6 @@ export default function SchoolLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
   const currentPage = segments[1];
-  console.log(currentPage);
 
   let mainClass = 'flex justify-center items-start flex-1 p-5 md:px-10 md:pb-0';
   if (currentPage === 'department') {
