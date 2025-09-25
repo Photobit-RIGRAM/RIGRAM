@@ -35,7 +35,7 @@ export default function DepartmentPage() {
 
   return (
     <section className="flex flex-col w-full gap-4 md:max-h-[700px]">
-      <h1 className="sr-only">OO학교 학과 리스트</h1>
+      <h1 className="sr-only">{`${school?.school_name} 학교 학과 리스트`}</h1>
       <header className="flex justify-between items-center">
         <h2 className="text-20 font-semibold text-gray-900 md:text-24 md:font-bold">학과 리스트</h2>
         <Button
@@ -53,7 +53,7 @@ export default function DepartmentPage() {
             title={dept.name}
             subTitle={dept.name_en}
             imgSrc={dept.img_url || undefined}
-            // href={dept.href}
+            href={`/${schoolId}/department/${dept.id}`}
           />
         ))}
         <Card variant="add" href={`/${schoolId}/department/add`} />
