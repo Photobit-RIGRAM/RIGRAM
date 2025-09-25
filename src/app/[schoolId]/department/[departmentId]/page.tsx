@@ -1,59 +1,96 @@
+'use client';
+
 import Button from '@/components/button';
 import PageHeader from '@/components/pageHeader';
-import { ArrowLeft, Calendar, GraduationCap, PencilLine, Tag } from 'lucide-react';
-
-const DETAIL_DATA = [
-  {
-    id: '0',
-    icon: <GraduationCap />,
-    title: '학과명',
-    content: '학과명0',
-  },
-  {
-    id: '1',
-    icon: <GraduationCap />,
-    title: '영어 학과명',
-    content: 'Department Name0',
-  },
-  {
-    id: '2',
-    icon: <Tag />,
-    title: '단과대학',
-    content: '인문계열',
-  },
-  {
-    id: '3',
-    icon: <Calendar />,
-    title: '생성일',
-    content: '2022-01-01',
-  },
-  {
-    id: '4',
-    icon: <Calendar />,
-    title: '수정일',
-    content: '2025-01-01',
-  },
-];
+import { useCollegeStore } from '@/store/useCollegeStore';
+import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { Calendar, GraduationCap, PencilLine, Tag, Trash } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function DepartmentDetail() {
+  const [collegeName, setCollegeName] = useState<string | null>(null);
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const departmentId = segments[2];
+  const { departments, fetchDepartmentById } = useDepartmentStore();
+  const { fetchCollegeById } = useCollegeStore();
+
+  useEffect(() => {
+    if (departmentId) {
+      fetchDepartmentById(departmentId).then((dept) => {
+        if (dept?.college_id) {
+          fetchCollegeById(dept.college_id).then((college) => {
+            if (college) setCollegeName(college.name);
+          });
+        }
+      });
+    }
+  }, [departmentId, fetchDepartmentById, fetchCollegeById]);
+
+  const department = departments.find((d) => d.id === departmentId);
+
+  if (!department) return <p>학과 데이터를 찾을 수 없습니다.</p>;
+
+  const DETAIL_DATA = [
+    {
+      id: '0',
+      icon: <GraduationCap />,
+      title: '학과명',
+      content: `${department.name}`,
+    },
+    {
+      id: '1',
+      icon: <GraduationCap />,
+      title: '영어 학과명',
+      content: `${department.name_en}`,
+    },
+    {
+      id: '2',
+      icon: <Tag />,
+      title: '단과대학',
+      content: `${collegeName}`,
+    },
+    {
+      id: '3',
+      icon: <Calendar />,
+      title: '생성일',
+      content: `${department.created_at.slice(0, 10)}`,
+    },
+    {
+      id: '4',
+      icon: <Calendar />,
+      title: '수정일',
+      content: `${department.updated_at.slice(0, 10)}`,
+    },
+  ];
+
   return (
     <>
-      <PageHeader title="국어국문학과" />
+      <PageHeader title={department.name} />
       <section className="relative w-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10">
         <header className="flex justify-between items-center mb-6">
           <h2 className="text-20 text-gray-900 font-semibold">기본 정보</h2>
-          <Button className="flex items-center gap-1 text-gray-600">
-            <PencilLine className="w-4 h-4" />
-            <span>정보 수정하기</span>
-          </Button>
+          <div className="flex flex-row gap-2">
+            <Button className="flex items-center gap-1 text-gray-600">
+              <PencilLine className="w-4 h-4" />
+              <span>학과 수정하기</span>
+            </Button>
+            <Button className="flex items-center gap-1 text-red">
+              <Trash className="w-4 h-4" />
+              <span>학과 삭제하기</span>
+            </Button>
+          </div>
         </header>
-        <div className="mb-6 md:mb-15">
-          <img
-            src="https://cdn.pixabay.com/photo/2025/08/09/16/51/wildlife-9764923_1280.jpg"
-            alt="학과명0 대표이미지"
-            className="w-full h-[200px] md:h-[280px] object-cover rounded-xl"
-          />
-        </div>
+        {department.img_url && (
+          <div className="mb-6 md:mb-15">
+            <img
+              src={department.img_url}
+              alt={`${department.name} 대표 이미지`}
+              className="w-full h-[200px] md:h-[280px] object-cover rounded-xl"
+            />
+          </div>
+        )}
         <dl className="flex flex-col gap-5">
           {DETAIL_DATA.map((info) => (
             <div className="flex justify-start items-center gap-2" key={info.id}>
