@@ -25,6 +25,7 @@ interface DepartmentsState {
     desc: string,
     img_url: string | null
   ) => Promise<void>;
+  deleteDepartment: (id: string) => Promise<boolean>;
 }
 
 export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
@@ -32,7 +33,7 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
   loading: false,
   error: null,
 
-  // 학교ID별 모든 학과 조회
+  // 학교ID별 모든 학과 조회(select)
   fetchDepartments: async (collegeId: string) => {
     set({ loading: true, error: null });
 
@@ -51,7 +52,7 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
       });
     }
   },
-  // 단일 학과 조회
+  // 단일 학과 조회(select)
   fetchDepartmentById: async (departmentId: string) => {
     set({ loading: true, error: null });
     const { data, error } = await supabase
@@ -78,7 +79,7 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
       return data;
     }
   },
-  // 학과 추가하기
+  // 학과 추가하기(insert)
   addDepartment: async (collegeId, name, nameEn, desc, img_url) => {
     const { data, error } = await supabase
       .from('departments')
@@ -96,5 +97,23 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
         return { departments: [...state.departments, data] };
       });
     }
+  },
+  // 학과 삭제하기(delete)
+  deleteDepartment: async (id) => {
+    set({ loading: true });
+
+    const { error } = await supabase.from('departments').delete().eq('id', id);
+
+    if (error) {
+      console.error('학과 삭제 중 오류가 발생했습니다. :', error);
+      set({ error: error.message });
+      return false;
+    }
+
+    set((state) => ({
+      departments: state.departments.filter((dept) => dept.id !== id),
+    }));
+
+    return true;
   },
 }));

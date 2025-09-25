@@ -6,14 +6,17 @@ import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { Calendar, GraduationCap, PencilLine, Tag, Trash } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function DepartmentDetail() {
-  const [collegeName, setCollegeName] = useState<string | null>(null);
+  const router = useRouter();
   const pathname = usePathname();
+  const [collegeName, setCollegeName] = useState<string | null>(null);
   const segments = pathname.split('/').filter(Boolean);
+  const schoolId = segments[0];
   const departmentId = segments[2];
-  const { departments, fetchDepartmentById } = useDepartmentStore();
+  const { departments, fetchDepartmentById, deleteDepartment } = useDepartmentStore();
   const { fetchCollegeById } = useCollegeStore();
 
   useEffect(() => {
@@ -31,6 +34,16 @@ export default function DepartmentDetail() {
   const department = departments.find((d) => d.id === departmentId);
 
   if (!department) return <p>학과 데이터를 찾을 수 없습니다.</p>;
+
+  const handleDelete = async () => {
+    if (confirm(`${department.name}을 삭제하시겠습니까?`)) {
+      const success = await deleteDepartment(departmentId);
+      if (success) {
+        alert(`${department.name}가 삭제되었습니다.`);
+        router.push(`/${schoolId}/department`);
+      }
+    }
+  };
 
   const DETAIL_DATA = [
     {
@@ -76,7 +89,7 @@ export default function DepartmentDetail() {
               <PencilLine className="w-4 h-4" />
               <span>학과 수정하기</span>
             </Button>
-            <Button className="flex items-center gap-1 text-red">
+            <Button className="flex items-center gap-1 text-red" onClick={handleDelete}>
               <Trash className="w-4 h-4" />
               <span>학과 삭제하기</span>
             </Button>
