@@ -13,6 +13,7 @@ interface CollegesState {
   loading: boolean;
   error: string | null;
   fetchColleges: (schoolId: string) => Promise<void>;
+  fetchCollegeById: (collegeId: string) => Promise<College | null>;
   addCollege: (schoolId: string, name: string) => Promise<College | null>;
 }
 
@@ -30,6 +31,34 @@ export const useCollegeStore = create<CollegesState>((set) => ({
       set({ error: error.message, loading: false });
     } else {
       set({ colleges: data ?? [], loading: false });
+    }
+  },
+
+  // 단일 단과대학 조회
+  fetchCollegeById: async (collegeId: string) => {
+    set({ loading: true, error: null });
+    const { data, error } = await supabase
+      .from('colleges')
+      .select('*')
+      .eq('id', collegeId)
+      .single();
+
+    if (error) {
+      set({ error: error.message, loading: false });
+      return null;
+    } else {
+      // 기존 state에 업데이트
+      set((state) => {
+        const exists = state.colleges.some((c) => c.id === data.id);
+        if (exists) {
+          return {
+            colleges: state.colleges.map((c) => (c.id === data.id ? data : c)),
+            loading: false,
+          };
+        }
+        return { colleges: [...state.colleges, data], loading: false };
+      });
+      return data;
     }
   },
 

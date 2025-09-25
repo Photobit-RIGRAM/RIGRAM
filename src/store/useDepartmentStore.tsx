@@ -9,6 +9,7 @@ type Department = {
   desc: string;
   img_url: string | null;
   created_at: string;
+  updated_at: string;
 };
 
 interface DepartmentsState {
@@ -16,6 +17,7 @@ interface DepartmentsState {
   loading: boolean;
   error: string | null;
   fetchDepartments: (collegeId: string) => Promise<void>;
+  fetchDepartmentById: (departmentId: string) => Promise<Department | null>;
   addDepartment: (
     college_id: string,
     name: string,
@@ -49,6 +51,34 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
       });
     }
   },
+  // 단일 학과 조회
+  fetchDepartmentById: async (departmentId: string) => {
+    set({ loading: true, error: null });
+    const { data, error } = await supabase
+      .from('departments')
+      .select('*')
+      .eq('id', departmentId)
+      .single();
+
+    if (error) {
+      set({ error: error.message, loading: false });
+      return null;
+    } else {
+      // 이미 있으면 교체, 없으면 추가
+      set((state) => {
+        const exists = state.departments.some((d) => d.id === data.id);
+        if (exists) {
+          return {
+            departments: state.departments.map((d) => (d.id === data.id ? data : d)),
+            loading: false,
+          };
+        }
+        return { departments: [...state.departments, data], loading: false };
+      });
+      return data;
+    }
+  },
+  // 학과 추가하기
   addDepartment: async (collegeId, name, nameEn, desc, img_url) => {
     const { data, error } = await supabase
       .from('departments')
