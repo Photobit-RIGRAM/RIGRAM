@@ -11,8 +11,8 @@ import { useEffect, useState } from 'react';
 
 export default function DepartmentDetail() {
   const router = useRouter();
-  const pathname = usePathname();
   const [collegeName, setCollegeName] = useState<string | null>(null);
+  const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
   const schoolId = segments[0];
   const departmentId = segments[2];
@@ -85,7 +85,10 @@ export default function DepartmentDetail() {
         <header className="flex justify-between items-center mb-6">
           <h2 className="text-20 text-gray-900 font-semibold">기본 정보</h2>
           <div className="flex flex-row gap-2">
-            <Button className="flex items-center gap-1 text-gray-600">
+            <Button
+              className="flex items-center gap-1 text-gray-600"
+              href={`/${schoolId}/department/${departmentId}/edit`}
+            >
               <PencilLine className="w-4 h-4" />
               <span>학과 수정하기</span>
             </Button>
