@@ -47,15 +47,18 @@ export default function DepartmentPage() {
         </Button>
       </header>
       <div className="grid grid-col-1 gap-6 md:grid-cols-3 h-full overflow-y-scroll scrollbar-hide">
-        {departments.map((dept) => (
-          <Card
-            key={dept.id}
-            title={dept.name}
-            subTitle={dept.name_en}
-            imgSrc={dept.img_url || undefined}
-            href={`/${schoolId}/department/${dept.id}`}
-          />
-        ))}
+        {departments
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, 'ko'))
+          .map((dept) => (
+            <Card
+              key={dept.id}
+              title={dept.name}
+              subTitle={dept.name_en}
+              imgSrc={dept.img_url || undefined}
+              href={`/${schoolId}/department/${dept.id}`}
+            />
+          ))}
         <Card variant="add" href={`/${schoolId}/department/add`} />
       </div>
     </section>
