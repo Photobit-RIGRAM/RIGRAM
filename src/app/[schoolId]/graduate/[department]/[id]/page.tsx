@@ -1,25 +1,47 @@
-import Button from '@/components/button';
-import { ArrowLeft, Calendar, Dot, Mail, Phone, User } from 'lucide-react';
+'use client';
 
-const StudentData = {
-  id: '0',
-  name: '김OO',
-  en_name: 'KimOO',
-  department: '국문학과',
-  manager: '다OO',
-  email: 'kimEmail@gmail.com',
-  phone: '010-1234-5678',
-  photo_id: 'https://cdn.pixabay.com/photo/2019/08/01/12/19/raccoon-4377383_1280.jpg',
-  photo_graduation: 'https://cdn.pixabay.com/photo/2023/11/05/12/57/squirrel-8367079_1280.jpg',
-  created: '2022-01-01',
-  updated: '2025-01-01',
-};
+import Button from '@/components/button';
+import { useStudentStore } from '@/store/useStudentStore';
+import { ArrowLeft, Calendar, Dot, Mail, Phone, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function GraduateDepartmentPage() {
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const studentId = segments[3];
+  const { student, fetchStudentById, isLoading, error } = useStudentStore();
+  const router = useRouter();
+  const handleGoBack = () => {
+    router.back();
+  };
+
+  useEffect(() => {
+    if (studentId) {
+      fetchStudentById(studentId);
+    }
+  }, []);
+
+  // 로딩 중일 때
+  if (isLoading) {
+    return <div className="p-10 text-center">로딩중...</div>;
+  }
+
+  // 에러 발생했을 때
+  if (error) {
+    return <div className="p-10 text-center text-red-500">에러: {error}</div>;
+  }
+
+  // student 데이터가 아직 없을 때
+  if (!student) {
+    return <div className="p-10 text-center">학생 데이터를 찾을 수 없습니다.</div>;
+  }
+
   return (
     <section className="relative w-full h-full border border-border rounded-xl shadow-dropdown">
       <div className="z-10 px-5 pt-5 relative mb-4 md:absolute md:left-0 md:top-0 md:transform md:-translate-y-12 flex justify-start items-center gap-1 text-gray-900 md:px-0 md:pt-0">
-        <Button href={'/main/school/department'}>
+        <Button onClick={handleGoBack}>
           <ArrowLeft className="w-8 h-8" />
         </Button>
         <h3 className="text-20 font-semibold">졸업생 상세 정보</h3>
@@ -36,25 +58,25 @@ export default function GraduateDepartmentPage() {
           <div className="flex justify-start items-center gap-1">
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
               <img
-                src={StudentData.photo_id}
+                src={student.profile_default}
                 alt="증명사진"
                 className="w-full h-full object-cover rounded-4xl"
               />
             </div>
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
               <img
-                src={StudentData.photo_graduation}
+                src={student.profile_graduate}
                 alt="증명사진"
                 className="w-full h-full object-cover rounded-4xl"
               />
             </div>
           </div>
           <div className="flex flex-col gap-1.5 items-center md:items-start">
-            <h3 className="text-18 md:text-22 text-gray-900 font-semibold">{StudentData.name}</h3>
+            <h3 className="text-18 md:text-22 text-gray-900 font-semibold">{student.name}</h3>
             <div className="flex items-center gap-2 text-16 text-gray-600 font-medium">
-              <span>{StudentData.department}</span>
+              <span>학과이름</span>
               <Dot />
-              <span>{StudentData.en_name}</span>
+              <span>{student.name_en}</span>
             </div>
           </div>
         </div>
@@ -66,35 +88,35 @@ export default function GraduateDepartmentPage() {
                 <User />
                 <span>담당자</span>
               </dt>
-              <dd className="text-gray-900">{StudentData.name}</dd>
+              {/* <dd className="text-gray-900">{StudentData.name}</dd> */}
             </div>
             <div className="flex justify-start items-center gap-2 text-18 font-medium">
               <dt className="flex items-center gap-2 text-gray-600 w-26 md:w-36">
                 <Mail />
                 <span>이메일</span>
               </dt>
-              <dd className="text-gray-900">{StudentData.email}</dd>
+              {/* <dd className="text-gray-900">{StudentData.email}</dd> */}
             </div>
             <div className="flex justify-start items-center gap-2 text-18 font-medium">
               <dt className="flex items-center gap-2 text-gray-600 w-26 md:w-36">
                 <Phone />
                 <span>전화번호</span>
               </dt>
-              <dd className="text-gray-900">{StudentData.phone}</dd>
+              {/* <dd className="text-gray-900">{StudentData.phone}</dd> */}
             </div>
             <div className="flex justify-start items-center gap-2 text-18 font-medium">
               <dt className="flex items-center gap-2 text-gray-600 w-26 md:w-36">
                 <Calendar />
                 <span>생성일</span>
               </dt>
-              <dd className="text-gray-900">{StudentData.created}</dd>
+              <dd className="text-gray-900">{student.created_at.slice(0, 10)}</dd>
             </div>
             <div className="flex justify-start items-center gap-2 text-18 font-medium">
               <dt className="flex items-center gap-2 text-gray-600 w-26 md:w-36">
                 <Calendar />
                 <span>수정일</span>
               </dt>
-              <dd className="text-gray-900">{StudentData.updated}</dd>
+              <dd className="text-gray-900">{student.updated_at.slice(0, 10)}</dd>
             </div>
           </dl>
         </div>
