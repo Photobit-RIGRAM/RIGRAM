@@ -4,20 +4,16 @@ import Card from '@/components/card';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function GraduatePage() {
+  const pathname = usePathname();
   const school = useSchoolStore((state) => state.school);
   const colleges = useCollegeStore((state) => state.colleges);
   const fetchColleges = useCollegeStore((state) => state.fetchColleges);
   const departments = useDepartmentStore((state) => state.departments);
   const fetchDepartments = useDepartmentStore((state) => state.fetchDepartments);
-  const slugify = (text: string) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\W-]+/g, '-');
-  const schoolId = slugify(school?.school_en_name ?? '');
   const school_id = school?.id;
 
   useEffect(() => {
@@ -37,15 +33,18 @@ export default function GraduatePage() {
         추가할 졸업생의 학과를 선택하세요.
       </h2>
       <div className="grid grid-col-1 gap-4 flex-1 h-full overflow-y-auto scrollbar-hide md:grid-cols-3 md:gap-6 md:max-h-[700px]">
-        {departments.map((dept) => (
-          <Card
-            key={dept.id}
-            title={dept.name}
-            subTitle={dept.name_en}
-            imgSrc={dept.img_url || undefined}
-            href={`/${schoolId}/graduate/${dept.id}`}
-          />
-        ))}
+        {departments
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, 'ko'))
+          .map((dept) => (
+            <Card
+              key={dept.id}
+              title={dept.name}
+              subTitle={dept.name_en}
+              imgSrc={dept.img_url || undefined}
+              href={`${pathname}/${dept.id}`}
+            />
+          ))}
       </div>
     </section>
   );
