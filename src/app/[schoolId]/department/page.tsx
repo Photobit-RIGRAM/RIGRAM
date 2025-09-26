@@ -6,20 +6,16 @@ import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import { Plus } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function DepartmentPage() {
+  const pathname = usePathname();
   const school = useSchoolStore((state) => state.school);
   const colleges = useCollegeStore((state) => state.colleges);
   const fetchColleges = useCollegeStore((state) => state.fetchColleges);
   const departments = useDepartmentStore((state) => state.departments);
   const fetchDepartments = useDepartmentStore((state) => state.fetchDepartments);
-  const slugify = (text: string) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\W-]+/g, '-');
-  const schoolId = slugify(school?.school_en_name ?? '');
   const school_id = school?.id;
 
   useEffect(() => {
@@ -40,7 +36,7 @@ export default function DepartmentPage() {
         <h2 className="text-20 font-semibold text-gray-900 md:text-24 md:font-bold">학과 리스트</h2>
         <Button
           className="flex items-center gap-1 px-3 py-2 text-16 text-primary-700 font-semibold"
-          href={`/${schoolId}/department/add`}
+          href={`/${pathname}/add`}
         >
           <Plus className="w-4 h-4" />
           학과 추가하기
@@ -56,10 +52,10 @@ export default function DepartmentPage() {
               title={dept.name}
               subTitle={dept.name_en}
               imgSrc={dept.img_url || undefined}
-              href={`/${schoolId}/department/${dept.id}`}
+              href={`${pathname}/${dept.id}`}
             />
           ))}
-        <Card variant="add" href={`/${schoolId}/department/add`} />
+        <Card variant="add" href={`${pathname}/add`} />
       </div>
     </section>
   );
