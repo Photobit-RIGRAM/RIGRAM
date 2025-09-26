@@ -8,14 +8,15 @@ import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
 import Textarea from '@/components/textarea';
 import { useCollegeStore } from '@/store/useCollegeStore';
-// import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 export default function DepartmentAddPage() {
-  // const [collegeId, setCollegeId] = useState('');
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
   const [collegeName, setCollegeName] = useState('');
   const [deptName, setDeptName] = useState('');
   const [deptNameEn, setDeptNameEn] = useState('');
@@ -23,7 +24,6 @@ export default function DepartmentAddPage() {
   const [deptDesc, setDeptDesc] = useState('');
   const schoolId = useSchoolStore((state) => state.school?.id);
   const addCollege = useCollegeStore((state) => state.addCollege);
-  // const addDepartment = useDepartmentStore((state) => state.addDepartment);
 
   const handleFileSelect = (file: File | null) => {
     if (!file) return;
@@ -37,37 +37,31 @@ export default function DepartmentAddPage() {
     }
 
     try {
-      // 1. 사용자 인증 확인
+      //사용자 인증 확인
       const {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
-      console.log('Current user:', user);
-      console.log('User ID:', user?.id);
-      console.log('Auth error:', authError);
 
       if (!user) {
         alert('사용자 인증이 필요합니다.');
         return;
       }
 
-      // 2. 단과대학 생성
-      console.log('Creating college...');
+      // 단과대학 생성
       const newCollege = await addCollege(schoolId, collegeName);
-      console.log('Created/Found college:', newCollege);
 
       if (!newCollege || !newCollege.id) {
         alert('단과대학 생성 실패');
         return;
       }
 
-      // 3. 이미지 업로드 처리
+      // 이미지 업로드 처리
       let logoUrl: string | null = null;
       if (imgUrl instanceof File) {
-        console.log('Uploading image...');
-        const fileExt = imgUrl.name.split('.').pop();
-        const fileName = deptNameEn || 'default-department';
-        const filePath = `school-dept/${fileName}.${fileExt}`;
+        const schoolName = segments[0];
+        const fileName = imgUrl.name;
+        const filePath = `${schoolName}/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('dept-img')
@@ -80,22 +74,10 @@ export default function DepartmentAddPage() {
 
         const { data: urlData } = supabase.storage.from('dept-img').getPublicUrl(filePath);
         logoUrl = urlData.publicUrl;
-        console.log('Uploaded image URL:', logoUrl);
       } else if (typeof imgUrl === 'string') {
         logoUrl = imgUrl;
       }
 
-      // 4. 학과 추가 - 직접 삽입으로 테스트
-      console.log('Adding department directly...');
-      console.log('Department data:', {
-        college_id: newCollege.id,
-        name: deptName,
-        name_en: deptNameEn,
-        desc: deptDesc,
-        img_url: logoUrl,
-      });
-
-      // addDepartment 함수 대신 직접 삽입해보기
       const { error: directInsertError } = await supabase
         .from('departments')
         .insert([
