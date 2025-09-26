@@ -25,6 +25,10 @@ interface DepartmentsState {
     desc: string,
     img_url: string | null
   ) => Promise<void>;
+  updateDepartment: (
+    id: string,
+    updates: Partial<Omit<Department, 'id' | 'created_at'>>
+  ) => Promise<Department | null>;
   deleteDepartment: (id: string) => Promise<boolean>;
 }
 
@@ -97,6 +101,30 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
         return { departments: [...state.departments, data] };
       });
     }
+  },
+  // 학과 수정하기(update)
+  updateDepartment: async (id: string, updates: Partial<Department>) => {
+    const { data, error } = await supabase
+      .from('departments')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      set({ error: error.message });
+      return null;
+    }
+
+    if (data) {
+      set((state) => ({
+        departments: state.departments.map((dept) =>
+          dept.id === id ? { ...dept, ...data } : dept
+        ),
+      }));
+      return data;
+    }
+    return null;
   },
   // 학과 삭제하기(delete)
   deleteDepartment: async (id) => {
