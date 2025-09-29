@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/button';
+import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useStudentStore } from '@/store/useStudentStore';
 import { ArrowLeft, Calendar, Dot, Mail, Phone, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -10,8 +11,11 @@ import { useEffect } from 'react';
 export default function GraduateDepartmentPage() {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
+  const deptId = segments[2];
   const studentId = segments[3];
   const { student, fetchStudentById, isLoading, error } = useStudentStore();
+  const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
+  const departments = useDepartmentStore((state) => state.departments);
   const router = useRouter();
   const handleGoBack = () => {
     router.back();
@@ -20,8 +24,11 @@ export default function GraduateDepartmentPage() {
   useEffect(() => {
     if (studentId) {
       fetchStudentById(studentId);
+      fetchDepartmentById(deptId);
     }
   }, []);
+
+  const department = departments.find((d) => d.id === deptId);
 
   // 로딩 중일 때
   if (isLoading) {
@@ -74,7 +81,7 @@ export default function GraduateDepartmentPage() {
           <div className="flex flex-col gap-1.5 items-center md:items-start">
             <h3 className="text-18 md:text-22 text-gray-900 font-semibold">{student.name}</h3>
             <div className="flex items-center gap-2 text-16 text-gray-600 font-medium">
-              <span>학과이름</span>
+              <span>{department?.name}</span>
               <Dot />
               <span>{student.name_en}</span>
             </div>
