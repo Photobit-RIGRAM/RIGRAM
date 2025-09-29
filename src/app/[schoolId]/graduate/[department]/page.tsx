@@ -18,6 +18,7 @@ export default function GraduateDepartmentStudentList() {
   const [deptName, setDeptName] = useState<string | null>(null);
   const [searchable, setSearchable] = useState(false);
   const [keyword, setKeyword] = useState('');
+  const [isSorted, setIsSorted] = useState(false);
 
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const { students, fetchStudents, isLoading } = useStudentStore();
@@ -43,17 +44,29 @@ export default function GraduateDepartmentStudentList() {
     router.push(`${pathname}/${id}`);
   };
 
-  const handleListFilter = () => {};
+  const handleListFilter = () => {
+    setIsSorted((prev) => !prev);
+  };
 
   const handleSearch = () => {
     setSearchable(!searchable);
   };
 
   const filteredStudents = useMemo(() => {
-    if (!keyword.trim()) return students;
+    let list = students.slice();
 
-    return students.filter((s) => s.name.toLowerCase().includes(keyword.toLowerCase()));
-  }, [students, keyword]);
+    // 검색
+    if (keyword.trim()) {
+      list = list.filter((s) => s.name.toLowerCase().includes(keyword.toLowerCase()));
+    }
+
+    // 정렬
+    if (isSorted) {
+      list.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ko'));
+    }
+
+    return list;
+  }, [students, keyword, isSorted]);
 
   return (
     <section className="relative w-full h-full bg-white border border-border p-5 rounded-xl shadow-dropdown md:p-10">
@@ -68,10 +81,9 @@ export default function GraduateDepartmentStudentList() {
           <h3 className="text-18 md:text-20 font-semibold">졸업생 리스트</h3>
           <div className="flex items-center gap-2 md:gap-6">
             <div className="flex items-center gap-2 text-gray-600 md:gap-4">
-              <ListFilter
-                className="hover:cursor-pointer hover:font-bold focus:font-bold active:font-bold"
-                onClick={handleListFilter}
-              />
+              <Button onClick={handleListFilter}>
+                <ListFilter className="hover:cursor-pointer hover:font-bold focus:font-bold active:font-bold" />
+              </Button>
               {searchable ? (
                 <Input
                   purpose="text"
@@ -80,10 +92,9 @@ export default function GraduateDepartmentStudentList() {
                   placeholder="이름 검색"
                 />
               ) : null}
-              <Search
-                className="hover:cursor-pointer hover:font-bold focus:font-bold active:font-bold"
-                onClick={handleSearch}
-              />
+              <Button onClick={handleSearch}>
+                <Search className="hover:cursor-pointer hover:font-bold focus:font-bold active:font-bold" />
+              </Button>
             </div>
             <Button
               className="text-white bg-primary-700 text-16 rounded-lg px-3 py-2 hover:font-bold focus:font-bold active:font-bold"
