@@ -36,16 +36,16 @@ export default function LoginPage() {
 
       const { data: users, error: usersError } = await supabase
         .from('users')
-        .select('school_id')
+        .select('id')
         .eq('id', currentUser.id)
         .single();
 
       if (usersError) throw usersError;
 
-      if (!users?.school_id) {
+      if (!users?.id) {
         router.push('/school-register');
       } else {
-        router.push(`${users.school_id}`);
+        router.push(`${users.id}`);
       }
     } catch (error: unknown) {
       console.error(error);

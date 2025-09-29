@@ -15,7 +15,6 @@ export default function GraduateDepartmentStudentList() {
   const [deptName, setDeptName] = useState<string | null>(null);
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  // const schoolId = segments[0];
   const departmentId = segments[2];
   const fetchCollegeById = useCollegeStore((state) => state.fetchCollegeById);
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
@@ -58,7 +57,10 @@ export default function GraduateDepartmentStudentList() {
               <ListFilter className="hover:cursor-pointer hover:font-bold focus:font-bold active:font-bold" />
               <Search className="hover:cursor-pointer hover:font-bold focus:font-bold active:font-bold" />
             </div>
-            <Button className="text-white bg-primary-700 text-16 rounded-lg px-3 py-2 hover:font-bold focus:font-bold active:font-bold">
+            <Button
+              className="text-white bg-primary-700 text-16 rounded-lg px-3 py-2 hover:font-bold focus:font-bold active:font-bold"
+              href={`${pathname}/add`}
+            >
               졸업생 추가하기
             </Button>
           </div>

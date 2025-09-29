@@ -5,6 +5,7 @@ import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Calendar, GraduationCap, Mail, PencilLine, Phone, User } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 const MENU_LIST = [
@@ -39,16 +40,11 @@ const MENU_LIST = [
 ];
 
 export default function SchoolMainPage() {
+  const pathname = usePathname();
   const fetchSchool = useSchoolStore((state) => state.fetchSchool);
   // const isLoading = useSchoolStore((state) => state.isLoading);
   const school = useSchoolStore((state) => state.school);
-
-  const slugify = (text: string) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\W-]+/g, '-');
-  const schoolId = slugify(school?.school_en_name ?? '');
+  const schoolId = school?.id;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +55,7 @@ export default function SchoolMainPage() {
       if (user) {
         fetchSchool(user.id);
       } else {
-        console.log('로그인이 되지 않았습니다. 다시 한 번 확인해 주세요.');
+        console.error('로그인이 되지 않았습니다. 다시 한 번 확인해 주세요.');
       }
     };
 
@@ -158,7 +154,7 @@ export default function SchoolMainPage() {
       <div className="w-full md:w-[532px] h-full flex flex-col gap-4 md:grid md:grid-cols-2 justify-center items-center">
         {MENU_LIST.map((menu) => (
           <Link
-            href={`/${schoolId}/${menu.url}`}
+            href={`${pathname}/${menu.url}`}
             key={menu.id}
             className="w-full flex flex-row justify-center gap-4 md:flex-col items-center md:gap-12 bg-primary-200 px-6 py-6 md:py-21 shadow-dropdown rounded-xl hover:bg-primary-300 focus:bg-primary-300 focus:outline-primary-700 active:bg-primary-300 active:outline-primary-700"
           >

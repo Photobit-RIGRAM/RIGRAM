@@ -13,12 +13,6 @@ import { Asterisk, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const slugify = (text: string) =>
-  text
-    .toLowerCase()
-    .trim()
-    .replace(/[\s\W-]+/g, '-');
-
 export default function SchoolAddPage() {
   const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
   const GO_NEXT_STEP = () => setCurrentStep('admin');
@@ -75,9 +69,6 @@ export default function SchoolAddPage() {
         logoUrl = schoolLogo;
       }
 
-      const baseSlug = slugify(schoolNameEn);
-      const schoolId = `${baseSlug}`;
-
       await addSchool(
         {
           school_name: schoolName,
@@ -91,16 +82,8 @@ export default function SchoolAddPage() {
         user.id
       );
 
-      const { error: usersError } = await supabase
-        .from('users')
-        .update({
-          school_id: schoolId,
-        })
-        .eq('id', user.id);
-      if (usersError) throw usersError;
-
       alert('학교 추가를 했습니다. 메인 페이지로 이동합니다.');
-      router.push(`/${schoolId}`);
+      router.push(`/${user.id}`);
     } catch (error) {
       console.error(error);
       alert('학교 추가에 실패했습니다.');
