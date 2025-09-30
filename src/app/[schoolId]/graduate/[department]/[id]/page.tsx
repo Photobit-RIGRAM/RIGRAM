@@ -3,7 +3,7 @@
 import Button from '@/components/button';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useStudentStore } from '@/store/useStudentStore';
-import { ArrowLeft, Calendar, Dot, Mail, Phone, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Dot, Mail, PencilLine, Phone, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -46,7 +46,7 @@ export default function GraduateDepartmentPage() {
   }
 
   return (
-    <section className="relative w-full h-full border border-border rounded-xl shadow-dropdown">
+    <section className="relative w-full h-full border border-border rounded-xl shadow-dropdown overflow-hidden">
       <div className="z-10 px-5 pt-5 relative mb-4 md:absolute md:left-0 md:top-0 md:transform md:-translate-y-12 flex justify-start items-center gap-1 text-gray-900 md:px-0 md:pt-0">
         <Button onClick={handleGoBack}>
           <ArrowLeft className="w-8 h-8" />
@@ -55,13 +55,13 @@ export default function GraduateDepartmentPage() {
       </div>
       <div className="absolute top-0 right-0 left-0 h-40 z-0">
         <img
-          src="https://cdn.pixabay.com/photo/2025/08/09/16/51/wildlife-9764923_1280.jpg"
-          alt="학과대표이미지"
+          src={department?.img_url ?? ''}
+          alt={`${department?.name} 학과대표이미지`}
           className="w-full h-full object-cover"
         />
       </div>
       <div className="relative flex flex-col gap-10 justify-start items-start w-full h-full pt-10 px-5 md:px-10 md:pt-35">
-        <div className="flex flex-col justify-center items-center gap-2 w-full md:gap-4 md:justify-start md:items-end md:flex-row">
+        <div className="relative flex flex-col justify-center items-center gap-2 w-full md:gap-4 md:justify-start md:items-end md:flex-row">
           <div className="flex justify-start items-center gap-1">
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
               <img
@@ -85,6 +85,12 @@ export default function GraduateDepartmentPage() {
               <Dot />
               <span>{student.name_en}</span>
             </div>
+          </div>
+          <div className="relative md:absolute md:top-8 md:right-0">
+            <Button className="flex items-center gap-1 text-gray-600" href={`${pathname}/edit`}>
+              <PencilLine className="w-4 h-4" />
+              <span>졸업생 수정하기</span>
+            </Button>
           </div>
         </div>
         <div className="flex flex-col gap-8">
