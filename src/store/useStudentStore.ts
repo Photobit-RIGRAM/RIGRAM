@@ -18,6 +18,10 @@ interface StudentsState {
     profile_graduate: string | null
     // graduation_year: number,
   ) => Promise<void>;
+  updateStudentProfile: (
+    studentId: string,
+    updates: Partial<Omit<Student, 'id' | 'created_at'>>
+  ) => Promise<Student | null>;
 }
 
 export const useStudentStore = create<StudentsState>((set) => ({
@@ -55,11 +59,13 @@ export const useStudentStore = create<StudentsState>((set) => ({
 
     if (error) {
       set({ isLoading: false, error: error.message });
+      return null;
     } else {
       set({ student: data, isLoading: false });
+      return data;
     }
   },
-
+  // student profile 추가
   addStudentProfile: async (
     schoolId,
     deptId,
@@ -92,5 +98,29 @@ export const useStudentStore = create<StudentsState>((set) => ({
         isLoading: false,
       }));
     }
+  },
+  // student의 id를 사용한 내용 업데이트
+  updateStudentProfile: async (studentId: string, updates: Partial<Student>) => {
+    const { data, error } = await supabase
+      .from('students')
+      .update(updates)
+      .eq('id', studentId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('학생 프로필을 수정하던 중 오류 발생:', error);
+      set({ isLoading: false, error: error.message });
+      return null;
+    }
+    if (data) {
+      set((state) => ({
+        students: state.students.map((student) =>
+          student.id === studentId ? { ...student, ...data } : student
+        ),
+      }));
+      return data;
+    }
+    return null;
   },
 }));
