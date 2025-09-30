@@ -3,7 +3,7 @@
 import Button from '@/components/button';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useStudentStore } from '@/store/useStudentStore';
-import { ArrowLeft, Calendar, Dot, Mail, PencilLine, Phone, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Dot, Mail, PencilLine, Phone, Trash, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ export default function GraduateDepartmentPage() {
   const segments = pathname.split('/').filter(Boolean);
   const deptId = segments[2];
   const studentId = segments[3];
-  const { student, fetchStudentById, isLoading, error } = useStudentStore();
+  const { student, fetchStudentById, isLoading, error, deleteStudentProfile } = useStudentStore();
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const departments = useDepartmentStore((state) => state.departments);
   const router = useRouter();
@@ -29,6 +29,16 @@ export default function GraduateDepartmentPage() {
   }, []);
 
   const department = departments.find((d) => d.id === deptId);
+
+  const handleGraduateDelete = async () => {
+    if (confirm(`${student?.name} 졸업생의 정보를 삭제하시겠습니까? `)) {
+      const success = await deleteStudentProfile(studentId);
+      if (success) {
+        alert(`${student?.name} 졸업생의 정보가 삭제되었습니다.`);
+        router.replace(`${pathname.slice(0, pathname.lastIndexOf('/'))}`);
+      }
+    }
+  };
 
   // 로딩 중일 때
   if (isLoading) {
@@ -86,10 +96,14 @@ export default function GraduateDepartmentPage() {
               <span>{student.name_en}</span>
             </div>
           </div>
-          <div className="relative md:absolute md:top-8 md:right-0">
+          <div className="relative md:absolute md:top-8 md:right-0 md:flex md:gap-2">
             <Button className="flex items-center gap-1 text-gray-600" href={`${pathname}/edit`}>
               <PencilLine className="w-4 h-4" />
               <span>졸업생 수정하기</span>
+            </Button>
+            <Button className="flex items-center gap-1 text-red" onClick={handleGraduateDelete}>
+              <Trash className="w-4 h-4" />
+              <span>졸업생 삭제하기</span>
             </Button>
           </div>
         </div>

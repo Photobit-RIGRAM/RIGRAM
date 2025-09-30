@@ -22,6 +22,7 @@ interface StudentsState {
     studentId: string,
     updates: Partial<Omit<Student, 'id' | 'created_at'>>
   ) => Promise<Student | null>;
+  deleteStudentProfile: (studentId: string) => Promise<boolean>;
 }
 
 export const useStudentStore = create<StudentsState>((set) => ({
@@ -122,5 +123,20 @@ export const useStudentStore = create<StudentsState>((set) => ({
       return data;
     }
     return null;
+  },
+  deleteStudentProfile: async (studentId) => {
+    const { error } = await supabase.from('students').delete().eq('id', studentId);
+
+    if (error) {
+      console.error('학생 프로필을 삭제하던 중 오류 발생:', error);
+      set({ isLoading: false, error: error.message });
+      return false;
+    }
+
+    set((state) => ({
+      students: state.students.filter((student) => student.id !== studentId),
+    }));
+
+    return true;
   },
 }));
