@@ -87,7 +87,6 @@ export const useStudentStore = create<StudentsState>((set) => ({
           profile_graduate,
         },
       ])
-      .select()
       .single();
 
     if (error) {
