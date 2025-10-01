@@ -4,9 +4,11 @@ import Card from '@/components/card';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function PhotoDepartmentListPage() {
+  const pathname = usePathname();
   const school = useSchoolStore((state) => state.school);
   const colleges = useCollegeStore((state) => state.colleges);
   const fetchColleges = useCollegeStore((state) => state.fetchColleges);
@@ -43,7 +45,7 @@ export default function PhotoDepartmentListPage() {
             title={dept.name}
             subTitle={dept.name_en}
             imgSrc={dept.img_url || undefined}
-            // href={dept.href}
+            href={`${pathname}/${dept.id}`}
           />
         ))}
       </div>
