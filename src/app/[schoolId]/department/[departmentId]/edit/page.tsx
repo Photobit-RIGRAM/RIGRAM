@@ -97,9 +97,9 @@ export default function DepartmentEditPage() {
       let logoUrl: string | null = null;
 
       if (imgUrl instanceof File) {
-        const schoolName = segments[0];
+        // const schoolName = segments[0];
         const fileName = imgUrl.name;
-        const filePath = `${schoolName}/${fileName}`;
+        const filePath = `${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('dept-img')
