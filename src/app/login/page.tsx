@@ -1,11 +1,59 @@
+'use client';
+
 import logo from '../../../public/images/logo.png';
 import Button from '@/components/button';
 import Checkbox from '@/components/checkbox';
 import Input from '@/components/input';
-import Radio from '@/components/radio';
+import { supabase } from '@/utils/supabase/client';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [role, setRole] = useState<'admin' | 'student'>('admin');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // 로그인 시도
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+
+      // 로그인 성공 시
+      const currentUser = data.user;
+      if (!currentUser) throw new Error('로그인된 유저를 찾을 수 없습니다.');
+
+      const { data: users, error: usersError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', currentUser.id)
+        .single();
+
+      if (usersError) throw usersError;
+
+      if (!users?.id) {
+        router.push('/school-register');
+      } else {
+        router.push(`${users.id}`);
+      }
+    } catch (error: unknown) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <section className="w-full h-full flex flex-col justify-center items-center px-5">
       <div className="w-full md:max-w-[520px]">
@@ -23,14 +71,52 @@ export default function LoginPage() {
           <span className="text-14 md:text-16 px-4 text-gray-400">로그인</span>
           <div className="flex-grow h-px bg-gray-400"></div>
         </div>
-        <form action="" className="flex flex-col gap-4 md:gap-5">
-          <Radio />
+
+        <form action="" className="flex flex-col gap-4 md:gap-5" onSubmit={handleLogin}>
+          <div className="flex gap-4">
+            <label>
+              <input
+                type="radio"
+                name="role"
+                value="admin"
+                checked={role === 'admin'}
+                onChange={() => setRole('admin')}
+              />
+              Admin
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="role"
+                value="student"
+                checked={role === 'student'}
+                onChange={() => setRole('student')}
+              />
+              Student
+            </label>
+          </div>
           <div className="flex flex-col gap-4">
-            <Input purpose="id" />
-            <Input purpose="password" />
+            <Input
+              purpose="id"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              purpose="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <Checkbox purpose="id" />
-          <Button className="w-full bg-gray-900 text-white text-18 py-4 rounded-lg">로그인</Button>
+          <Button
+            type="submit"
+            className="w-full bg-gray-900 text-white text-18 py-4 rounded-lg"
+            disabled={isLoading}
+          >
+            {isLoading ? '로그인 중...' : '로그인'}
+          </Button>
         </form>
       </div>
     </section>

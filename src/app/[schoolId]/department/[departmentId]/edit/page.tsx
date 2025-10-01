@@ -8,60 +8,98 @@ import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
 import Textarea from '@/components/textarea';
 import { useCollegeStore } from '@/store/useCollegeStore';
-import { useSchoolStore } from '@/store/useSchoolStore';
+import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function DepartmentAddPage() {
+export default function DepartmentEditPage() {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
+  const departmentId = segments[2];
   const [collegeName, setCollegeName] = useState('');
   const [deptName, setDeptName] = useState('');
   const [deptNameEn, setDeptNameEn] = useState('');
-  const [imgUrl, setImgUrl] = useState<File | string | null>('');
+  const [imgUrl, setImgUrl] = useState<File | string | null>(null);
+  const [prevImgUrl, setPrevImgUrl] = useState<string | null>(null);
   const [deptDesc, setDeptDesc] = useState('');
-  const schoolId = useSchoolStore((state) => state.school?.id);
-  const addCollege = useCollegeStore((state) => state.addCollege);
+  const updateDepartment = useDepartmentStore((state) => state.updateDepartment);
+  const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
+  const fetchCollegeById = useCollegeStore((state) => state.fetchCollegeById);
 
   const handleFileSelect = (file: File | null) => {
     if (!file) return;
     setImgUrl(file);
   };
 
-  const handleDeptAdd = async () => {
-    if (!schoolId || !collegeName || !deptName) {
-      console.error('Missing required fields');
+  useEffect(() => {
+    const getDepartment = async () => {
+      if (!departmentId) return;
+
+      const department = await fetchDepartmentById(departmentId);
+      if (!department) return;
+
+      const college = await fetchCollegeById(department.college_id);
+      if (department) {
+        setDeptName(department.name);
+        setDeptNameEn(department.name_en);
+        setDeptDesc(department.desc ?? '');
+        setImgUrl(department.img_url ?? null);
+        setPrevImgUrl(department.img_url ?? null);
+        setCollegeName(college ? college.name : '');
+      }
+    };
+
+    getDepartment();
+  }, [departmentId, fetchDepartmentById, fetchCollegeById]);
+
+  const extractFilePathFromUrl = (url: string): string | null => {
+    try {
+      console.log('원본 URL:', url);
+
+      let urlParts = url.split('/storage/v1/object/public/dept-img/');
+
+      if (urlParts.length === 2) {
+        console.log('패턴 1으로 추출된 경로:', urlParts[1]);
+        return urlParts[1];
+      }
+
+      // 패턴 2: /object/public/dept-img/school/file.jpg (상대 경로)
+      urlParts = url.split('/object/public/dept-img/');
+      if (urlParts.length === 2) {
+        console.log('패턴 2로 추출된 경로:', urlParts[1]);
+        return urlParts[1];
+      }
+
+      // 패턴 3: 정규식으로 dept-img 이후 경로 추출
+      const match = url.match(/dept-img\/(.+)$/);
+      if (match) {
+        console.log('정규식으로 추출된 경로:', match[1]);
+        return match[1];
+      }
+
+      console.log('경로 추출 실패');
+      return null;
+    } catch (error) {
+      console.error('URL 파싱 오류:', error);
+      return null;
+    }
+  };
+
+  const handleDeptUpdate = async () => {
+    if (!deptName || !deptNameEn) {
+      alert('필수 입력값이 누락되었습니다.');
       return;
     }
 
     try {
-      //사용자 인증 확인
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        alert('사용자 인증이 필요합니다.');
-        return;
-      }
-
-      // 단과대학 생성
-      const newCollege = await addCollege(schoolId, collegeName);
-
-      if (!newCollege || !newCollege.id) {
-        alert('단과대학 생성 실패');
-        return;
-      }
-
-      // 이미지 업로드 처리
       let logoUrl: string | null = null;
+
       if (imgUrl instanceof File) {
-        const schoolName = segments[0];
+        // const schoolName = segments[0];
         const fileName = imgUrl.name;
-        const filePath = `${schoolName}/${fileName}`;
+        const filePath = `${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('dept-img')
@@ -69,43 +107,57 @@ export default function DepartmentAddPage() {
 
         if (uploadError) {
           console.error('Upload error:', uploadError);
-          throw uploadError;
+          alert('이미지 업로드 실패');
+          return;
         }
 
         const { data: urlData } = supabase.storage.from('dept-img').getPublicUrl(filePath);
         logoUrl = urlData.publicUrl;
+
+        // 기존 이미지가 잇을 경우 storage에서 삭제
+        if (prevImgUrl && prevImgUrl !== logoUrl) {
+          // if (prevImgUrl && prevImgUrl.includes(`/object/public/dept-img/`)) {
+          // const parts = prevImgUrl.split(`/object/public/dept-img`);
+          // let oldFilePath = parts.length > 1 ? parts[1] : null;
+          const oldFilePath = extractFilePathFromUrl(prevImgUrl);
+
+          // if (oldFilePath?.startsWith('/')) {
+          //   oldFilePath = oldFilePath.slice(1);
+          // }
+          console.log('삭제할 oldFilePath:', oldFilePath);
+
+          if (oldFilePath) {
+            console.log('삭제할 oldFilePath:', oldFilePath);
+            const { error: removeError } = await supabase.storage
+              .from('dept-img')
+              .remove([oldFilePath]);
+
+            if (removeError) {
+              console.error('기존 이미지 삭제 실패:', removeError);
+            } else {
+              console.log('기존 이미지 삭제 성공:', oldFilePath);
+            }
+          }
+        }
       } else if (typeof imgUrl === 'string') {
         logoUrl = imgUrl;
       }
 
-      const { error: directInsertError } = await supabase
-        .from('departments')
-        .insert([
-          {
-            college_id: newCollege.id,
-            name: deptName,
-            name_en: deptNameEn,
-            desc: deptDesc,
-            img_url: logoUrl,
-          },
-        ])
-        .select()
-        .single();
+      // 학과 업데이트
+      const updated = await updateDepartment(departmentId, {
+        name: deptName,
+        name_en: deptNameEn,
+        desc: deptDesc,
+        img_url: logoUrl,
+      });
 
-      if (directInsertError) {
-        console.error('Direct insert failed:', directInsertError);
-        alert(`학과 생성 실패: ${directInsertError.message}`);
+      if (!updated) {
+        alert('학과 수정 실패');
         return;
       }
 
-      // 성공시 폼 초기화
-      setCollegeName('');
-      setDeptName('');
-      setDeptNameEn('');
-      setDeptDesc('');
-      setImgUrl('');
-
-      alert('학과가 성공적으로 추가되었습니다!');
+      setPrevImgUrl(logoUrl);
+      alert('학과가 성공적으로 수정되었습니다!');
     } catch (error) {
       console.error('Unexpected error:', error);
       alert(`예상치 못한 오류: ${error}`);
@@ -114,7 +166,7 @@ export default function DepartmentAddPage() {
 
   return (
     <section className="flex flex-col h-full gap-2 md:gap-4">
-      <PageHeader title="학과 추가하기" />
+      <PageHeader title="학과 수정하기" />
       <div className="bg-white w-full h-full p-5 border border-border-section rounded-xl shadow-dropdown md:w-[1080px] md:min-h-[753px] md:p-10">
         <header className="relative flex flex-col justify-start gap-2 md:gap-1">
           <ol className="flex justify-start items-center">
@@ -125,9 +177,9 @@ export default function DepartmentAddPage() {
           <h3 className="text-20 md:text-24 text-gray-900 font-semibold">기본 정보</h3>
           <Button
             className="absolute right-0 bottom-0 text-white bg-primary-700 rounded-lg px-3 py-1.5"
-            onClick={handleDeptAdd}
+            onClick={handleDeptUpdate}
           >
-            추가
+            수정
           </Button>
         </header>
         <Divider gap={6} mdGap={8} />

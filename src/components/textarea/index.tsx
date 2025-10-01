@@ -4,9 +4,17 @@ interface TextareaProps {
   placeholder?: string;
   className?: string;
   value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-export default function Textarea({ id, name, placeholder, value, className }: TextareaProps) {
+export default function Textarea({
+  id,
+  name,
+  placeholder,
+  value,
+  className,
+  onChange,
+}: TextareaProps) {
   return (
     <textarea
       id={id}
@@ -14,6 +22,7 @@ export default function Textarea({ id, name, placeholder, value, className }: Te
       placeholder={placeholder}
       className={`border border-border rounded-lg bg-gray-100 placeholder-gray=500 resize-none ${className || ''}`}
       value={value}
+      onChange={onChange}
     ></textarea>
   );
 }

@@ -1,13 +1,31 @@
 'use client';
 
 import Button from '@/components/button';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
+  const school = useSchoolStore((state) => state.school);
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const handleMenuDrop = () => {
     setIsOpen(!isOpen);
   };
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
+  const schoolId = slugify(school?.school_en_name ?? '');
 
   return (
     <header className="flex flex-row-reverse justify-between items-center w-full min-h-14 bg-gray-100 px-5 shadow-dropdown md:min-h-16 md:px-10">
@@ -25,10 +43,10 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
           className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center bg-white border border-gray-500 rounded-lg overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
         >
           <li className="flex justify-center items-center whitespace-nowrap px-3 py-2 border-b border-b-gray-500 hover:bg-gray-200">
-            <Button href={'/main'}>학교 페이지로 이동</Button>
+            <Button href={`/${schoolId}`}>학교 페이지로 이동</Button>
           </li>
           <li className="flex justify-center items-center w-full px-3 py-2 hover:bg-gray-200">
-            <Button>로그아웃</Button>
+            <Button onClick={handleLogout}>로그아웃</Button>
           </li>
         </ul>
       </div>
@@ -39,8 +57,8 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
             <span className="text-14 md:text-18 text-gray-500 font-medium">관리 중</span>
             <span className="w-1 h-1 rounded-full bg-green" aria-hidden="true"></span>
             <div className="text-14 md:text-18 text-gray-700 font-medium flex items-center gap-1 max-w-[150px] md:max-w-full overflow-hidden">
-              <span className="truncate">인천의이름이엄청나게긴대학교</span>
-              <span className="shrink-0">(졸업연도)</span>
+              <span className="truncate">{school?.school_name}</span>
+              <span className="shrink-0">({school?.graduation_year})</span>
             </div>
           </>
         ) : (
