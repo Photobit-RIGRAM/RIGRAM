@@ -14,12 +14,6 @@ export default function PhotoDepartmentListPage() {
   const fetchColleges = useCollegeStore((state) => state.fetchColleges);
   const departments = useDepartmentStore((state) => state.departments);
   const fetchDepartments = useDepartmentStore((state) => state.fetchDepartments);
-  const slugify = (text: string) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\W-]+/g, '-');
-  const schoolId = slugify(school?.school_en_name ?? '');
   const school_id = school?.id;
 
   useEffect(() => {

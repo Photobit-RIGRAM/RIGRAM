@@ -3,12 +3,13 @@
 import Badge from '@/components/badge';
 import Button from '@/components/button';
 import FileInput from '@/components/fileInput';
+import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useMediaStore } from '@/store/useMediaStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CATEGORY_OPTIONS = [
   { value: 'team', label: '팀' },
@@ -28,13 +29,31 @@ export default function PhotoAddPage() {
   const [category, setCategory] = useState<'team' | 'organization' | 'club' | 'event'>('team');
   const addMedia = useMediaStore((state) => state.addMedia);
   const school = useSchoolStore((state) => state.school);
-  const schoolEnName = school?.school_en_name || '';
-  // const schoolId = school?.school_en_name;
+  const schoolNameEn = school?.school_en_name || '';
+  const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
+  const [deptNameEn, setDeptNameEn] = useState('');
+
+  useEffect(() => {
+    const loadDepartment = async () => {
+      try {
+        const dept = await fetchDepartmentById(departmentId);
+        if (dept?.name_en) {
+          setDeptNameEn(dept.name_en);
+        }
+      } catch (error) {
+        console.error('Department 조회 실패:', error);
+      }
+    };
+
+    if (departmentId) {
+      loadDepartment();
+    }
+  }, [departmentId, fetchDepartmentById]);
 
   /** 파일 업로드 (Supabase Storage) */
   const uploadFile = async (file: File, folder: 'media' | 'thumbnail') => {
     const ext = file.name.split('.').pop();
-    const filePath = `${schoolEnName}/${departmentId}/${folder}/${Date.now()}.${ext}`;
+    const filePath = `${schoolNameEn}/${deptNameEn}/${folder}/${file.name}.${ext}`;
 
     const { error } = await supabase.storage.from('media').upload(filePath, file, { upsert: true });
 
@@ -49,7 +68,6 @@ export default function PhotoAddPage() {
     return data?.publicUrl ?? null;
   };
 
-  /** 최종 추가 */
   const handleAddMedia = async () => {
     if (!mediaFile) {
       alert('사진 또는 동영상을 선택해주세요.');
