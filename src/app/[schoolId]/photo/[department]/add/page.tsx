@@ -52,8 +52,7 @@ export default function PhotoAddPage() {
 
   /** 파일 업로드 (Supabase Storage) */
   const uploadFile = async (file: File, folder: 'media' | 'thumbnail') => {
-    const ext = file.name.split('.').pop();
-    const filePath = `${schoolNameEn}/${deptNameEn}/${folder}/${file.name}.${ext}`;
+    const filePath = `${schoolNameEn}/${deptNameEn}/${folder}/${file.name}`;
 
     const { error } = await supabase.storage.from('media').upload(filePath, file, { upsert: true });
 

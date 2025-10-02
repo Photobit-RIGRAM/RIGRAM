@@ -7,6 +7,7 @@ import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
 import { useStudentStore } from '@/store/useStudentStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
@@ -17,7 +18,6 @@ export default function GraduateEditPage() {
   const pathname = usePathname();
   const router = useRouter();
   const segments = pathname.split('/').filter(Boolean);
-  const schoolId = segments[0];
   const departmentId = segments[2];
   const studentId = segments[3];
   const [studentName, setStudentName] = useState('');
@@ -28,6 +28,8 @@ export default function GraduateEditPage() {
   const { departments, fetchDepartmentById } = useDepartmentStore();
   const department = departments.find((d) => d.id === departmentId);
   const { student, fetchStudentById, updateStudentProfile } = useStudentStore();
+  const school = useSchoolStore((state) => state.school);
+  const schoolNameEn = school?.school_en_name || '';
 
   useEffect(() => {
     if (studentId) {
@@ -64,7 +66,6 @@ export default function GraduateEditPage() {
       let graduationUrl: string | null = null;
 
       // 파일 경로 구성
-      const schoolName = schoolId || 'defaultSchool';
       const departmentName = department?.name_en || 'defaultDept';
       const studentNameSafe = studentNameEn || 'defaultStudent';
 
@@ -72,7 +73,7 @@ export default function GraduateEditPage() {
         const { data, error } = await supabase.storage
           .from('student-profiles')
           .upload(
-            `${schoolName}/${departmentName}/${studentNameSafe}/profile.${profileImg.name.split('.').pop()}`,
+            `${schoolNameEn}/${departmentName}/${studentNameSafe}/profile/${profileImg.name}`,
             profileImg,
             {
               upsert: true,
@@ -91,7 +92,7 @@ export default function GraduateEditPage() {
         const { data, error } = await supabase.storage
           .from('student-profiles')
           .upload(
-            `${schoolName}/${departmentName}/${studentNameSafe}/graduation.${graduationImg.name.split('.').pop()}`,
+            `${schoolNameEn}/${departmentName}/${studentNameSafe}/graduation/${graduationImg.name}`,
             graduationImg,
             { upsert: true }
           );
