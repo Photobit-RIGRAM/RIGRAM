@@ -1,12 +1,10 @@
 'use client';
 
-import logo from '../../../public/images/logo.png';
 import Button from '@/components/button';
 import Checkbox from '@/components/checkbox';
 import Input from '@/components/input';
 import { supabase } from '@/utils/supabase/client';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function LoginPage() {
@@ -23,14 +21,12 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      // 로그인 시도
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      if (error) throw error;
+      if (error) console.error('로그인 중 오류가 발생했습니다. :', error.message);
 
-      // 로그인 성공 시
       const currentUser = data.user;
       if (!currentUser) throw new Error('로그인된 유저를 찾을 수 없습니다.');
 
@@ -39,13 +35,15 @@ export default function LoginPage() {
         .select('id')
         .eq('id', currentUser.id)
         .single();
-
       if (usersError) throw usersError;
 
       if (!users?.id) {
+        // 학교 등록이 안된 경우
         router.push('/school-register');
-      } else {
-        router.push(`${users.id}`);
+      } else if (users?.id) {
+        // 유저가 존재하면 유저 페이지로 이동
+        localStorage.setItem('schoolId', users.id);
+        router.push(`/${users.id}`);
       }
     } catch (error: unknown) {
       console.error(error);
@@ -58,7 +56,7 @@ export default function LoginPage() {
     <section className="w-full h-full flex flex-col justify-center items-center px-5">
       <div className="w-full md:max-w-[520px]">
         <figure className="flex flex-col items-center gap-4 md:gap-7">
-          <Image src={logo} alt="리그램 로고" className="w-16 h-16 md:w-20 md:h-20" />
+          <img src={`/images/logo.png`} alt="리그램 로고" className="w-16 h-16 md:w-20 md:h-20" />
           <figcaption className="flex flex-col items-center gap-1">
             <h3 className="text-28 md:text-32 font-bold text-gray-900 uppercase">
               photobit - rigram

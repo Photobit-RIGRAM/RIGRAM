@@ -7,16 +7,13 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const token = localStorage.getItem('authToken');
-      const schoolId = localStorage.getItem('schoolId');
-      if (token && schoolId) {
-        router.push('/${schoolId}');
-      } else {
-        router.push('/login');
-      }
-    }, 2000);
-    return () => clearTimeout(timer);
+    const schoolId = localStorage.getItem('schoolId');
+    const token = localStorage.getItem('sb-access-token');
+    if (token && schoolId) {
+      router.push(`/${schoolId}`);
+    } else {
+      router.push('/login');
+    }
   }, []);
 
   return (
