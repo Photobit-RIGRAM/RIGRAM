@@ -94,12 +94,12 @@ export default function PhotoListPage() {
 
       {/* 미디어 그리드 */}
       <div className="grid grid-cols-1 gap-1 md:grid-cols-3 md:gap-2 max-h-[500px] w-full">
-        {RENDER_MEDIA.map((media) => {
+        {RENDER_MEDIA.map((media, index) => {
           const isSelected = selectedMediaIds.includes(media?.id);
 
           return (
             <div
-              key={media.id}
+              key={media?.id ?? `media-${index}`}
               className={`relative flex justify-center items-center bg-[#eee] h-[200px] rounded-lg overflow-hidden hover:cursor-pointer
                 ${
                   isDeleteMode
@@ -148,100 +148,4 @@ export default function PhotoListPage() {
       </div>
     </section>
   );
-  // return (
-  //   <section className="relative flex flex-col gap-2 w-full h-full bg-white rounded-xl p-5 overflow-y-scroll scrollbar-hide md:p-6">
-  //     <header className="relative flex justify-between items-center md:px-6 md:py-4">
-  //       <div className="flex flex-col gap-1.5">
-  //         <h3 className="text-16 text-gray-900 font-semibold md:text-20">
-  //           사진 - {currentTab === 'all' ? '전체' : currentTab}
-  //         </h3>
-  //         <span className="flex items-center gap-1 text-14 text-gray-700 font-medium md:text-16">
-  //           <Images />
-  //           {`이미지${RENDER_MEDIA.filter((item) => item?.type === 'photo').length}개, 동영상${RENDER_MEDIA.filter((item) => item?.type === 'video').length}개`}
-  //         </span>
-  //       </div>
-  //       <div className="flex gap-2">
-  //         <Button
-  //           className="bg-gray-800 text-white rounded-full p-1.5 md:p-2.5 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-700"
-  //           href={`${pathname}/add`}
-  //         >
-  //           <ImagePlus />
-  //         </Button>
-  //         <Button
-  //           className="bg-gray-800 text-white rounded-full p-1.5 md:p-2.5 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-700"
-  //           onClick={handleDeleteButton}
-  //         >
-  //           {isDeleteMode ? <Trash /> : <ImageMinus />}
-  //         </Button>
-  //       </div>
-  //     </header>
-
-  //     {/* <div className="grid grid-cols-1 gap-1 md:grid-cols-3 md:gap-2 max-h-[500px] w-full">
-  //       {RENDER_MEDIA.map((media) => (
-  //         // const isSelected = selectedMediaIds.includes(media.id);
-  //         <div
-  //           key={media.id}
-  //           className="relative flex justify-center items-center bg-[#eee] h-[200px] rounded-lg overflow-hidden hover:cursor-pointer hover:scale-105 hover:opacity-70"
-  //           onClick={() => setSelectedMedia(media)}
-  //         >
-  //           {media?.type === 'video' ? (
-  //             <video preload="none" poster={media.video_thumbnail || '/default-thumbnail.jpg'}>
-  //               <source src={media?.url} type="video/mp4" />
-  //             </video>
-  //           ) : (
-  //             <img src={media?.url} alt="" className="w-full h-full object-cover" />
-  //           )}
-  //           {media?.type === 'video' && (
-  //             <div className="absolute flex justify-center items-center w-[84px] h-[84px] bg-[#51515D] text-white opacity-60 rounded-full">
-  //               <Play />
-  //             </div>
-  //           )}
-  //         </div>
-  //       ))}
-  //     </div> */}
-  //     <div className="grid grid-cols-1 gap-1 md:grid-cols-3 md:gap-2 max-h-[500px] w-full">
-  //       {RENDER_MEDIA.map((media) => {
-  //         const isSelected = selectedMediaIds.includes(media.id);
-  //         return (
-  //           <div
-  //             key={media.id}
-  //             className={`relative flex justify-center items-center bg-[#eee] h-[200px] rounded-lg overflow-hidden hover:cursor-pointer ${
-  //               isDeleteMode
-  //                 ? isSelected
-  //                   ? 'ring-4 ring-red-500'
-  //                   : 'hover:opacity-70'
-  //                 : 'hover:scale-105 hover:opacity-70'
-  //             }`}
-  //             onClick={() => (isDeleteMode ? toggleSelect(media.id) : setSelectedMedia(media))}
-  //           >
-  //             {media?.type === 'video' ? (
-  //               <video preload="none" poster={media.video_thumbnail || '/default-thumbnail.jpg'}>
-  //                 <source src={media?.url} type="video/mp4" />
-  //               </video>
-  //             ) : (
-  //               <img src={media?.url} alt="" className="w-full h-full object-cover" />
-  //             )}
-  //             {media?.type === 'video' && !isDeleteMode && (
-  //               <div className="absolute flex justify-center items-center w-[84px] h-[84px] bg-[#51515D] text-white opacity-60 rounded-full">
-  //                 <Play />
-  //               </div>
-  //             )}
-  //             {isDeleteMode && (
-  //               <div
-  //                 className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 ${
-  //                   isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'
-  //                 }`}
-  //               />
-  //             )}
-  //           </div>
-  //         );
-  //       })}
-  //     </div>
-
-  //     <OverlayViewer media={selectedMedia} onClose={() => setSelectedMedia(null)} />
-  //     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 min-w-fit">
-  //       <BottomTab purpose="organization" />
-  //     </div>
-  //   </section>
-  // );
 }

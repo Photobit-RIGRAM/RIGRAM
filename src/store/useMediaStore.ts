@@ -59,7 +59,6 @@ export const useMediaStore = create<MediaState>((set) => ({
         mediaList: [data, ...state.mediaList],
         isLoading: false,
       }));
-      alert('사진 또는 동영상이 성공적으로 추가되었습니다.');
     }
   },
   deleteMedia: async (departmentId, mediaId) => {
