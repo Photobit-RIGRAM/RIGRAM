@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -8,8 +9,8 @@ export default function Home() {
 
   useEffect(() => {
     const schoolId = localStorage.getItem('schoolId');
-    const token = localStorage.getItem('sb-access-token');
-    if (token && schoolId) {
+
+    if (schoolId) {
       router.push(`/${schoolId}`);
     } else {
       router.push('/login');
