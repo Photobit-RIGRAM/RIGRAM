@@ -1,0 +1,51 @@
+'use client';
+
+import Card from '@/components/card';
+import { useCollegeStore } from '@/store/useCollegeStore';
+import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
+import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+
+export default function GraduatePage() {
+  const pathname = usePathname();
+  const school = useSchoolStore((state) => state.school);
+  const colleges = useCollegeStore((state) => state.colleges);
+  const fetchColleges = useCollegeStore((state) => state.fetchColleges);
+  const departments = useDepartmentStore((state) => state.departments);
+  const fetchDepartments = useDepartmentStore((state) => state.fetchDepartments);
+  const school_id = school?.id;
+
+  useEffect(() => {
+    if (!school_id) return;
+    fetchColleges(school_id);
+  }, [school_id, fetchColleges]);
+
+  useEffect(() => {
+    colleges.forEach((college) => {
+      fetchDepartments(college.id);
+    });
+  }, [colleges, fetchDepartments]);
+
+  return (
+    <section className="flex flex-col gap-4 w-full h-full bg-white rounded-xl p-5 md:p-6">
+      <h2 className="text-20 font-semibold md:text-24 md:font-bold">
+        추가할 졸업생의 학과를 선택하세요.
+      </h2>
+      <div className="grid grid-col-1 gap-4 flex-1 h-full overflow-y-auto scrollbar-hide md:grid-cols-3 md:gap-6 md:max-h-[700px]">
+        {departments
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, 'ko'))
+          .map((dept) => (
+            <Card
+              key={dept.id}
+              title={dept.name}
+              subTitle={dept.name_en}
+              imgSrc={dept.img_url || undefined}
+              href={`${pathname}/${dept.id}`}
+            />
+          ))}
+      </div>
+    </section>
+  );
+}
