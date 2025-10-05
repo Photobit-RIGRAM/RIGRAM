@@ -20,16 +20,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isLogin = useAuthStore((state) => state.isLogin);
-  const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
   const fetchUser = useAuthStore((state) => state.fetchUser);
 
   useEffect(() => {
-    // 앱 첫 로드 시 로그인 상태 확인
     fetchUser();
 
-    // 로그인/로그아웃 이벤트 구독
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
