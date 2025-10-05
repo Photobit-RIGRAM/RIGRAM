@@ -5,6 +5,7 @@ import Button from '@/components/button';
 import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
 import { useStudentStore } from '@/store/useStudentStore';
 import { supabase } from '@/utils/supabase/client';
 import { ArrowLeft, Asterisk } from 'lucide-react';
@@ -25,12 +26,16 @@ export default function GraduateAddPage() {
   const [graduationImg, setGraduationImg] = useState<File | null>(null);
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const addStudentProfile = useStudentStore((state) => state.addStudentProfile);
+  const school = useSchoolStore((state) => state.school);
+  const schoolNameEn = school?.school_en_name || '';
+  const [deptNameEn, setDeptNameEn] = useState('');
 
   useEffect(() => {
     if (currentDeptId) {
       fetchDepartmentById(currentDeptId).then((dept) => {
         if (dept?.name) {
           setDeptName(dept.name);
+          setDeptNameEn(dept.name_en);
         }
       });
     }
@@ -49,7 +54,7 @@ export default function GraduateAddPage() {
   };
 
   const uploadImage = async (file: File, folder: string) => {
-    const filePath = `${folder}/${file.name}`;
+    const filePath = `${schoolNameEn}/${deptNameEn}/${studentNameEn}/${folder}/${file.name}`;
     const { data, error } = await supabase.storage.from('student-profiles').upload(filePath, file);
 
     if (error) {

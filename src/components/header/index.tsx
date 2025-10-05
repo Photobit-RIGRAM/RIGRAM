@@ -24,6 +24,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('schoolId');
     logout();
     router.push('/login');
     setIsOpen(false);
@@ -68,7 +69,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
             </li>
           )}
           <li
-            className="flex justify-center items-center w-full px-1.5 py-1 text-14 hover:bg-gray-200 md:px-3 md:py-2 md:text-16"
+            className="flex justify-center items-center whitespace-nowrap px-1.5 py-1 text-14 hover:bg-gray-200 md:px-3 md:py-2 md:text-16"
             role="menuitem"
           >
             <Button onClick={handleLogout}>로그아웃</Button>

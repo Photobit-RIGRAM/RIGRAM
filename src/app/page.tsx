@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -7,16 +8,13 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const token = localStorage.getItem('authToken');
-      const schoolId = localStorage.getItem('schoolId');
-      if (token && schoolId) {
-        router.push('/${schoolId}');
-      } else {
-        router.push('/login');
-      }
-    }, 2000);
-    return () => clearTimeout(timer);
+    const schoolId = localStorage.getItem('schoolId');
+
+    if (schoolId) {
+      router.push(`/${schoolId}`);
+    } else {
+      router.push('/login');
+    }
   }, []);
 
   return (
