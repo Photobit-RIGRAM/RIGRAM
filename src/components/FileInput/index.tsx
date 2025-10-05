@@ -13,7 +13,7 @@ interface FileInputProps {
   size?: 'sm' | 'lg';
 }
 
-export default function FileInput({
+export default function fileInput({
   id = 'fileInput',
   name = 'fileInput',
   accept = 'image/*, video/*',
