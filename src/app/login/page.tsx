@@ -4,13 +4,13 @@ import Button from '@/components/button';
 import Checkbox from '@/components/checkbox';
 import Input from '@/components/input';
 import { supabase } from '@/utils/supabase/client';
-import { notFound, useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [role, setRole] = useState<'admin' | 'student'>('admin');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -18,7 +18,6 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -56,7 +55,9 @@ export default function LoginPage() {
     <section className="w-full h-full flex flex-col justify-center items-center px-5">
       <div className="w-full md:max-w-[520px]">
         <figure className="flex flex-col items-center gap-4 md:gap-7">
-          <img src={`/images/logo.png`} alt="리그램 로고" className="w-16 h-16 md:w-20 md:h-20" />
+          <div className="relative w-16 h-16 md:w-20 md:h-20">
+            <Image src={`/images/logo.png`} alt="리그램 로고" className="object-contain" />
+          </div>
           <figcaption className="flex flex-col items-center gap-1">
             <h3 className="text-28 md:text-32 font-bold text-gray-900 uppercase">
               photobit - rigram

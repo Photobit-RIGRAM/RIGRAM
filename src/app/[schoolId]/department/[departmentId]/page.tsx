@@ -5,6 +5,7 @@ import PageHeader from '@/components/pageHeader';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { Calendar, GraduationCap, PencilLine, Tag, Trash } from 'lucide-react';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -100,11 +101,13 @@ export default function DepartmentDetail() {
         </header>
         {department.img_url && (
           <div className="mb-6 md:mb-15">
-            <img
-              src={department.img_url}
-              alt={`${department.name} 대표 이미지`}
-              className="w-full h-[200px] md:h-[280px] object-cover rounded-xl"
-            />
+            <div className="relative w-full h-[200px] md:h-[280px] rounded-xl">
+              <Image
+                src={department.img_url}
+                alt={`${department.name} 대표 이미지`}
+                className="object-cover"
+              />
+            </div>
           </div>
         )}
         <dl className="flex flex-col gap-5">

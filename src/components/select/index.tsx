@@ -18,7 +18,7 @@ interface SelectProps {
 export default function Select({
   purpose,
   id,
-  name,
+  // name,
   label,
   defaultValue,
   labelClass,

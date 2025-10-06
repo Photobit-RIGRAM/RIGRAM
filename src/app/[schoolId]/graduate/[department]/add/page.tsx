@@ -57,6 +57,10 @@ export default function GraduateAddPage() {
     const filePath = `${schoolNameEn}/${deptNameEn}/${studentNameEn}/${folder}/${file.name}`;
     const { data, error } = await supabase.storage.from('student-profiles').upload(filePath, file);
 
+    if (!data) {
+      console.log(data);
+    }
+
     if (error) {
       console.error('이미지 업로드 실패:', error.message);
       return null;

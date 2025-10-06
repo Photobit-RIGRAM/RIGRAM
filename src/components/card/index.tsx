@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface CardProps {
@@ -29,7 +30,13 @@ export default function Card({ href, title, subTitle, imgSrc, variant = 'default
       href={href || '#'}
       className="flex flex-row md:flex-col h-40 md:h-64 w-full rounded-xl border border-gray-300 shadow-dropdown overflow-hidden hover:font-bold hover:border-gray-500 focus:font-bold focus:border-gray-500 active:font-bold active:border-gray-500"
     >
-      <img src={imgSrc} alt={title} className="w-1/2 md:w-full md:h-40 object-cover" />
+      <div className="relative w-1/2 md:w-full md:h-40">
+        <Image
+          src={imgSrc || '/images/default-dept.png'}
+          alt={title || ''}
+          className="object-cover"
+        />
+      </div>
       <div className="flex flex-col gap-1 px-5 py-4">
         <h3 className="text-gray-800">{title}</h3>
         <p className="text-gray-500">{subTitle}</p>

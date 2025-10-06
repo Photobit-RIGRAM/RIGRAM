@@ -17,6 +17,7 @@ const CATEGORY_OPTIONS = [
   { value: 'club', label: '동아리' },
   { value: 'event', label: '행사' },
 ];
+type Category = 'team' | 'organization' | 'club' | 'event';
 
 export default function PhotoAddPage() {
   const pathname = usePathname();
@@ -26,7 +27,7 @@ export default function PhotoAddPage() {
   const departmentId = segments[2];
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [category, setCategory] = useState<'team' | 'organization' | 'club' | 'event'>('team');
+  const [category, setCategory] = useState<Category>('team');
   const addMedia = useMediaStore((state) => state.addMedia);
   const school = useSchoolStore((state) => state.school);
   const schoolNameEn = school?.school_en_name || '';
@@ -133,7 +134,7 @@ export default function PhotoAddPage() {
               id="category"
               className="w-full"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value as Category)}
             >
               {CATEGORY_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>

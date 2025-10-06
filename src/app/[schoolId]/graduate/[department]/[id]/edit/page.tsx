@@ -39,7 +39,7 @@ export default function GraduateEditPage() {
     if (departmentId) {
       fetchDepartmentById(departmentId);
     }
-  }, [studentId, fetchStudentById]);
+  }, [studentId, fetchStudentById, departmentId, fetchDepartmentById]);
 
   useEffect(() => {
     if (student) {
@@ -47,7 +47,7 @@ export default function GraduateEditPage() {
       setStudentNameEn(student.name_en);
       setDeptName(department?.name || '');
     }
-  }, [student]);
+  }, [student, department?.id, department?.name]);
 
   const handleFileSelect = (file: File | null, type: 'profile' | 'graduation') => {
     if (!file) return;

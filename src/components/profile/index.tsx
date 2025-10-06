@@ -1,20 +1,21 @@
 import type { Student } from '@/types/student';
+import Image from 'next/image';
 
 interface ProfileProps extends Student {
   onClick: () => void;
 }
 
 export default function Profile({
-  id,
-  school_id,
-  dept_id,
+  // id,
+  // school_id,
+  // dept_id,
   name,
-  name_en,
-  graduation_year,
+  // name_en,
+  // graduation_year,
   profile_default,
   profile_graduate,
-  created_at,
-  updated_at,
+  // created_at,
+  // updated_at,
   onClick,
 }: ProfileProps) {
   return (
@@ -23,16 +24,12 @@ export default function Profile({
       onClick={onClick}
     >
       <div className="flex gap-3 justify-center items-center w-full overflow-hidden">
-        <img
-          src={profile_default}
-          alt={`${name}의 증명사진`}
-          className="w-1/2 h-35 rounded-sm object-cover"
-        />
-        <img
-          src={profile_graduate}
-          alt={`${name}의 졸업사진`}
-          className="w-1/2 h-35 rounded-sm object-cover"
-        />
+        <div className="relative w-1/2 h-35 rounded-sm ">
+          <Image src={profile_default} alt={`${name}의 증명사진`} fill className="object-cover" />
+        </div>
+        <div className="relative w-1/2 h-35 rounded-sm ">
+          <Image src={profile_graduate} alt={`${name}의 졸업사진`} fill className="object-cover" />
+        </div>
       </div>
       <span className="text-18 text-gray-900 font-semibold">{name}</span>
     </div>

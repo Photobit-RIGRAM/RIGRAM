@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuthStore } from '@/store/useAuthStore';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -15,14 +15,16 @@ export default function Home() {
     } else {
       router.push('/login');
     }
-  }, []);
+  }, [router]);
 
   return (
     <section className="w-full h-full bg-blue flex justify-center items-center flex-col gap-10 md:gap-16">
       <div className="relative">
-        <img
+        <Image
           src="/images/splash_img.png"
           alt="졸업은 새로운 시작입니다."
+          width={300}
+          height={121}
           className="object-cover"
         />
       </div>

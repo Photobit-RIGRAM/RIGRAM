@@ -5,6 +5,7 @@ import OverlayViewer from '@/components/overlayViewer';
 import BottomTab from '@/components/tab/bottom';
 import { useMediaStore } from '@/store/useMediaStore';
 import { ImageMinus, ImagePlus, Images, Play, Trash } from 'lucide-react';
+import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -116,7 +117,9 @@ export default function PhotoListPage() {
                   <source src={media?.url} type="video/mp4" />
                 </video>
               ) : (
-                <img src={media?.url} alt="" className="w-full h-full object-cover" />
+                <div className="w-full h-full">
+                  <Image src={media?.url} alt="" className="object-cover" />
+                </div>
               )}
 
               {/* ▶️ 비디오 아이콘 (삭제 모드 아닐 때만 표시) */}

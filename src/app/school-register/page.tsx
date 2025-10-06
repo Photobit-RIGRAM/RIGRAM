@@ -1,5 +1,7 @@
 import Button from '@/components/button';
-import PageHeader from '@/components/pageHeader';
+import Image from 'next/image';
+
+// import PageHeader from '@/components/pageHeader';
 
 export default function SchoolRegisterPage() {
   return (
@@ -7,11 +9,14 @@ export default function SchoolRegisterPage() {
       <h1 className="sr-only">학교 등록이 안되어 있을 경우</h1>
 
       <figure className="flex flex-col items-center gap-6 md:gap-7.5">
-        <img
-          src="/images/mainImg.png"
-          alt="등록된 학교가 없습니다."
-          className="w-24 h-24 md:w-54 md:h-54"
-        />
+        <div className="w-24 h-24 md:w-54 md:h-54">
+          <Image
+            src="/images/mainImg.png"
+            alt="등록된 학교가 없습니다."
+            fill
+            className="object-contain"
+          />
+        </div>
         <figcaption className="flex flex-col items-center gap-2.5">
           <h2 className="text-20 font-bold text-gray-900 md:text-24">등록된 학교가 없습니다.</h2>
           <p className="text-16 font-medium text-gray-500 text-center md:text-18">

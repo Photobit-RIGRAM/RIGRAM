@@ -4,6 +4,7 @@ import Button from '@/components/button';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useStudentStore } from '@/store/useStudentStore';
 import { ArrowLeft, Calendar, Dot, Mail, PencilLine, Phone, Trash, User } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -26,7 +27,7 @@ export default function GraduateDepartmentPage() {
       fetchStudentById(studentId);
       fetchDepartmentById(deptId);
     }
-  }, []);
+  }, [deptId, fetchDepartmentById, fetchStudentById, studentId]);
 
   const department = departments.find((d) => d.id === deptId);
 
@@ -64,28 +65,27 @@ export default function GraduateDepartmentPage() {
         <h3 className="text-20 font-semibold">졸업생 상세 정보</h3>
       </div>
       <div className="absolute top-0 right-0 left-0 h-40 z-0">
-        <img
-          src={department?.img_url ?? ''}
-          alt={`${department?.name} 학과대표이미지`}
-          className="w-full h-full object-cover"
-        />
+        <div className="relative w-full h-full">
+          <Image
+            src={department?.img_url ?? ''}
+            alt={`${department?.name} 학과대표이미지`}
+            fill
+            className="object-cover"
+          />
+        </div>
       </div>
       <div className="relative flex flex-col gap-10 justify-start items-start w-full h-full pt-10 px-5 md:px-10 md:pt-35">
         <div className="relative flex flex-col justify-center items-center gap-2 w-full md:gap-4 md:justify-start md:items-end md:flex-row">
           <div className="flex justify-start items-center gap-1">
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
-              <img
-                src={student.profile_default}
-                alt="증명사진"
-                className="w-full h-full object-cover rounded-4xl"
-              />
+              <div className="w-full h-full rounded-4xl">
+                <Image src={student.profile_default} alt="증명사진" className="object-cover" />
+              </div>
             </div>
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
-              <img
-                src={student.profile_graduate}
-                alt="증명사진"
-                className="w-full h-full object-cover rounded-4xl"
-              />
+              <div className="w-full h-full rounded-4xl">
+                <Image src={student.profile_graduate} alt="증명사진" className="object-cover" />
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-1.5 items-center md:items-start">

@@ -42,6 +42,9 @@ export default function DepartmentAddPage() {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
+      if (authError) {
+        console.error('Auth error:', authError);
+      }
 
       if (!user) {
         alert('사용자 인증이 필요합니다.');

@@ -1,6 +1,6 @@
 'use client';
 
-import { Image } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 import { useState } from 'react';
 
 interface FileInputProps {
@@ -13,7 +13,7 @@ interface FileInputProps {
   size?: 'sm' | 'lg';
 }
 
-export default function fileInput({
+export default function FileInput({
   id = 'fileInput',
   name = 'fileInput',
   accept = 'image/*, video/*',
@@ -46,7 +46,7 @@ export default function fileInput({
         <div
           className={`flex justify-center items-center bg-primary-100 p-5 rounded-lg ${size === 'sm' ? '' : 'w-34 h-40'}`}
         >
-          <Image className="w-6 h-6 text-gray-500" />
+          <ImageIcon className="w-6 h-6 text-gray-500" />
         </div>
         <div>
           {fileName ? (

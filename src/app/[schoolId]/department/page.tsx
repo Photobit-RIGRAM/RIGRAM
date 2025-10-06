@@ -51,7 +51,7 @@ export default function DepartmentPage() {
               key={dept.id}
               title={dept.name}
               subTitle={dept.name_en}
-              imgSrc={dept.img_url || undefined}
+              imgSrc={dept.img_url as string}
               href={`${pathname}/${dept.id}`}
             />
           ))}

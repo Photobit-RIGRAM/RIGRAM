@@ -2,6 +2,7 @@
 
 import Button from '@/components/button';
 import { ArrowLeft, PencilLine } from 'lucide-react';
+import Image from 'next/image';
 import 'swiper/css/navigation';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -31,7 +32,7 @@ export default function DepartmentIntroPage() {
           pagination={{ clickable: true }}
         >
           <SwiperSlide className="relative aspect-[4/3]">
-            <img
+            <Image
               src="https://cdn.pixabay.com/photo/2025/08/09/16/51/wildlife-9764923_1280.jpg"
               alt="학과명0 대표이미지"
               className="w-full h-full object-cover rounded-xl bg-opacity-15"
@@ -46,13 +47,12 @@ export default function DepartmentIntroPage() {
                 세속의 복잡한 이해관계로부터 초연해 오직 학문의 정도를 걸으며 날개를 펴고 비상을
                 준비하는 서울대학교의 의지가 담겨 있습니다. 쌍학은 1998년 10월 14일, 모교 개교
                 52주년 기념식에 맞춰 학의 활짝 펼친 날개와 다리 모습을 표현한 모교 상징
-                조형물입니다. 날개와 다리는 청동이고, 좌대는 황강석이며, 김대중 대통령의 친필인
-                '겨레와 함께 미래로'가 烏石(흑요암)에 새겨져 있습니다.
+                조형물입니다.
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="relative aspect-[4/3]">
-            <img
+            <Image
               src="https://cdn.pixabay.com/photo/2025/08/09/16/51/wildlife-9764923_1280.jpg"
               alt="학과명0 대표이미지"
               className="w-full h-full object-cover rounded-xl"
@@ -67,13 +67,12 @@ export default function DepartmentIntroPage() {
                 세속의 복잡한 이해관계로부터 초연해 오직 학문의 정도를 걸으며 날개를 펴고 비상을
                 준비하는 서울대학교의 의지가 담겨 있습니다. 쌍학은 1998년 10월 14일, 모교 개교
                 52주년 기념식에 맞춰 학의 활짝 펼친 날개와 다리 모습을 표현한 모교 상징
-                조형물입니다. 날개와 다리는 청동이고, 좌대는 황강석이며, 김대중 대통령의 친필인
-                '겨레와 함께 미래로'가 烏石(흑요암)에 새겨져 있습니다.
+                조형물입니다.
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="relative aspect-[4/3]">
-            <img
+            <Image
               src="https://cdn.pixabay.com/photo/2025/08/09/16/51/wildlife-9764923_1280.jpg"
               alt="학과명0 대표이미지"
               className="w-full h-full object-cover rounded-xl"
@@ -88,13 +87,12 @@ export default function DepartmentIntroPage() {
                 세속의 복잡한 이해관계로부터 초연해 오직 학문의 정도를 걸으며 날개를 펴고 비상을
                 준비하는 서울대학교의 의지가 담겨 있습니다. 쌍학은 1998년 10월 14일, 모교 개교
                 52주년 기념식에 맞춰 학의 활짝 펼친 날개와 다리 모습을 표현한 모교 상징
-                조형물입니다. 날개와 다리는 청동이고, 좌대는 황강석이며, 김대중 대통령의 친필인
-                '겨레와 함께 미래로'가 烏石(흑요암)에 새겨져 있습니다.
+                조형물입니다.
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="relative aspect-[4/3]">
-            <img
+            <Image
               src="https://cdn.pixabay.com/photo/2025/08/09/16/51/wildlife-9764923_1280.jpg"
               alt="학과명0 대표이미지"
               className="w-full h-full object-cover rounded-xl"
@@ -109,8 +107,7 @@ export default function DepartmentIntroPage() {
                 세속의 복잡한 이해관계로부터 초연해 오직 학문의 정도를 걸으며 날개를 펴고 비상을
                 준비하는 서울대학교의 의지가 담겨 있습니다. 쌍학은 1998년 10월 14일, 모교 개교
                 52주년 기념식에 맞춰 학의 활짝 펼친 날개와 다리 모습을 표현한 모교 상징
-                조형물입니다. 날개와 다리는 청동이고, 좌대는 황강석이며, 김대중 대통령의 친필인
-                '겨레와 함께 미래로'가 烏石(흑요암)에 새겨져 있습니다.
+                조형물입니다.
               </p>
             </div>
           </SwiperSlide>

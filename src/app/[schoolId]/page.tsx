@@ -143,11 +143,14 @@ export default function SchoolMainPage() {
         <div className="flex flex-col items-center gap-6">
           <figure className="flex flex-col items-center gap-6">
             <div className="border border-gray-200 rounded-4xl p-4 md:p-6">
-              <img
-                src={schoolLogoUrl}
-                alt={`${school?.school_name}학교 로고`}
-                className="w-13 h-13"
-              />
+              <div className="relative w-13 h-13">
+                <Image
+                  src={schoolLogoUrl}
+                  alt={`${school?.school_name}학교 로고`}
+                  fill
+                  className="object-contain"
+                />
+              </div>
             </div>
             <figcaption className="flex flex-col items-center gap-1">
               <h3 className="text-20 md:text-24 font-semibold text-gray-900">

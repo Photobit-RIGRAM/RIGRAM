@@ -1,7 +1,8 @@
 'use client';
 
 import type { Media } from '@/types/media';
-import { Play, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import Image from 'next/image';
 
 interface OverlayViewerProps {
   media: Media | null;
@@ -30,11 +31,9 @@ export default function OverlayViewer({ media, onClose }: OverlayViewerProps) {
           <source src={media.url} type="video/mp4" />
         </video>
       ) : (
-        <img
-          src={media.url}
-          alt=""
-          className="max-w-[90%] max-h-[80%] rounded-lg shadow-lg object-contain"
-        />
+        <div className="relative max-w-[90%] max-h-[80%] rounded-lg shadow-lg">
+          <Image src={media.url} alt="" className="object-contain" fill />
+        </div>
       )}
     </div>
   );

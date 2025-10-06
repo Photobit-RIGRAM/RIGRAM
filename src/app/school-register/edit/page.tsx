@@ -28,7 +28,7 @@ export default function SchoolEditPage() {
   });
 
   const GO_NEXT_STEP = () => setCurrentStep('admin');
-  const GO_PREV_STEP = () => setCurrentStep('basic');
+  // const GO_PREV_STEP = () => setCurrentStep('basic');
 
   useEffect(() => {
     const getData = async () => {

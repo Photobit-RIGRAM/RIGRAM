@@ -1,5 +1,5 @@
 import Button from '@/components/button';
-import { ArrowLeft, Image, Plus } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 
 const UNION_DATA = [
   {
@@ -37,7 +37,7 @@ export default function DepartmentUnionPage() {
       <div className="relative flex flex-col gap-1.5">
         <h3 className="text-18 font-semibold md:text-24 md:text-gray-900">학생회</h3>
         <div className="flex justify-start items-center gap-1">
-          <Image className="w-4 h-4" />
+          {/* <Image className="w-4 h-4" /> */}
           <span>{UNION_DATA.length}명의 인물</span>
         </div>
         <Button className="absolute top-0 right-0 flex items-center gap-1 text-gray-600">
@@ -50,7 +50,7 @@ export default function DepartmentUnionPage() {
       <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
         {UNION_DATA.map((person) => (
           <figure key={person.id} className="flex flex-col gap-2.5">
-            <img src={person.img_url} alt={person.name} className="rounded-xl" />
+            {/* <img src={person.img_url} alt={person.name} className="rounded-xl" /> */}
             <figcaption className="flex flex-col gap-1">
               <h3>{person.name}</h3>
               <span>{person.position}</span>
