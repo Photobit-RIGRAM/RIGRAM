@@ -31,18 +31,20 @@ export default function LoginPage() {
 
       const { data: users, error: usersError } = await supabase
         .from('users')
-        .select('id')
+        .select('id, school_id')
         .eq('id', currentUser.id)
         .single();
       if (usersError) throw usersError;
 
-      if (!users?.id) {
+      if (!users.school_id) {
         // 학교 등록이 안된 경우
-        router.push('/school-register');
-      } else if (users?.id) {
+        router.replace('/school-register');
+        localStorage.setItem('schoolId', users.id);
+      } else if (users.id && users.school_id) {
         // 유저가 존재하면 유저 페이지로 이동
         localStorage.setItem('schoolId', users.id);
-        router.push(`/${users.id}`);
+        router.replace(`/${users.id}`);
+        setIsLoading(false);
       }
     } catch (error: unknown) {
       console.error(error);
@@ -56,7 +58,7 @@ export default function LoginPage() {
       <div className="w-full md:max-w-[520px]">
         <figure className="flex flex-col items-center gap-4 md:gap-7">
           <div className="relative w-16 h-16 md:w-20 md:h-20">
-            <Image src={`/images/logo.png`} alt="리그램 로고" className="object-contain" />
+            <Image src={`/images/logo.png`} alt="리그램 로고" fill className="object-contain" />
           </div>
           <figcaption className="flex flex-col items-center gap-1">
             <h3 className="text-28 md:text-32 font-bold text-gray-900 uppercase">

@@ -1,6 +1,8 @@
 import { supabase } from '@/utils/supabase/client';
 import { create } from 'zustand';
 
+// import { createJSONStorage, persist } from 'zustand/middleware';
+
 interface SchoolTable {
   id?: string;
   school_name?: string;
@@ -40,9 +42,10 @@ interface SchoolFormState {
   setAdminEmail: (adminEmail: string) => void;
 }
 
-export const useSchoolStore = create<SchoolStore & SchoolFormState>((set) => ({
+export const useSchoolStore = create<SchoolStore & SchoolFormState>()((set) => ({
   school: null,
   isLoading: false,
+
   // 학교 불러오기
   fetchSchool: async (userId) => {
     set({ isLoading: true });
@@ -95,7 +98,7 @@ export const useSchoolStore = create<SchoolStore & SchoolFormState>((set) => ({
   setSchoolNameEn: (nameEn) => set({ schoolNameEn: nameEn }),
   setGraduationYear: (year) => set({ graduationYear: year }),
   setSchoolLogo: (logoUrl) => set({ schoolLogo: logoUrl }),
-  setAdminName: (adminName: string) => set({ adminName: adminName }),
-  setAdminPhone: (adminPhone: string) => set({ adminPhone: adminPhone }),
-  setAdminEmail: (adminEmail: string) => set({ adminEmail: adminEmail }),
+  setAdminName: (adminName: string) => set({ adminName }),
+  setAdminPhone: (adminPhone: string) => set({ adminPhone }),
+  setAdminEmail: (adminEmail: string) => set({ adminEmail }),
 }));

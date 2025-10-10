@@ -34,6 +34,7 @@ export default function Card({ href, title, subTitle, imgSrc, variant = 'default
         <Image
           src={imgSrc || '/images/default-dept.png'}
           alt={title || ''}
+          fill
           className="object-cover"
         />
       </div>

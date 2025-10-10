@@ -19,14 +19,14 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   };
 
   const handleSchoolPage = () => {
-    router.push(`/${schoolId}`);
+    router.replace(`/${schoolId}`);
     setIsOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('schoolId');
     logout();
-    router.push('/login');
+    router.replace('/login');
     setIsOpen(false);
   };
 
@@ -60,14 +60,14 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
           role="menu"
           className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center bg-white border border-gray-500 rounded-lg overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
         >
-          {schoolId && (
+          {school && school?.school_name ? (
             <li
               className="flex justify-center items-center whitespace-nowrap px-1.5 py-1 text-14 border-b border-b-gray-500 hover:bg-gray-200 md:px-3 md:py-2 md:text-16"
               role="menuitem"
             >
               <Button onClick={handleSchoolPage}>학교 페이지로 이동</Button>
             </li>
-          )}
+          ) : null}
           <li
             className="flex justify-center items-center whitespace-nowrap px-1.5 py-1 text-14 hover:bg-gray-200 md:px-3 md:py-2 md:text-16"
             role="menuitem"
