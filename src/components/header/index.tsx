@@ -31,7 +31,10 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   };
 
   return (
-    <header className="flex flex-row-reverse justify-between items-center w-full min-h-14 bg-gray-100 px-5 shadow-dropdown md:min-h-16 md:px-10">
+    <header
+      role="banner"
+      className="flex flex-row-reverse justify-between items-center w-full min-h-14 bg-gray-100 px-5 shadow-dropdown md:min-h-16 md:px-10"
+    >
       <nav className="relative shrink-0">
         <Button
           onClick={handleMenuDrop}
