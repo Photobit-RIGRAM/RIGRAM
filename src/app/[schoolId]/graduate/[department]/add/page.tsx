@@ -44,6 +44,7 @@ export default function GraduateAddPage() {
   const handleGoBack = () => {
     router.back();
   };
+
   const handleFileSelect = (file: File | null, type: 'profile' | 'graduation') => {
     if (!file) return;
     if (type === 'profile') {
@@ -53,22 +54,22 @@ export default function GraduateAddPage() {
     }
   };
 
+  /* 파일 업로드 (Supabase storage) */
   const uploadImage = async (file: File, folder: string) => {
     const filePath = `${schoolNameEn}/${deptNameEn}/${studentNameEn}/${folder}/${file.name}`;
-    const { data, error } = await supabase.storage.from('student-profiles').upload(filePath, file);
 
-    if (!data) {
-      console.log(data);
-    }
-
+    const { error } = await supabase.storage
+      .from('student-profiles')
+      .upload(filePath, file, { upsert: true });
     if (error) {
-      console.error('이미지 업로드 실패:', error.message);
+      console.error(`${folder}이미지 업로드 실패: `, error.message);
+      alert(`${folder} 업로드 실패`);
       return null;
     }
 
-    const { data: urlData } = supabase.storage.from('student-profiles').getPublicUrl(filePath);
+    const { data } = supabase.storage.from('student-profiles').getPublicUrl(filePath);
 
-    return urlData?.publicUrl ?? null;
+    return data?.publicUrl ?? null;
   };
 
   const handleProfileAdd = async () => {
