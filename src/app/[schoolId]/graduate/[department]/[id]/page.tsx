@@ -2,7 +2,9 @@
 
 import Button from '@/components/button';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
 import { useStudentStore } from '@/store/useStudentStore';
+import { supabase } from '@/utils/supabase/client';
 import { ArrowLeft, Calendar, Dot, Mail, PencilLine, Phone, Trash, User } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -10,6 +12,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function GraduateDepartmentPage() {
+  const router = useRouter();
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
   const deptId = segments[2];
@@ -17,7 +20,8 @@ export default function GraduateDepartmentPage() {
   const { student, fetchStudentById, isLoading, error, deleteStudentProfile } = useStudentStore();
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const departments = useDepartmentStore((state) => state.departments);
-  const router = useRouter();
+  const school = useSchoolStore((state) => state.school);
+
   const handleGoBack = () => {
     router.back();
   };
@@ -31,8 +35,70 @@ export default function GraduateDepartmentPage() {
 
   const department = departments.find((d) => d.id === deptId);
 
+  const deleteStudentFromStorage = async (
+    schoolNameEn: string,
+    deptNameEn: string,
+    studentNameEn: string
+  ) => {
+    const folderPath = `${schoolNameEn}/${deptNameEn}/${studentNameEn}`;
+    const subfolders = ['profile', 'graduation'];
+
+    // 하위 폴더부터 삭제
+    for (const sub of subfolders) {
+      const { data: subFiles, error: subError } = await supabase.storage
+        .from('student-profiles')
+        .list(`${folderPath}/${sub}`);
+      if (subError) {
+        console.error(`${sub} 폴더 조회 실패:`, subError.message);
+        continue;
+      }
+
+      if (subFiles && subFiles.length > 0) {
+        const paths = subFiles.map((sf) => `${folderPath}/${sub}/${sf.name}`);
+        const { error: removeError } = await supabase.storage
+          .from('student-profiles')
+          .remove(paths);
+        if (removeError) {
+          console.error(`${sub} 폴더 파일 삭제 실패:`, removeError.message);
+        } else {
+          console.log(`${sub} 폴더 내 파일 삭제 완료`);
+        }
+      }
+    }
+
+    // 상위 폴더의 루트에 파일이 있을 경우 삭제
+    const { data, error } = await supabase.storage
+      .from('student-profiles')
+      .list(folderPath, { limit: 100 });
+
+    if (error) {
+      console.error('상위 폴더 조회 실패:', error.message);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      const filePaths = data.map((f) => `${folderPath}/${f.name}`);
+      const { error: removeError } = await supabase.storage
+        .from('student-profiles')
+        .remove(filePaths);
+      if (removeError) {
+        console.error('상위 폴더 파일 삭제 실패:', removeError.message);
+      } else {
+        console.log('상위 폴더 파일 삭제 완료:', folderPath);
+      }
+    }
+
+    console.log(`${studentNameEn} 학생 폴더 삭제 완료`);
+  };
+
   const handleGraduateDelete = async () => {
     if (confirm(`${student?.name} 졸업생의 정보를 삭제하시겠습니까? `)) {
+      await deleteStudentFromStorage(
+        school?.school_en_name || '',
+        department?.name_en || '',
+        student?.name_en || ''
+      );
+
       const success = await deleteStudentProfile(studentId);
       if (success) {
         alert(`${student?.name} 졸업생의 정보가 삭제되었습니다.`);
@@ -78,13 +144,18 @@ export default function GraduateDepartmentPage() {
         <div className="relative flex flex-col justify-center items-center gap-2 w-full md:gap-4 md:justify-start md:items-end md:flex-row">
           <div className="flex justify-start items-center gap-1">
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
-              <div className="w-full h-full rounded-4xl">
-                <Image src={student.profile_default} alt="증명사진" className="object-cover" />
+              <div className="relative w-full h-full rounded-4xl">
+                <Image src={student.profile_default} alt="증명사진" fill className="object-cover" />
               </div>
             </div>
             <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
-              <div className="w-full h-full rounded-4xl">
-                <Image src={student.profile_graduate} alt="증명사진" className="object-cover" />
+              <div className="relative w-full h-full rounded-4xl">
+                <Image
+                  src={student.profile_graduate}
+                  alt="증명사진"
+                  fill
+                  className="object-cover"
+                />
               </div>
             </div>
           </div>
