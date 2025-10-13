@@ -7,7 +7,7 @@ import { Calendar, GraduationCap, Mail, PencilLine, Phone, User } from 'lucide-r
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, useParams, usePathname } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 const MENU_LIST = [
   {
@@ -47,61 +47,46 @@ export default function SchoolMainPage() {
   const school = useSchoolStore((state) => state.school);
   const { schoolId } = useParams<{ schoolId: string }>();
 
-  useEffect(() => {
-    const getAuthData = async () => {
-      try {
-        const {
-          data: { user },
-          error,
-        } = await supabase.auth.getUser();
-        if (error) {
-          console.error('사용자 정보를 가져오는데 실패했습니다. :', error);
-          return;
-        }
-        if (user) {
-          await fetchSchool(user.id);
-        } else {
-          console.error('로그인이 되지 않았습니다. 다시 한 번 확인해 주세요.');
-        }
-      } catch (error) {
+  // 인증 요청 최소화
+  const getAuthData = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
         console.error('사용자 정보를 가져오는데 실패했습니다. :', error);
+        return;
       }
-    };
-
-    getAuthData();
+      const user = data?.session?.user;
+      if (user) {
+        await fetchSchool(user.id);
+      } else {
+        console.warn('로그인이 필요합니다.');
+      }
+    } catch (error) {
+      console.error('사용자 인증 요청 중 오류가 발생했습니다. :', error);
+    }
   }, [fetchSchool]);
+
+  // 최초 1회만 호출
+  useEffect(() => {
+    if (!school) getAuthData();
+  }, [getAuthData, school]);
 
   const InfoConfig = useMemo(
     () => [
-      {
-        id: '0',
-        icon: <User />,
-        title: '담당자',
-        content: `${school?.manager_name}`,
-      },
-      {
-        id: '1',
-        icon: <Mail />,
-        title: '이메일',
-        content: `${school?.manager_email}`,
-      },
-      {
-        id: '2',
-        icon: <Phone />,
-        title: '연락처',
-        content: `${school?.manager_contact}`,
-      },
+      { id: '0', icon: <User />, title: '담당자', content: school?.manager_name ?? '-' },
+      { id: '1', icon: <Mail />, title: '이메일', content: school?.manager_email ?? '-' },
+      { id: '2', icon: <Phone />, title: '연락처', content: school?.manager_contact ?? '-' },
       {
         id: '3',
         icon: <Calendar />,
         title: '생성일',
-        content: `${school?.created_at?.slice(0, 10)}`,
+        content: school?.created_at?.slice(0, 10) ?? '-',
       },
       {
         id: '4',
         icon: <Calendar />,
         title: '수정일',
-        content: `${school?.updated_at?.slice(0, 10)}`,
+        content: school?.updated_at?.slice(0, 10) ?? '-',
       },
     ],
     [school]
@@ -131,9 +116,7 @@ export default function SchoolMainPage() {
     );
   }
 
-  if (schoolId !== school.id) {
-    return notFound();
-  }
+  if (schoolId !== school.id) return notFound();
 
   const schoolLogoUrl =
     school.school_img_url instanceof File
@@ -144,6 +127,7 @@ export default function SchoolMainPage() {
     <section className="flex flex-col justify-center items-center gap-5 w-full md:flex-row md:gap-4">
       <h1 className="sr-only">학교 정보 메인 페이지 - 학교 등록이 되어있을 경우</h1>
 
+      {/* 좌측 학교 정보 */}
       <article className="w-full md:w-[532px] h-full flex flex-col gap-13 bg-white p-6 md:px-18 shadow-dropdown md:pt-[52px] md:pb-[120px] rounded-xl">
         <div className="flex flex-col items-center gap-6">
           <figure className="flex flex-col items-center gap-6">
@@ -153,6 +137,7 @@ export default function SchoolMainPage() {
                   src={schoolLogoUrl}
                   alt={`${school?.school_name}학교 로고`}
                   fill
+                  sizes="52px"
                   className="object-contain"
                 />
               </div>
@@ -196,15 +181,17 @@ export default function SchoolMainPage() {
           </dl>
         </div>
       </article>
+      {/* 우측 메뉴 */}
       <nav
         className="w-full h-full flex flex-col justify-center items-center gap-4 md:w-[532px] md:grid md:grid-cols-2"
-        aria-label="주요 메뉴"
+        aria-label="학교 관리 주요 메뉴"
       >
         <h2 className="sr-only">주요 관리 메뉴</h2>
         {MENU_LIST.map((menu) => (
           <Link
             key={menu.id}
             href={`${pathname}/${menu.url}`}
+            prefetch
             className="w-full flex flex-row justify-center gap-4 items-center bg-primary-200 px-6 py-6 shadow-dropdown rounded-xl md:flex-col md:gap-12 md:py-21 hover:bg-primary-300 hover:outline hover:outline-primary-700 focus:bg-primary-300 focus:outline-primary-700 active:bg-primary-300 active:outline-primary-700"
             aria-label={`${menu.title}의 ${menu.subTitle} 관리 페이지로 이동`}
           >
@@ -214,14 +201,14 @@ export default function SchoolMainPage() {
                 {menu.subTitle}
               </p>
             </div>
-            <div className="flex justify-center items-center w-20 h-20 md:w-[120px] md:h-[120px]">
+            <div className="relative flex justify-center items-center w-20 h-20 md:w-[120px] md:h-[120px]">
               <Image
                 src={menu.img_url}
                 alt={menu.title}
-                width={120}
-                height={120}
-                className="w-full h-full object-contain"
-                loading="lazy"
+                fill
+                priority
+                sizes="(max-width: 768px) 80px, 120px"
+                className="object-contain"
               />
             </div>
           </Link>
