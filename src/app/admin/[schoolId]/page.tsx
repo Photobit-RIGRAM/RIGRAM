@@ -92,31 +92,19 @@ export default function SchoolMainPage() {
     [school]
   );
 
-  if (isLoading) {
+  if (!school || isLoading) {
     return (
       <div
         className="flex justify-center items-center min-h-[400px]"
         role="status"
         aria-live="polite"
       >
-        <span className="text-gray-600">로딩 중...</span>
+        <span className="text-gray-600">학교 정보를 불러오는 중 입니다..</span>
       </div>
     );
   }
 
-  if (!school) {
-    return (
-      <div
-        className="flex justify-center items-center min-h-[400px]"
-        role="alert"
-        aria-live="assertive"
-      >
-        <span className="text-gray-600">학교 정보를 불러올 수 없습니다.</span>
-      </div>
-    );
-  }
-
-  if (schoolId !== school.id) return notFound();
+  if (schoolId !== school?.id) return notFound();
 
   const schoolLogoUrl =
     school.school_img_url instanceof File
