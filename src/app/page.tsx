@@ -12,7 +12,7 @@ export default function Home() {
       const schoolId = localStorage.getItem('schoolId');
 
       if (schoolId) {
-        router.replace(`/${schoolId}`);
+        router.replace(`/admin/${schoolId}`);
       } else {
         router.replace('/login');
       }

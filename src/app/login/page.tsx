@@ -38,12 +38,12 @@ export default function LoginPage() {
 
       if (!users.school_id) {
         // 학교 등록이 안된 경우
-        router.replace('/school-register');
+        router.replace('/admin/school-register');
         localStorage.setItem('schoolId', users.id);
       } else if (users.id && users.school_id) {
         // 유저가 존재하면 유저 페이지로 이동
         localStorage.setItem('schoolId', users.id);
-        router.replace(`/${users.id}`);
+        router.replace(`/admin/${users.id}`);
         setIsLoading(false);
       }
     } catch (error: unknown) {
