@@ -6,7 +6,7 @@ import { supabase } from '@/utils/supabase/client';
 import { Calendar, GraduationCap, Mail, PencilLine, Phone, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { notFound, useParams, usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 
 const MENU_LIST = [
@@ -45,6 +45,7 @@ export default function SchoolMainPage() {
   const fetchSchool = useSchoolStore((state) => state.fetchSchool);
   const isLoading = useSchoolStore((state) => state.isLoading);
   const school = useSchoolStore((state) => state.school);
+  const { schoolId } = useParams<{ schoolId: string }>();
 
   useEffect(() => {
     const getAuthData = async () => {
@@ -128,6 +129,10 @@ export default function SchoolMainPage() {
         <span className="text-gray-600">학교 정보를 불러올 수 없습니다.</span>
       </div>
     );
+  }
+
+  if (schoolId !== school.id) {
+    return notFound();
   }
 
   const schoolLogoUrl =

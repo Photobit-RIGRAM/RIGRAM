@@ -56,7 +56,6 @@ export default function PhotoAddPage() {
     const filePath = `${schoolNameEn}/${deptNameEn}/${folder}/${file.name}`;
 
     const { error } = await supabase.storage.from('media').upload(filePath, file, { upsert: true });
-
     if (error) {
       console.error(`${folder} 업로드 실패:`, error.message);
       alert(`${folder} 업로드 실패`);

@@ -17,6 +17,7 @@ export default function DepartmentPage() {
   const departments = useDepartmentStore((state) => state.departments);
   const fetchDepartments = useDepartmentStore((state) => state.fetchDepartments);
   const school_id = school?.id;
+  const school_graduation_year = school?.graduation_year;
 
   useEffect(() => {
     if (!school_id) return;
