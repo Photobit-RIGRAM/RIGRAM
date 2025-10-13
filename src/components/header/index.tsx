@@ -19,7 +19,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   };
 
   const handleSchoolPage = () => {
-    router.replace(`/${schoolId}`);
+    router.replace(`/admin/${schoolId}`);
     setIsOpen(false);
   };
 
@@ -49,6 +49,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
                 alt="리그램 로고"
                 fill
                 priority
+                sizes="(max-width: 768px): 24px, 32px"
                 className="object-contain"
               />
             </div>
