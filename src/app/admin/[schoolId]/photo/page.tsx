@@ -33,15 +33,17 @@ export default function PhotoDepartmentListPage() {
         사진을 추가할 학과를 선택하세요.
       </h3>
       <div className="grid grid-col-1 gap-4 overflow-y-auto scrollbar-hide md:max-h-[700px] md:grid-cols-3 md:gap-6">
-        {departments.map((dept) => (
-          <Card
-            key={dept.id}
-            title={dept.name}
-            subTitle={dept.name_en}
-            imgSrc={dept.img_url || undefined}
-            href={`${pathname}/${dept.id}`}
-          />
-        ))}
+        {departments
+          .filter((dept) => dept.graduation_year === school?.graduation_year)
+          .map((dept) => (
+            <Card
+              key={dept.id}
+              title={dept.name}
+              subTitle={dept.name_en}
+              imgSrc={dept.img_url || undefined}
+              href={`${pathname}/${dept.id}`}
+            />
+          ))}
       </div>
     </section>
   );

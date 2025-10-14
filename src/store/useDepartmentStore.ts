@@ -6,7 +6,7 @@ type Department = {
   college_id: string;
   name: string;
   name_en: string;
-  desc: string;
+  graduation_year: string;
   img_url: string | null;
   created_at: string;
   updated_at: string;
@@ -14,7 +14,7 @@ type Department = {
 
 interface DepartmentsState {
   departments: Department[];
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
   fetchDepartments: (collegeId: string) => Promise<void>;
   fetchDepartmentById: (departmentId: string) => Promise<Department | null>;
@@ -23,6 +23,7 @@ interface DepartmentsState {
     name: string,
     name_en: string,
     desc: string,
+    graduation_year: string,
     img_url: string | null
   ) => Promise<void>;
   updateDepartment: (
@@ -34,12 +35,12 @@ interface DepartmentsState {
 
 export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
   departments: [],
-  loading: false,
+  isLoading: false,
   error: null,
 
   // 학교ID별 모든 학과 조회(select)
   fetchDepartments: async (collegeId: string) => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
 
     const { data, error } = await supabase
       .from('departments')
@@ -47,18 +48,18 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
       .eq('college_id', collegeId);
 
     if (error) {
-      set({ error: error.message, loading: false });
+      set({ error: error.message, isLoading: false });
     } else {
       const current = get().departments.filter((d) => d.college_id !== collegeId);
       set({
         departments: [...current, ...(data ?? [])],
-        loading: false,
+        isLoading: false,
       });
     }
   },
   // 단일 학과 조회(select)
   fetchDepartmentById: async (departmentId: string) => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
     const { data, error } = await supabase
       .from('departments')
       .select('*')
@@ -66,7 +67,7 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
       .single();
 
     if (error) {
-      set({ error: error.message, loading: false });
+      set({ error: error.message, isLoading: false });
       return null;
     } else {
       // 이미 있으면 교체, 없으면 추가
@@ -75,19 +76,19 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
         if (exists) {
           return {
             departments: state.departments.map((d) => (d.id === data.id ? data : d)),
-            loading: false,
+            isLoading: false,
           };
         }
-        return { departments: [...state.departments, data], loading: false };
+        return { departments: [...state.departments, data], isLoading: false };
       });
       return data;
     }
   },
   // 학과 추가하기(insert)
-  addDepartment: async (collegeId, name, nameEn, desc, img_url) => {
+  addDepartment: async (collegeId, name, nameEn, graduation_year, img_url) => {
     const { data, error } = await supabase
       .from('departments')
-      .insert([{ college_id: collegeId, name, name_en: nameEn, desc, img_url }])
+      .insert([{ college_id: collegeId, name, name_en: nameEn, graduation_year, img_url }])
       .select()
       .single();
 
@@ -128,7 +129,7 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
   },
   // 학과 삭제하기(delete)
   deleteDepartment: async (id) => {
-    set({ loading: true });
+    set({ isLoading: true });
 
     const { error } = await supabase.from('departments').delete().eq('id', id);
 

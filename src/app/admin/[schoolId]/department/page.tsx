@@ -45,6 +45,7 @@ export default function DepartmentPage() {
       </header>
       <div className="grid grid-col-1 gap-6 md:grid-cols-3 h-full overflow-y-scroll scrollbar-hide">
         {departments
+          .filter((dept) => dept.graduation_year === school_graduation_year)
           .slice()
           .sort((a, b) => a.name.localeCompare(b.name, 'ko'))
           .map((dept) => (

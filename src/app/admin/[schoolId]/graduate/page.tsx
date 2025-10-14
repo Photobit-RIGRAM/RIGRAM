@@ -34,6 +34,7 @@ export default function GraduatePage() {
       </h2>
       <div className="grid grid-col-1 gap-4 flex-1 h-full overflow-y-auto scrollbar-hide md:grid-cols-3 md:gap-6 md:max-h-[700px]">
         {departments
+          .filter((dept) => dept.graduation_year === school?.graduation_year)
           .slice()
           .sort((a, b) => a.name.localeCompare(b.name, 'ko'))
           .map((dept) => (
