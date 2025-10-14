@@ -9,11 +9,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'admin' | 'student'>('admin');
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,16 +31,16 @@ export default function LoginPage() {
 
       const { data: users, error: usersError } = await supabase
         .from('users')
-        .select('id, school_id')
+        .select('id, school_name_en')
         .eq('id', currentUser.id)
         .single();
       if (usersError) throw usersError;
 
-      if (!users.school_id) {
+      if (!users.school_name_en) {
         // 학교 등록이 안된 경우
         router.replace('/admin/school-register');
         localStorage.setItem('schoolId', users.id);
-      } else if (users.id && users.school_id) {
+      } else if (users.id && users.school_name_en) {
         // 유저가 존재하면 유저 페이지로 이동
         localStorage.setItem('schoolId', users.id);
         router.replace(`/admin/${users.id}`);
@@ -58,7 +58,13 @@ export default function LoginPage() {
       <div className="w-full md:max-w-[520px]">
         <figure className="flex flex-col items-center gap-4 md:gap-7">
           <div className="relative w-16 h-16 md:w-20 md:h-20">
-            <Image src={`/images/logo.png`} alt="리그램 로고" fill className="object-contain" />
+            <Image
+              src={`/images/logo.png`}
+              alt="리그램 로고"
+              fill
+              sizes="(max-width: 768px) 64px, 80px"
+              className="object-contain"
+            />
           </div>
           <figcaption className="flex flex-col items-center gap-1">
             <h3 className="text-28 md:text-32 font-bold text-gray-900 uppercase">

@@ -27,7 +27,7 @@ export default function GraduateAddPage() {
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const addStudentProfile = useStudentStore((state) => state.addStudentProfile);
   const school = useSchoolStore((state) => state.school);
-  const schoolNameEn = school?.school_en_name || '';
+  const schoolNameEn = school?.school_name_en || '';
   const [deptNameEn, setDeptNameEn] = useState('');
 
   useEffect(() => {

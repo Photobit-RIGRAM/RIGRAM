@@ -47,7 +47,7 @@ export default function SchoolEditPage() {
     if (school) {
       setForm({
         schoolName: school.school_name ?? '',
-        schoolNameEn: school.school_en_name ?? '',
+        schoolNameEn: school.school_name_en ?? '',
         graduationYear: school.graduation_year ?? '',
         schoolLogo: school.school_img_url ?? '',
         adminName: school.manager_name ?? '',
@@ -96,7 +96,7 @@ export default function SchoolEditPage() {
     await editSchool(
       {
         school_name: form.schoolName,
-        school_en_name: form.schoolNameEn,
+        school_name_en: form.schoolNameEn,
         graduation_year: form.graduationYear,
         school_img_url: logoUrl,
         manager_name: form.adminName,

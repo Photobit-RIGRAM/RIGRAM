@@ -14,27 +14,20 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function SchoolAddPage() {
+  const router = useRouter();
+
   const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
+  const [schoolName, setSchoolName] = useState('');
+  const [schoolNameEn, setSchoolNameEn] = useState('');
+  const [graduationYear, setGraduationYear] = useState('');
+  const [schoolLogo, setSchoolLogo] = useState<File | string | null>('');
+  const [adminName, setAdminName] = useState('');
+  const [adminPhone, setAdminPhone] = useState('');
+  const [adminEmail, setAdminEmail] = useState('');
+  const addSchool = useSchoolStore((state) => state.addSchool);
+
   const GO_NEXT_STEP = () => setCurrentStep('admin');
   const GO_PREV_STEP = () => setCurrentStep('basic');
-  const {
-    schoolName,
-    schoolNameEn,
-    graduationYear,
-    schoolLogo,
-    adminName,
-    adminPhone,
-    adminEmail,
-    setSchoolName,
-    setSchoolNameEn,
-    setGraduationYear,
-    setSchoolLogo,
-    setAdminName,
-    setAdminPhone,
-    setAdminEmail,
-    addSchool,
-  } = useSchoolStore();
-  const router = useRouter();
 
   const handleFileSelect = (file: File | null) => {
     if (!file) return;
@@ -48,13 +41,22 @@ export default function SchoolAddPage() {
       } = await supabase.auth.getUser();
       if (!user) throw new Error('로그인이 필요합니다.');
 
+      // 🔍 중복 체크
+      const { data: existingSchool } = await supabase
+        .from('schools')
+        .select('id')
+        .eq('manager_contact', adminPhone)
+        .single();
+      if (existingSchool) {
+        alert('이미 등록된 담당자 전화번호입니다.');
+        return;
+      }
+
       let logoUrl: string | null = null;
 
       // schoolLogo가 File 타입이면 업로드 실행
       if (schoolLogo instanceof File) {
-        const fileExt = schoolLogo.name.split('.').pop();
-        const fileName = schoolNameEn || 'default-school';
-        const filePath = `school-logos/${fileName}.${fileExt}`;
+        const filePath = `${schoolNameEn}/school-logo`;
 
         const { error: uploadError } = await supabase.storage
           .from('school-logos')
@@ -72,7 +74,7 @@ export default function SchoolAddPage() {
       await addSchool(
         {
           school_name: schoolName,
-          school_en_name: schoolNameEn,
+          school_name_en: schoolNameEn,
           graduation_year: graduationYear,
           school_img_url: logoUrl,
           manager_name: adminName,
@@ -83,7 +85,15 @@ export default function SchoolAddPage() {
       );
 
       alert('학교 추가를 했습니다. 메인 페이지로 이동합니다.');
-      router.push(`/${user.id}`);
+      router.replace(`/admin/${user.id}`);
+
+      setSchoolName('');
+      setSchoolNameEn('');
+      setGraduationYear('');
+      setSchoolLogo('');
+      setAdminName('');
+      setAdminPhone('');
+      setAdminEmail('');
     } catch (error) {
       console.error(error);
       alert('학교 추가에 실패했습니다.');

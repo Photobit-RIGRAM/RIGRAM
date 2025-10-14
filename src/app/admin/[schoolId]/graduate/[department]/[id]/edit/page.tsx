@@ -29,7 +29,7 @@ export default function GraduateEditPage() {
   const department = departments.find((d) => d.id === departmentId);
   const { student, fetchStudentById, updateStudentProfile } = useStudentStore();
   const school = useSchoolStore((state) => state.school);
-  const schoolNameEn = school?.school_en_name || '';
+  const schoolNameEn = school?.school_name_en || '';
 
   useEffect(() => {
     if (studentId) {

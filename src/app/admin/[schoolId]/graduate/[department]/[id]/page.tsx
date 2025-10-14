@@ -94,7 +94,7 @@ export default function GraduateDepartmentPage() {
   const handleGraduateDelete = async () => {
     if (confirm(`${student?.name} 졸업생의 정보를 삭제하시겠습니까? `)) {
       await deleteStudentFromStorage(
-        school?.school_en_name || '',
+        school?.school_name_en || '',
         department?.name_en || '',
         student?.name_en || ''
       );

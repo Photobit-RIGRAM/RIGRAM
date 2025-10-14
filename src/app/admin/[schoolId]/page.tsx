@@ -135,7 +135,7 @@ export default function SchoolMainPage() {
                 {school?.school_name}
               </h3>
               <span className="text-16 md:text-20 font-regular text-gray-700">
-                {school?.school_en_name}
+                {school?.school_name_en}
               </span>
             </figcaption>
           </figure>

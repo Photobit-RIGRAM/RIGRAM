@@ -6,7 +6,7 @@ import { create } from 'zustand';
 interface SchoolTable {
   id?: string;
   school_name?: string;
-  school_en_name?: string;
+  school_name_en?: string;
   graduation_year?: string;
   school_img_url?: File | string | null;
   manager_name?: string;
@@ -24,25 +24,7 @@ interface SchoolStore {
   editSchool: (data: SchoolTable, userId: string) => Promise<void>;
 }
 
-interface SchoolFormState {
-  schoolName: string;
-  schoolNameEn: string;
-  graduationYear: string;
-  schoolLogo: File | string | null;
-  adminName: string;
-  adminPhone: string;
-  adminEmail: string;
-
-  setSchoolName: (name: string) => void;
-  setSchoolNameEn: (nameEn: string) => void;
-  setGraduationYear: (year: string) => void;
-  setSchoolLogo: (logo: File | string | null) => void;
-  setAdminName: (adminName: string) => void;
-  setAdminPhone: (adminPhone: string) => void;
-  setAdminEmail: (adminEmail: string) => void;
-}
-
-export const useSchoolStore = create<SchoolStore & SchoolFormState>()((set) => ({
+export const useSchoolStore = create<SchoolStore>()((set) => ({
   school: null,
   isLoading: false,
 
@@ -61,12 +43,18 @@ export const useSchoolStore = create<SchoolStore & SchoolFormState>()((set) => (
   // 학교 추가하기
   addSchool: async (data, userId) => {
     try {
-      const { error } = await supabase.from('schools').update(data).eq('id', userId);
-      if (error) throw error;
+      const { error: schoolError } = await supabase.from('schools').update(data).eq('id', userId);
+      if (schoolError) throw schoolError;
+
+      const { error: userError } = await supabase
+        .from('users')
+        .update({ school_name_en: data.school_name_en })
+        .eq('id', userId);
+      if (userError) throw userError;
 
       set({ school: { ...(data as SchoolTable), id: userId } });
     } catch (error) {
-      console.error(error);
+      console.error('학교 추가 중 오류가 발생했습니다. : ', error);
     }
   },
   // 학교 수정하기
@@ -85,20 +73,4 @@ export const useSchoolStore = create<SchoolStore & SchoolFormState>()((set) => (
       console.error(error);
     }
   },
-
-  schoolName: '',
-  schoolNameEn: '',
-  graduationYear: '',
-  schoolLogo: null,
-  adminName: '',
-  adminPhone: '',
-  adminEmail: '',
-
-  setSchoolName: (name) => set({ schoolName: name }),
-  setSchoolNameEn: (nameEn) => set({ schoolNameEn: nameEn }),
-  setGraduationYear: (year) => set({ graduationYear: year }),
-  setSchoolLogo: (logoUrl) => set({ schoolLogo: logoUrl }),
-  setAdminName: (adminName: string) => set({ adminName }),
-  setAdminPhone: (adminPhone: string) => set({ adminPhone }),
-  setAdminEmail: (adminEmail: string) => set({ adminEmail }),
 }));
