@@ -8,12 +8,21 @@ interface CardProps {
   subTitle?: string;
   imgSrc?: string;
   variant?: 'default' | 'add';
+  role?: string;
 }
 
-export default function Card({ href, title, subTitle, imgSrc, variant = 'default' }: CardProps) {
+export default function Card({
+  href,
+  title,
+  subTitle,
+  imgSrc,
+  variant = 'default',
+  role,
+}: CardProps) {
   if (variant === 'add') {
     return (
       <Link
+        role={role}
         href={href || '#'}
         className="flex justify-center items-center h-40 md:h-64 w-full rounded-xl border border-gray-300 shadow-dropdown overflow-hidden hover:font-bold hover:border-gray-500 focus:font-bold focus:border-gray-500 active:font-bold active:border-gray-500"
       >
@@ -27,6 +36,7 @@ export default function Card({ href, title, subTitle, imgSrc, variant = 'default
 
   return (
     <Link
+      role={role}
       href={href || '#'}
       className="flex flex-row md:flex-col h-40 md:h-64 w-full rounded-xl border border-gray-300 shadow-dropdown overflow-hidden hover:font-bold hover:border-gray-500 focus:font-bold focus:border-gray-500 active:font-bold active:border-gray-500"
     >
