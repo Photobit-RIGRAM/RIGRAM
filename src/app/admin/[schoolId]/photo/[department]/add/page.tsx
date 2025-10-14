@@ -23,14 +23,14 @@ export default function PhotoAddPage() {
   const pathname = usePathname();
   const router = useRouter();
   const segments = pathname.split('/').filter(Boolean);
-  const schoolId = segments[0];
-  const departmentId = segments[2];
+  const schoolId = segments[1];
+  const departmentId = segments[3];
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [category, setCategory] = useState<Category>('team');
   const addMedia = useMediaStore((state) => state.addMedia);
   const school = useSchoolStore((state) => state.school);
-  const schoolNameEn = school?.school_en_name || '';
+  const schoolNameEn = school?.school_name_en || '';
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const [deptNameEn, setDeptNameEn] = useState('');
 

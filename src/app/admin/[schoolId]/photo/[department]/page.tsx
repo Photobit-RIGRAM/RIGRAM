@@ -13,7 +13,7 @@ export default function PhotoListPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const currentDept = segments[2];
+  const currentDept = segments[3];
   const currentTab = searchParams.get('tab') || 'all';
   const mediaList = useMediaStore((state) => state.mediaList);
   const fetchMediaList = useMediaStore((state) => state.fetchMediaList);

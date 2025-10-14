@@ -15,8 +15,8 @@ export default function GraduateDepartmentPage() {
   const router = useRouter();
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const deptId = segments[2];
-  const studentId = segments[3];
+  const deptId = segments[3];
+  const studentId = segments[4];
   const { student, fetchStudentById, isLoading, error, deleteStudentProfile } = useStudentStore();
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const departments = useDepartmentStore((state) => state.departments);
@@ -107,19 +107,14 @@ export default function GraduateDepartmentPage() {
     }
   };
 
-  // 로딩 중일 때
-  if (isLoading) {
-    return <div className="p-10 text-center">로딩중...</div>;
-  }
-
   // 에러 발생했을 때
   if (error) {
     return <div className="p-10 text-center text-red-500">에러: {error}</div>;
   }
 
   // student 데이터가 아직 없을 때
-  if (!student) {
-    return <div className="p-10 text-center">학생 데이터를 찾을 수 없습니다.</div>;
+  if (!student || isLoading) {
+    return <div className="p-10 text-center">학생 데이터를 찾는 중 입니다.</div>;
   }
 
   return (

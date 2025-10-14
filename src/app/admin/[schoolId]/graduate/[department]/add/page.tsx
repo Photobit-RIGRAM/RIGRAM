@@ -17,8 +17,8 @@ export default function GraduateAddPage() {
   const router = useRouter();
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const currentSchoolId = segments[0];
-  const currentDeptId = segments[2];
+  const currentSchoolId = segments[1];
+  const currentDeptId = segments[3];
   const [studentName, setStudentName] = useState('');
   const [studentNameEn, setStudentNameEn] = useState('');
   const [deptName, setDeptName] = useState('');

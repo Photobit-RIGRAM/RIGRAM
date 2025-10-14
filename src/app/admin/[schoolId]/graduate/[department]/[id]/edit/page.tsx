@@ -18,8 +18,8 @@ export default function GraduateEditPage() {
   const pathname = usePathname();
   const router = useRouter();
   const segments = pathname.split('/').filter(Boolean);
-  const departmentId = segments[2];
-  const studentId = segments[3];
+  const departmentId = segments[3];
+  const studentId = segments[4];
   const [studentName, setStudentName] = useState('');
   const [studentNameEn, setStudentNameEn] = useState('');
   const [deptName, setDeptName] = useState('');

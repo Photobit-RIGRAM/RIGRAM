@@ -150,7 +150,7 @@ export default function SchoolMainPage() {
             <h3 className="text-18 text-gray-900 font-semibold">상세 정보</h3>
             <Button
               className="flex items-center text-16 text-gray-600 gap-1 hover:text-gray-700 hover:font-bold focus:text-gray-700 focus:font-bold focus:outline-gray-700 active:text-gray-700 active:font-bold"
-              href={`/school-register/edit`}
+              href={`/admin/school-register/edit`}
             >
               <PencilLine className="w-4 h-4" />
               <span>정보 수정하기</span>

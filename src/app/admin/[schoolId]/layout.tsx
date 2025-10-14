@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 export default function SchoolLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const currentPage = segments[1];
+  const currentPage = segments[2];
   const fetchSchool = useSchoolStore((state) => state.fetchSchool);
 
   let mainClass = 'flex justify-center items-start flex-1 p-5 md:px-10 md:pb-0';

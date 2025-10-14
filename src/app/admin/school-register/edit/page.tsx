@@ -64,12 +64,6 @@ export default function SchoolEditPage() {
     });
   };
 
-  const slugify = (text: string) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[\s\W-]+/g, '-');
-
   const handleEdit = async () => {
     const {
       data: { user },
@@ -112,9 +106,8 @@ export default function SchoolEditPage() {
       user.id
     );
 
-    const schoolId = slugify(form.schoolNameEn);
     alert('학교 정보가 수정되었습니다. 메인 페이지로 이동합니다.');
-    router.push(`/${schoolId}`);
+    router.replace(`/admin/${school?.id}`);
   };
 
   const RenderStep = () => {

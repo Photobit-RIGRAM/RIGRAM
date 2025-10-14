@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 export default function DepartmentEditPage() {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const departmentId = segments[2];
+  const departmentId = segments[3];
   const [collegeName, setCollegeName] = useState('');
   const [deptName, setDeptName] = useState('');
   const [deptNameEn, setDeptNameEn] = useState('');
@@ -44,7 +44,7 @@ export default function DepartmentEditPage() {
       if (department) {
         setDeptName(department.name);
         setDeptNameEn(department.name_en);
-        setDeptDesc(department.desc ?? '');
+        // setDeptDesc(department.desc ?? '');
         setImgUrl(department.img_url ?? null);
         setPrevImgUrl(department.img_url ?? null);
         setCollegeName(college ? college.name : '');
@@ -147,7 +147,7 @@ export default function DepartmentEditPage() {
       const updated = await updateDepartment(departmentId, {
         name: deptName,
         name_en: deptNameEn,
-        desc: deptDesc,
+        // desc: deptDesc,
         img_url: logoUrl,
       });
 

@@ -13,15 +13,15 @@ const TOP_TAB = [
 export default function TopTab() {
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const schoolId = segments[0];
-  const currentTab = segments[1];
+  const schoolId = segments[1];
+  const currentTab = segments[2];
 
   return (
     <ul className="flex items-center gap-2 md:gap-4">
       {TOP_TAB.map((tab) => (
         <li key={tab.id} className="flex">
           <Link
-            href={`/${schoolId}/${tab.url}`}
+            href={`/admin/${schoolId}/${tab.url}`}
             className={`text-14 md:text-16 rounded-md px-2 py-2 md:px-4 md:py-2.5 ${
               currentTab === tab.url
                 ? 'bg-gray-200 text-gray-800 font-bold'

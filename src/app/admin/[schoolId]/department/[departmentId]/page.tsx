@@ -15,9 +15,9 @@ export default function DepartmentDetail() {
   const [collegeName, setCollegeName] = useState<string | null>(null);
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const schoolId = segments[0];
-  const departmentId = segments[2];
-  const { departments, fetchDepartmentById, deleteDepartment } = useDepartmentStore();
+  const schoolId = segments[1];
+  const departmentId = segments[3];
+  const { departments, fetchDepartmentById, deleteDepartment, isLoading } = useDepartmentStore();
   const { fetchCollegeById } = useCollegeStore();
 
   useEffect(() => {
@@ -34,14 +34,14 @@ export default function DepartmentDetail() {
 
   const department = departments.find((d) => d.id === departmentId);
 
-  if (!department) return <p>학과 데이터를 찾을 수 없습니다.</p>;
+  if (!department || isLoading) return <p>학과 데이터를 불러오는 중 입니다.</p>;
 
   const handleDelete = async () => {
     if (confirm(`${department.name}을 삭제하시겠습니까?`)) {
       const success = await deleteDepartment(departmentId);
       if (success) {
         alert(`${department.name}가 삭제되었습니다.`);
-        router.push(`/${schoolId}/department`);
+        router.replace(`/admin/${schoolId}/department`);
       }
     }
   };
@@ -88,7 +88,7 @@ export default function DepartmentDetail() {
           <div className="flex flex-row gap-2">
             <Button
               className="flex items-center gap-1 text-gray-600"
-              href={`/${schoolId}/department/${departmentId}/edit`}
+              href={`/admin/${schoolId}/department/${departmentId}/edit`}
             >
               <PencilLine className="w-4 h-4" />
               <span>학과 수정하기</span>
@@ -105,6 +105,8 @@ export default function DepartmentDetail() {
               <Image
                 src={department.img_url}
                 alt={`${department.name} 대표 이미지`}
+                fill
+                sizes="(max-width: 768px) 100% 200px, 100%, 280px"
                 className="object-cover"
               />
             </div>
@@ -113,7 +115,7 @@ export default function DepartmentDetail() {
         <dl className="flex flex-col gap-5">
           {DETAIL_DATA.map((info) => (
             <div className="flex justify-start items-center gap-2" key={info.id}>
-              <dt className="flex justify-start items-center gap-2 w-25 text-gray-600 md:w-40">
+              <dt className="flex justify-start items-center gap-2 w-30 text-gray-600 shrink-0 md:w-40">
                 {info.icon}
                 <span className="text-16 md:text-18 flex-1 whitespace-nowrap">{info.title}</span>
               </dt>

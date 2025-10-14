@@ -14,7 +14,7 @@ export default function GraduateDepartmentStudentList() {
   const router = useRouter();
   const pathname = usePathname();
   const segments = pathname.split('/').filter(Boolean);
-  const departmentId = segments[2];
+  const departmentId = segments[3];
   const [deptName, setDeptName] = useState<string | null>(null);
   const [searchable, setSearchable] = useState(false);
   const [keyword, setKeyword] = useState('');
@@ -112,7 +112,7 @@ export default function GraduateDepartmentStudentList() {
               <Profile key={student.id} {...student} onClick={() => handleGoProfile(student.id)} />
             ))
           ) : (
-            <p className="col-span-full text-center text-gray-500">검색 결과가 없습니다.</p>
+            <p className="col-span-full text-center text-gray-500">등록된 졸업생이 없습니다.</p>
           )}
         </div>
       </div>
