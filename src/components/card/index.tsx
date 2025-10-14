@@ -45,6 +45,7 @@ export default function Card({
           src={imgSrc || '/images/default-dept.png'}
           alt={title || ''}
           fill
+          sizes="(max-width: 768px) 50%, 100% 160px"
           className="object-cover"
         />
       </div>
