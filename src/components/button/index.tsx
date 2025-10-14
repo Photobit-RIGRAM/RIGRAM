@@ -22,7 +22,10 @@ export default function Button({
 
   if (href) {
     return (
-      <Link href={href} className={`flex justify-center items-center ${className ?? ''}`}>
+      <Link
+        href={href}
+        className={`flex justify-center items-center ${className ?? ''} ${PseudoSelectors}`}
+      >
         {children}
       </Link>
     );
