@@ -18,6 +18,7 @@ export default function SchoolRegisterPage() {
             alt=""
             role="presentation"
             fill
+            sizes="(max-width: 768px) 96px, 216px"
             className="object-contain"
           />
         </div>
