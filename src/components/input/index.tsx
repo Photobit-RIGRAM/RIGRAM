@@ -7,6 +7,7 @@ interface InputProps {
   value?: string;
   required?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -20,6 +21,7 @@ export default function Input({
   required = false,
   onChange,
   disabled = false,
+  readOnly = false,
 }: InputProps) {
   const getConfig = () => {
     switch (purpose) {
@@ -68,6 +70,7 @@ export default function Input({
       required={required}
       onChange={onChange}
       disabled={disabled}
+      readOnly={readOnly}
       className={`border border-gray-500 rounded-lg px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700  
         ${
           purpose === 'id' || purpose === 'password' || purpose === 'search'
