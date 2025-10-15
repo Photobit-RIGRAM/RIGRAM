@@ -42,10 +42,11 @@ const MENU_LIST = [
 
 export default function SchoolMainPage() {
   const pathname = usePathname();
+
+  const { schoolId } = useParams<{ schoolId: string }>();
   const fetchSchool = useSchoolStore((state) => state.fetchSchool);
   const isLoading = useSchoolStore((state) => state.isLoading);
   const school = useSchoolStore((state) => state.school);
-  const { schoolId } = useParams<{ schoolId: string }>();
 
   // 인증 요청 최소화
   const getAuthData = useCallback(async () => {
@@ -116,16 +117,16 @@ export default function SchoolMainPage() {
       <h1 className="sr-only">학교 정보 메인 페이지 - 학교 등록이 되어있을 경우</h1>
 
       {/* 좌측 학교 정보 */}
-      <article className="w-full md:w-[532px] h-full flex flex-col gap-13 bg-white p-6 md:px-18 shadow-dropdown md:pt-[52px] md:pb-[120px] rounded-xl">
-        <div className="flex flex-col items-center gap-6">
-          <figure className="flex flex-col items-center gap-6">
+      <article className="w-full md:w-[532px] h-full flex flex-col gap-6 bg-white p-6 md:px-18 shadow-dropdown md:gap-13 md:pt-[52px] md:pb-[120px] rounded-xl">
+        <div className="flex flex-col items-center gap-4 md:gap-6">
+          <figure className="flex flex-col items-center gap-4 md:gap-6">
             <div className="border border-gray-200 rounded-4xl p-4 md:p-6">
               <div className="relative w-13 h-13">
                 <Image
                   src={schoolLogoUrl}
                   alt={`${school?.school_name}학교 로고`}
                   fill
-                  sizes="52px"
+                  sizes="(max-width: 768px) 52px"
                   className="object-contain"
                 />
               </div>
@@ -179,7 +180,8 @@ export default function SchoolMainPage() {
           <Link
             key={menu.id}
             href={`${pathname}/${menu.url}`}
-            prefetch
+            prefetch={false}
+            shallow
             className="w-full flex flex-row justify-center gap-4 items-center bg-primary-200 px-6 py-6 shadow-dropdown rounded-xl md:flex-col md:gap-12 md:py-21 hover:bg-primary-300 hover:outline hover:outline-primary-700 focus:bg-primary-300 focus:outline-primary-700 active:bg-primary-300 active:outline-primary-700"
             aria-label={`${menu.title}의 ${menu.subTitle} 관리 페이지로 이동`}
           >
