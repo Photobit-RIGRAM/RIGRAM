@@ -6,30 +6,37 @@ import Divider from '@/components/divider';
 import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
+import Select from '@/components/select';
 import Textarea from '@/components/textarea';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useMemo, useState } from 'react';
 
 export default function DepartmentAddPage() {
+  const router = useRouter();
   const pathname = usePathname();
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
+
   const [collegeName, setCollegeName] = useState('');
   const [deptName, setDeptName] = useState('');
   const [deptNameEn, setDeptNameEn] = useState('');
   const [imgUrl, setImgUrl] = useState<File | string | null>('');
   const [deptDesc, setDeptDesc] = useState('');
+
   const schoolId = useSchoolStore((state) => state.school?.id);
+  const schoolGraduationYear = useSchoolStore((state) => state.school?.graduation_year);
   const addCollege = useCollegeStore((state) => state.addCollege);
 
-  const handleFileSelect = (file: File | null) => {
+  // 파일 선택 handler (useCallback으로 메모이제이션)
+  const handleFileSelect = useCallback((file: File | null) => {
     if (!file) return;
     setImgUrl(file);
-  };
+  }, []);
 
+  // 학과 등록
   const handleDeptAdd = async () => {
     if (!schoolId || !collegeName || !deptName) {
       console.error('Missing required fields');
@@ -90,6 +97,7 @@ export default function DepartmentAddPage() {
             name_en: deptNameEn,
             desc: deptDesc,
             img_url: logoUrl,
+            graduation_year: schoolGraduationYear,
           },
         ])
         .select()
@@ -101,14 +109,15 @@ export default function DepartmentAddPage() {
         return;
       }
 
+      alert('학과가 성공적으로 추가되었습니다!');
+      router.replace(`/admin/${segments[1]}/department`);
+
       // 성공시 폼 초기화
       setCollegeName('');
       setDeptName('');
       setDeptNameEn('');
       setDeptDesc('');
       setImgUrl('');
-
-      alert('학과가 성공적으로 추가되었습니다!');
     } catch (error) {
       console.error('Unexpected error:', error);
       alert(`예상치 못한 오류: ${error}`);
@@ -190,6 +199,27 @@ export default function DepartmentAddPage() {
                 className="w-full"
                 value={deptNameEn}
                 onChange={(e) => setDeptNameEn(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-start items-center">
+            <label
+              htmlFor="graduate-year"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
+            >
+              졸업연도
+              <Asterisk className="text-red w-4 h-4" />
+            </label>
+            <div className="flex-1 min-w-0">
+              <Input
+                purpose="text"
+                id="graduate-year"
+                className="w-full bg-gray-100"
+                value={
+                  useSchoolStore.getState().school?.graduation_year ||
+                  '학교 정보에 졸업연도가 없습니다.'
+                }
+                readOnly
               />
             </div>
           </div>

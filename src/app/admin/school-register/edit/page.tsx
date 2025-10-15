@@ -11,12 +11,10 @@ import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function SchoolEditPage() {
   const router = useRouter();
-  const { school, fetchSchool, editSchool } = useSchoolStore();
-  const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
   const [form, setForm] = useState({
     schoolName: '',
     schoolNameEn: '',
@@ -26,23 +24,30 @@ export default function SchoolEditPage() {
     adminPhone: '',
     adminEmail: '',
   });
+  const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
+  const { school, fetchSchool, editSchool } = useSchoolStore();
 
   const GO_NEXT_STEP = () => setCurrentStep('admin');
   // const GO_PREV_STEP = () => setCurrentStep('basic');
 
+  /* 상태 변경 useCallback으로 최적화 */
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  }, []);
+
+  /* 초기 데이터 fetch */
   useEffect(() => {
     const getData = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (user) {
-        await fetchSchool(user.id);
-      }
+      if (user) await fetchSchool(user.id);
     };
 
-    getData();
-  }, [fetchSchool]);
+    if (!school) getData();
+  }, [fetchSchool, school]);
 
+  /* form 초기화 */
   useEffect(() => {
     if (school) {
       setForm({
@@ -56,13 +61,6 @@ export default function SchoolEditPage() {
       });
     }
   }, [school]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.id]: e.target.value,
-    });
-  };
 
   const handleEdit = async () => {
     const {
@@ -138,7 +136,7 @@ export default function SchoolEditPage() {
               <div className="flex justify-start items-center w-full">
                 <label
                   htmlFor="schoolName"
-                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
                 >
                   학교 이름
                   <Asterisk className="text-red w-4 h-4" />
@@ -157,9 +155,10 @@ export default function SchoolEditPage() {
               <div className="flex justify-start items-center w-full">
                 <label
                   htmlFor="schoolNameEn"
-                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
                 >
                   학교 영어 이름
+                  <Asterisk className="text-red w-4 h-4" />
                 </label>
                 <div className="flex-1 min-w-0">
                   <Input
@@ -175,7 +174,7 @@ export default function SchoolEditPage() {
               <div className="flex justify-start items-center">
                 <label
                   htmlFor="school-year"
-                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
                 >
                   졸업연도
                   <Asterisk className="text-red w-4 h-4" />
@@ -192,7 +191,7 @@ export default function SchoolEditPage() {
               <div className="flex justify-start items-center">
                 <label
                   htmlFor="school-logo"
-                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
                 >
                   학교 로고
                   <Asterisk className="text-red w-4 h-4" />
@@ -244,10 +243,10 @@ export default function SchoolEditPage() {
               <div className="flex justify-start items-center w-full">
                 <label
                   htmlFor="adminName"
-                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+                  className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
                 >
                   담당자 이름
-                  <Asterisk className="text-red w-4 h-4" />
+                  <Asterisk className="text-red w-4 h-4" aria-hidden="true" />
                 </label>
                 <div className="flex-1 min-w-0">
                   <Input
@@ -266,7 +265,7 @@ export default function SchoolEditPage() {
                   className="flex justify-start items-center gap-0.5 text-18 text-gray-800 md:w-[200px]"
                 >
                   전화번호
-                  <Asterisk className="text-red w-4 h-4" />
+                  <Asterisk className="text-red w-4 h-4" aria-hidden="true" />
                 </label>
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <Input
@@ -311,10 +310,10 @@ export default function SchoolEditPage() {
               <div className="flex justify-start items-center w-full">
                 <label
                   htmlFor="adminEmail"
-                  className="flex justify-start items-center gap-0.5 text-18 text-gray-800 md:w-[200px]"
+                  className="flex justify-start items-center gap-0.5 text-18 text-gray-800 w-[120px] md:w-[200px]"
                 >
                   이메일
-                  <Asterisk className="text-red w-4 h-4" />
+                  <Asterisk className="text-red w-4 h-4" aria-hidden="true" />
                 </label>
                 <div className="flex-1 min-w-0">
                   <Input
@@ -334,9 +333,9 @@ export default function SchoolEditPage() {
   };
 
   return (
-    <section className="flex flex-col h-full gap-2 md:gap-4">
+    <>
       <PageHeader title="학교 수정하기" />
-      {RenderStep()}
-    </section>
+      <section className="flex flex-col h-full gap-2 md:gap-4">{RenderStep()}</section>
+    </>
   );
 }
