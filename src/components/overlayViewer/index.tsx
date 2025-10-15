@@ -18,21 +18,27 @@ export default function OverlayViewer({ media, onClose }: OverlayViewerProps) {
         className="absolute top-5 right-5 text-white bg-black/50 rounded-full p-2 hover:bg-black"
         onClick={onClose}
       >
-        <X size={24} />
+        <X size={24} aria-hidden="true" />
       </button>
 
       {media.type === 'video' ? (
         <video
           controls
           autoPlay
-          className="max-w-[90%] max-h-[80%] rounded-lg shadow-lg"
+          className="max-w-[90vw] max-h-[80vh] rounded-lg shadow-lg"
           poster={media.video_thumbnail || undefined}
         >
           <source src={media.url} type="video/mp4" />
         </video>
       ) : (
-        <div className="relative max-w-[90%] max-h-[80%] rounded-lg shadow-lg">
-          <Image src={media.url} alt="" className="object-contain" fill />
+        <div className="relative w-[90vw] h-[80vh] rounded-lg shadow-lg">
+          <Image
+            src={media.url}
+            alt={'미디어 이미지'}
+            className="object-contain"
+            fill
+            sizes="(max-width: 768px) 90vw, 80vh"
+          />
         </div>
       )}
     </div>

@@ -3,6 +3,8 @@ import Image from 'next/image';
 
 interface ProfileProps extends Student {
   onClick: () => void;
+  role: string;
+  tabIndex: number;
 }
 
 export default function Profile({
@@ -17,11 +19,15 @@ export default function Profile({
   // created_at,
   // updated_at,
   onClick,
+  role,
+  tabIndex,
 }: ProfileProps) {
   return (
     <div
       className="flex flex-col gap-4 p-4 bg-white border border-border rounded-xl"
       onClick={onClick}
+      role={role}
+      tabIndex={tabIndex}
     >
       <div className="flex gap-3 justify-center items-center w-full overflow-hidden">
         <div className="relative w-1/2 h-35 rounded-sm ">
