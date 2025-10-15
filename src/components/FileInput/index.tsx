@@ -1,6 +1,7 @@
 'use client';
 
 import { Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface FileInputProps {
@@ -23,6 +24,7 @@ export default function FileInput({
   size = 'sm',
 }: FileInputProps) {
   const [fileName, setFileName] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -30,9 +32,17 @@ export default function FileInput({
       setFileName(
         multiple ? `${files[0].name}외 ${files.length - 1}개 파일 선택됨` : files[0].name
       );
+
+      if (files[0].type.startsWith('image/')) {
+        const imageUrl = URL.createObjectURL(files[0]);
+        setPreviewUrl(imageUrl);
+      } else {
+        setPreviewUrl(null);
+      }
       onChange?.(multiple ? files : files[0]);
     } else {
       setFileName(null);
+      setPreviewUrl(null);
       onChange?.(files);
     }
   };
@@ -44,9 +54,19 @@ export default function FileInput({
         className="flex justify-start items-center gap-4 w-full p-3 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100"
       >
         <div
-          className={`flex justify-center items-center bg-primary-100 p-5 rounded-lg ${size === 'sm' ? '' : 'w-34 h-40'}`}
+          className={`relative flex justify-center items-center bg-primary-100 p-5 rounded-lg ${size === 'sm' ? '' : 'w-34 h-40'}`}
         >
-          <ImageIcon className="w-6 h-6 text-gray-500" />
+          {previewUrl ? (
+            <Image
+              src={previewUrl}
+              alt="미리보기"
+              fill
+              sizes="(max-width: 768px) 10px 10px"
+              className="object-cover w-full h-full rounded-lg"
+            />
+          ) : (
+            <ImageIcon className="w-6 h-6 text-gray-500" />
+          )}
         </div>
         <div>
           {fileName ? (
