@@ -4,7 +4,9 @@ export type Student = {
   dept_id: string;
   name: string;
   name_en: string;
-  graduation_year: number;
+  email: string;
+  phone: string;
+  graduation_year: string;
   profile_default: string;
   profile_graduate: string;
   created_at: string;

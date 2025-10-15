@@ -15,8 +15,10 @@ interface StudentsState {
     name: string,
     name_en: string,
     profile_default: string | null,
-    profile_graduate: string | null
-    // graduation_year: number,
+    profile_graduate: string | null,
+    email: string,
+    phone: string,
+    graduation_year: string
   ) => Promise<void>;
   updateStudentProfile: (
     studentId: string,
@@ -73,7 +75,10 @@ export const useStudentStore = create<StudentsState>((set) => ({
     name,
     nameEn,
     profile_default: string | null,
-    profile_graduate: string | null
+    profile_graduate: string | null,
+    email,
+    phone,
+    graduation_year
   ) => {
     const { data, error } = await supabase
       .from('students')
@@ -85,6 +90,9 @@ export const useStudentStore = create<StudentsState>((set) => ({
           name_en: nameEn,
           profile_default,
           profile_graduate,
+          email,
+          phone,
+          graduation_year,
         },
       ])
       .single();
