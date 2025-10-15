@@ -58,7 +58,7 @@ export default function DepartmentPage() {
         <h2 className="text-20 font-semibold text-gray-900 md:text-24 md:font-bold">학과 리스트</h2>
         <Button
           className="flex items-center gap-1 px-3 py-2 text-16 text-primary-700 font-semibold"
-          href={`/${pathname}/add`}
+          href={`${pathname}/add`}
           aria-label="새 학과 추가하기"
         >
           <Plus className="w-4 h-4" />
