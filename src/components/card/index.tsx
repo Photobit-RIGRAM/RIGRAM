@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 interface CardProps {
   href?: string;
@@ -19,7 +20,9 @@ export default function Card({
   variant = 'default',
   role,
 }: CardProps) {
-  if (variant === 'add') {
+  const isAddVariant = useMemo(() => variant === 'add', [variant]);
+
+  if (isAddVariant) {
     return (
       <Link
         href={href}
@@ -28,7 +31,7 @@ export default function Card({
         aria-label="새 학과 추가하기"
       >
         <div className="flex items-center gap-1 text-gray-500">
-          <Plus />
+          <Plus aria-hidden="true" />
           <span>학과 추가하기</span>
         </div>
       </Link>
