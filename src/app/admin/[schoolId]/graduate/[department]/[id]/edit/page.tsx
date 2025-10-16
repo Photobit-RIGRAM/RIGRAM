@@ -12,24 +12,45 @@ import { useStudentStore } from '@/store/useStudentStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export default function GraduateEditPage() {
-  const pathname = usePathname();
   const router = useRouter();
-  const segments = pathname.split('/').filter(Boolean);
+  const pathname = usePathname();
+  const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
   const departmentId = segments[3];
   const studentId = segments[4];
+
   const [studentName, setStudentName] = useState('');
   const [studentNameEn, setStudentNameEn] = useState('');
   const [deptName, setDeptName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [graduationYear, setGraduationYear] = useState('');
   const [profileImg, setProfileImg] = useState<File | null>(null);
   const [graduationImg, setGraduationImg] = useState<File | null>(null);
+
   const { departments, fetchDepartmentById } = useDepartmentStore();
   const department = departments.find((d) => d.id === departmentId);
   const { student, fetchStudentById, updateStudentProfile } = useStudentStore();
   const school = useSchoolStore((state) => state.school);
   const schoolNameEn = school?.school_name_en || '';
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
+
+  // 파일 선택 handler
+  const handleFileSelect = useCallback((file: File | null, type: 'profile' | 'graduation') => {
+    if (!file) return;
+    if (type === 'profile') {
+      setProfileImg(file);
+    } else {
+      setGraduationImg(file);
+    }
+  }, []);
 
   useEffect(() => {
     if (studentId) {
@@ -46,17 +67,11 @@ export default function GraduateEditPage() {
       setStudentName(student.name);
       setStudentNameEn(student.name_en);
       setDeptName(department?.name || '');
+      setGraduationYear(department?.graduation_year || '');
+      setPhone(student.phone);
+      setEmail(student.email);
     }
-  }, [student, department?.id, department?.name]);
-
-  const handleFileSelect = (file: File | null, type: 'profile' | 'graduation') => {
-    if (!file) return;
-    if (type === 'profile') {
-      setProfileImg(file);
-    } else {
-      setGraduationImg(file);
-    }
-  };
+  }, [student, department?.id, department?.name, department?.graduation_year]);
 
   const handleGraduateUpdate = async () => {
     if (!studentName || !studentNameEn) return;
@@ -66,14 +81,15 @@ export default function GraduateEditPage() {
       let graduationUrl: string | null = null;
 
       // 파일 경로 구성
-      const departmentName = department?.name_en || 'defaultDept';
-      const studentNameSafe = studentNameEn || 'defaultStudent';
+      const schoolName = slugify(schoolNameEn);
+      const departmentName = slugify(department?.name_en || '');
+      const studentNameSafe = slugify(studentNameEn || 'defaultStudent');
 
       if (profileImg) {
         const { data, error } = await supabase.storage
           .from('student-profiles')
           .upload(
-            `${schoolNameEn}/${departmentName}/${studentNameSafe}/profile/${profileImg.name}`,
+            `${schoolName}/${departmentName}/${studentNameSafe}/profile/${profileImg.name}`,
             profileImg,
             {
               upsert: true,
@@ -92,7 +108,7 @@ export default function GraduateEditPage() {
         const { data, error } = await supabase.storage
           .from('student-profiles')
           .upload(
-            `${schoolNameEn}/${departmentName}/${studentNameSafe}/graduation/${graduationImg.name}`,
+            `${schoolName}/${departmentName}/${studentNameSafe}/graduation/${graduationImg.name}`,
             graduationImg,
             { upsert: true }
           );
@@ -109,6 +125,8 @@ export default function GraduateEditPage() {
         name_en: studentNameEn,
         profile_default: profileUrl || student?.profile_default || '',
         profile_graduate: graduationUrl || student?.profile_graduate || '',
+        email,
+        phone,
       });
 
       if (!updated) {
@@ -198,7 +216,61 @@ export default function GraduateEditPage() {
                 placeholder="학과 이름을 입력해 주세요.(80자 제한)"
                 className="w-full"
                 value={deptName}
-                disabled={true}
+                readOnly={true}
+              />
+            </div>
+          </div>
+          <div className="flex justify-start items-center w-full">
+            <label
+              htmlFor="graduation-year"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            >
+              졸업 연도
+            </label>
+            <div className="flex-1 min-w-0">
+              <Input
+                purpose="text"
+                id="graduation-year"
+                placeholder=""
+                className="w-full"
+                value={graduationYear}
+                readOnly={true}
+              />
+            </div>
+          </div>
+          <div className="flex justify-start items-center w-full">
+            <label
+              htmlFor="contact"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            >
+              연락처
+            </label>
+            <div className="flex-1 min-w-0">
+              <Input
+                purpose="text"
+                id="contact"
+                placeholder="01012345678"
+                className="w-full"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex justify-start items-center w-full">
+            <label
+              htmlFor="email"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            >
+              이메일
+            </label>
+            <div className="flex-1 min-w-0">
+              <Input
+                purpose="text"
+                id="email"
+                placeholder="example@email.com"
+                className="w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
