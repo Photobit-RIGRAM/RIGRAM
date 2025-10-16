@@ -6,7 +6,6 @@ import Divider from '@/components/divider';
 import FileInput from '@/components/fileInput';
 import Input from '@/components/input';
 import PageHeader from '@/components/pageHeader';
-import Select from '@/components/select';
 import Textarea from '@/components/textarea';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
@@ -26,9 +25,16 @@ export default function DepartmentAddPage() {
   const [imgUrl, setImgUrl] = useState<File | string | null>('');
   const [deptDesc, setDeptDesc] = useState('');
 
+  const school = useSchoolStore((state) => state.school);
   const schoolId = useSchoolStore((state) => state.school?.id);
   const schoolGraduationYear = useSchoolStore((state) => state.school?.graduation_year);
   const addCollege = useCollegeStore((state) => state.addCollege);
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
 
   // 파일 선택 handler (useCallback으로 메모이제이션)
   const handleFileSelect = useCallback((file: File | null) => {
@@ -69,9 +75,9 @@ export default function DepartmentAddPage() {
       // 이미지 업로드 처리
       let logoUrl: string | null = null;
       if (imgUrl instanceof File) {
-        const schoolName = segments[0];
-        const fileName = imgUrl.name;
-        const filePath = `${schoolName}/${fileName}`;
+        const schoolName = slugify(school?.school_name_en ?? '');
+        const deptName = slugify(deptNameEn);
+        const filePath = `${schoolName}/${deptName}/${imgUrl.name}`;
 
         const { error: uploadError } = await supabase.storage
           .from('dept-img')
