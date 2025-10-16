@@ -4,6 +4,8 @@ import Button from '@/components/button';
 import PageHeader from '@/components/pageHeader';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
+import { supabase } from '@/utils/supabase/client';
 import { Calendar, GraduationCap, PencilLine, Tag, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -18,8 +20,15 @@ export default function DepartmentDetail() {
   const departmentId = segments[3];
 
   const [collegeName, setCollegeName] = useState<string | null>(null);
+  const school = useSchoolStore((state) => state.school);
   const { departments, fetchDepartmentById, deleteDepartment, isLoading } = useDepartmentStore();
   const { fetchCollegeById } = useCollegeStore();
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
 
   useEffect(() => {
     if (!departmentId) return;
@@ -47,12 +56,60 @@ export default function DepartmentDetail() {
   if (!department || isLoading) return <p>학과 데이터를 불러오는 중 입니다.</p>;
 
   const handleDelete = async () => {
-    if (confirm(`${department.name}을 삭제하시겠습니까?`)) {
+    if (!department) return;
+    if (!confirm(`${department.name}을 삭제하시겠습니까?`)) return;
+
+    try {
+      const schoolName = slugify(school?.school_name_en ?? '');
+      const deptName = slugify(department.name_en);
+      const deptPath = `${schoolName}/${deptName}`;
+
+      // 1. 해당 학과 폴더 안의 파일 목록 조회
+      const { data: files, error: listError } = await supabase.storage
+        .from('dept-img')
+        .list(deptPath);
+
+      if (listError) {
+        console.error('파일 목록 불러오기 실패:', listError);
+        throw listError;
+      }
+
+      // 2. 학과 폴더 내 파일 모두 삭제
+      if (files && files.length > 0) {
+        const filePaths = files.map((f) => `${deptPath}/${f.name}`);
+        const { error: removeError } = await supabase.storage.from('dept-img').remove(filePaths);
+        if (removeError) {
+          console.error('파일 삭제 실패:', removeError);
+          throw removeError;
+        }
+      }
+
+      // 3. 동일 학교의 다른 학과가 존재하는지 확인
+      const otherDepartments = departments.filter(
+        (d) => d.id !== department.id && d.college_id === department.college_id
+      );
+
+      // 4. 만약 학교의 다른 학과가 없다면 → 학교 폴더 자체 삭제
+      if (otherDepartments.length === 0) {
+        const { data: schoolFiles } = await supabase.storage.from('dept-img').list(schoolName);
+        if (schoolFiles && schoolFiles.length === 0) {
+          // 폴더 안 비어있으면 루트 폴더 정리
+          const { error: cleanError } = await supabase.storage
+            .from('dept-img')
+            .remove([schoolName]);
+          if (cleanError) console.error('학교 폴더 삭제 실패:', cleanError);
+        }
+      }
+
+      // 5. Supabase DB에서 학과 삭제
       const success = await deleteDepartment(departmentId);
       if (success) {
-        alert(`${department.name}가 삭제되었습니다.`);
+        alert(`${department.name}이 삭제되었습니다.`);
         router.replace(`/admin/${schoolId}/department`);
       }
+    } catch (err) {
+      console.error('학과 삭제 중 오류 발생:', err);
+      alert('학과 삭제 중 문제가 발생했습니다.');
     }
   };
 
