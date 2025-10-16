@@ -59,6 +59,8 @@ export default function PhotoListPage() {
 
     try {
       await Promise.all(selectedMediaIds.map((id) => deleteMedia(currentDept, id)));
+      await fetchMediaList(currentDept);
+
       alert('삭제 완료');
       setSelectedMediaIds([]);
       setIsDeleteMode(false);
