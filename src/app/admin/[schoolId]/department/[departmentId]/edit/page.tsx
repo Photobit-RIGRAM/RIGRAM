@@ -9,24 +9,35 @@ import PageHeader from '@/components/pageHeader';
 import Textarea from '@/components/textarea';
 import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
+import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function DepartmentEditPage() {
+  const router = useRouter();
   const pathname = usePathname();
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
   const departmentId = segments[3];
+
   const [collegeName, setCollegeName] = useState('');
   const [deptName, setDeptName] = useState('');
   const [deptNameEn, setDeptNameEn] = useState('');
   const [imgUrl, setImgUrl] = useState<File | string | null>(null);
   const [prevImgUrl, setPrevImgUrl] = useState<string | null>(null);
   const [deptDesc, setDeptDesc] = useState('');
+
+  const school = useSchoolStore((state) => state.school);
   const updateDepartment = useDepartmentStore((state) => state.updateDepartment);
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
   const fetchCollegeById = useCollegeStore((state) => state.fetchCollegeById);
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
 
   const handleFileSelect = (file: File | null) => {
     if (!file) return;
@@ -97,10 +108,14 @@ export default function DepartmentEditPage() {
       let logoUrl: string | null = null;
 
       if (imgUrl instanceof File) {
-        // const schoolName = segments[0];
+        const schoolName = slugify(school?.school_name_en ?? '');
+        const deptName = slugify(deptNameEn);
         const fileName = imgUrl.name;
-        const filePath = `${fileName}`;
 
+        // 폴더 구조를 반영
+        const filePath = `${schoolName}/${deptName}/${fileName}`;
+
+        // 같은 경로에 파일이 이미 있으면 덮어쓰기 (upsert)
         const { error: uploadError } = await supabase.storage
           .from('dept-img')
           .upload(filePath, imgUrl, { upsert: true });
@@ -111,36 +126,20 @@ export default function DepartmentEditPage() {
           return;
         }
 
+        // 새 이미지 URL 생성
         const { data: urlData } = supabase.storage.from('dept-img').getPublicUrl(filePath);
         logoUrl = urlData.publicUrl;
 
-        // 기존 이미지가 잇을 경우 storage에서 삭제
+        // ✅ 기존 이미지가 있고, 경로가 다를 경우 삭제
         if (prevImgUrl && prevImgUrl !== logoUrl) {
-          // if (prevImgUrl && prevImgUrl.includes(`/object/public/dept-img/`)) {
-          // const parts = prevImgUrl.split(`/object/public/dept-img`);
-          // let oldFilePath = parts.length > 1 ? parts[1] : null;
           const oldFilePath = extractFilePathFromUrl(prevImgUrl);
-
-          // if (oldFilePath?.startsWith('/')) {
-          //   oldFilePath = oldFilePath.slice(1);
-          // }
-          console.log('삭제할 oldFilePath:', oldFilePath);
-
-          if (oldFilePath) {
-            console.log('삭제할 oldFilePath:', oldFilePath);
+          if (oldFilePath && oldFilePath !== filePath) {
             const { error: removeError } = await supabase.storage
               .from('dept-img')
               .remove([oldFilePath]);
-
-            if (removeError) {
-              console.error('기존 이미지 삭제 실패:', removeError);
-            } else {
-              console.log('기존 이미지 삭제 성공:', oldFilePath);
-            }
+            if (removeError) console.error('기존 이미지 삭제 실패:', removeError);
           }
         }
-      } else if (typeof imgUrl === 'string') {
-        logoUrl = imgUrl;
       }
 
       // 학과 업데이트
@@ -158,6 +157,7 @@ export default function DepartmentEditPage() {
 
       setPrevImgUrl(logoUrl);
       alert('학과가 성공적으로 수정되었습니다!');
+      router.replace(`/admin/${school?.id}/department/${departmentId}`);
     } catch (error) {
       console.error('Unexpected error:', error);
       alert(`예상치 못한 오류: ${error}`);
