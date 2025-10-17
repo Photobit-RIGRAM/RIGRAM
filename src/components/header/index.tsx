@@ -19,19 +19,22 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   };
 
   const handleSchoolPage = () => {
-    router.push(`/${schoolId}`);
+    router.replace(`/admin/${schoolId}`);
     setIsOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('schoolId');
     logout();
-    router.push('/login');
+    router.replace('/login');
     setIsOpen(false);
   };
 
   return (
-    <header className="flex flex-row-reverse justify-between items-center w-full min-h-14 bg-gray-100 px-5 shadow-dropdown md:min-h-16 md:px-10">
+    <header
+      role="banner"
+      className="flex flex-row-reverse justify-between items-center w-full min-h-14 bg-gray-100 px-5 shadow-dropdown md:min-h-16 md:px-10"
+    >
       <nav className="relative shrink-0">
         <Button
           onClick={handleMenuDrop}
@@ -46,6 +49,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
                 alt="리그램 로고"
                 fill
                 priority
+                sizes="(max-width: 768px): 24px, 32px"
                 className="object-contain"
               />
             </div>
@@ -60,14 +64,14 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
           role="menu"
           className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center bg-white border border-gray-500 rounded-lg overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
         >
-          {schoolId && (
+          {school && school?.school_name ? (
             <li
               className="flex justify-center items-center whitespace-nowrap px-1.5 py-1 text-14 border-b border-b-gray-500 hover:bg-gray-200 md:px-3 md:py-2 md:text-16"
               role="menuitem"
             >
               <Button onClick={handleSchoolPage}>학교 페이지로 이동</Button>
             </li>
-          )}
+          ) : null}
           <li
             className="flex justify-center items-center whitespace-nowrap px-1.5 py-1 text-14 hover:bg-gray-200 md:px-3 md:py-2 md:text-16"
             role="menuitem"
