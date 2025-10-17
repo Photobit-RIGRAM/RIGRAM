@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/button';
-import Checkbox from '@/components/checkbox';
+// import Checkbox from '@/components/checkbox';
 import Input from '@/components/input';
 import { supabase } from '@/utils/supabase/client';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'admin' | 'student'>('admin');
+  // const [role, setRole] = useState<'admin' | 'student'>('admin');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -80,7 +80,7 @@ export default function LoginPage() {
         </div>
 
         <form action="" className="flex flex-col gap-4 md:gap-5" onSubmit={handleLogin}>
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <label>
               <input
                 type="radio"
@@ -101,7 +101,7 @@ export default function LoginPage() {
               />
               Student
             </label>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-4">
             <Input
               purpose="id"
@@ -116,7 +116,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Checkbox purpose="id" />
+          {/* <Checkbox purpose="id" /> */}
           <Button
             type="submit"
             className="w-full bg-gray-900 text-white text-18 py-4 rounded-lg"
