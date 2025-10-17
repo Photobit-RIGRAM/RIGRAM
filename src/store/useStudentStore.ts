@@ -132,18 +132,60 @@ export const useStudentStore = create<StudentsState>((set) => ({
     return null;
   },
   deleteStudentProfile: async (studentId) => {
-    const { error } = await supabase.from('students').delete().eq('id', studentId);
+    set({ isLoading: false, error: null });
 
-    if (error) {
-      console.error('학생 프로필을 삭제하던 중 오류 발생:', error);
-      set({ isLoading: false, error: error.message });
+    try {
+      const { data } = await supabase
+        .from('students')
+        .select('profile_default, profile_graduate')
+        .eq('id', studentId)
+        .single();
+
+      /* Storage 파일 경로 추출 */
+      const baseUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/student-profiles/`;
+      const filePaths: string[] = [];
+
+      const extractPath = (fullUrl?: string | null) => {
+        if (!fullUrl) return null;
+        if (!fullUrl.startsWith(baseUrl)) return null;
+        return fullUrl.replace(baseUrl, '');
+      };
+
+      const defaultPath = extractPath(data?.profile_default);
+      const graduatePath = extractPath(data?.profile_graduate);
+
+      if (defaultPath) filePaths.push(defaultPath);
+      if (graduatePath) filePaths.push(graduatePath);
+
+      /* Storage에서 파일 삭제 */
+      if (filePaths.length > 0) {
+        const { error: storageError } = await supabase.storage
+          .from('student-profiles')
+          .remove(filePaths);
+        if (storageError) console.warn('Storage 파일 삭제 중 오류:', storageError.message);
+      } else {
+        console.log('삭제할 파일이 없습니다. Storage 삭제를 건너뜁니다.');
+      }
+
+      /* DB에서 student row 삭제 */
+      const { error } = await supabase.from('students').delete().eq('id', studentId);
+      if (error) {
+        console.error('학생 프로필을 삭제하던 중 오류 발생:', error);
+        set({ isLoading: false, error: error.message });
+        return false;
+      }
+
+      /* 상태 업데이트 */
+      set((state) => ({
+        students: state.students.filter((student) => student.id !== studentId),
+        isLoading: false,
+      }));
+
+      return true;
+    } catch (error) {
+      console.error('졸업생 정보를 삭제하던 중 오류가 발생했습니다. :', error);
+      set({ isLoading: false });
       return false;
     }
-
-    set((state) => ({
-      students: state.students.filter((student) => student.id !== studentId),
-    }));
-
-    return true;
   },
 }));

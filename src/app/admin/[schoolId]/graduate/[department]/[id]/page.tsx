@@ -84,8 +84,6 @@ export default function GraduateDepartmentPage() {
         console.log('상위 폴더 파일 삭제 완료:', folderPath);
       }
     }
-
-    console.log(`${studentNameEn} 학생 폴더 삭제 완료`);
   };
 
   const handleGraduateDelete = async () => {
