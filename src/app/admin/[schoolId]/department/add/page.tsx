@@ -44,12 +44,14 @@ export default function DepartmentAddPage() {
 
   // 학과 등록
   const handleDeptAdd = async () => {
-    if (!schoolId || !collegeName || !deptName) {
-      console.error('Missing required fields');
-      return;
-    }
+    if (!schoolId) return;
 
     try {
+      if (!collegeName) return alert('단과대학명을 입력해 주세오.');
+      if (!deptName) return alert('학과명을 입력해 주세오.');
+      if (!deptNameEn) return alert('학과 영문명을 입력해 주세오.');
+      if (!imgUrl) return alert('학과의 대표 이미지를 업로드해 주세오.');
+
       //사용자 인증 확인
       const {
         data: { user },
@@ -115,7 +117,7 @@ export default function DepartmentAddPage() {
         return;
       }
 
-      alert('학과가 성공적으로 추가되었습니다!');
+      alert(`${deptName}학과가 추가되었습니다.`);
       router.replace(`/admin/${segments[1]}/department`);
 
       // 성공시 폼 초기화
@@ -182,7 +184,7 @@ export default function DepartmentAddPage() {
               <Input
                 purpose="text"
                 id="department-name"
-                placeholder="학과 이름을 입력해 주세요. (80자 제한)"
+                placeholder="학과명을 입력해 주세요. (80자 제한)"
                 className="w-full"
                 required={true}
                 value={deptName}
@@ -196,13 +198,15 @@ export default function DepartmentAddPage() {
               className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
             >
               학과 영문명
+              <Asterisk className="text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
                 purpose="text"
                 id="department-name-en"
-                placeholder="학교 이름을 입력해 주세요 (80자 제한)"
+                placeholder="학과 영문명을 입력해 주세요 (80자 제한)"
                 className="w-full"
+                required={true}
                 value={deptNameEn}
                 onChange={(e) => setDeptNameEn(e.target.value)}
               />
@@ -242,10 +246,12 @@ export default function DepartmentAddPage() {
                 id="department-image"
                 className="w-full"
                 size="lg"
+                value={imgUrl}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
                   handleFileSelect(file);
+                  setImgUrl(file);
                 }}
               />
             </div>
