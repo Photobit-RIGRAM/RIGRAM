@@ -20,6 +20,7 @@ export default function DepartmentDetail() {
   const departmentId = segments[3];
 
   const [collegeName, setCollegeName] = useState<string | null>(null);
+
   const school = useSchoolStore((state) => state.school);
   const { departments, fetchDepartmentById, deleteDepartment, isLoading } = useDepartmentStore();
   const { fetchCollegeById } = useCollegeStore();
@@ -57,7 +58,7 @@ export default function DepartmentDetail() {
 
   const handleDelete = async () => {
     if (!department) return;
-    if (!confirm(`${department.name}을 삭제하시겠습니까?`)) return;
+    if (!confirm(`${department.name}을(를) 삭제하시겠습니까?`)) return;
 
     try {
       const schoolName = slugify(school?.school_name_en ?? '');
@@ -104,7 +105,7 @@ export default function DepartmentDetail() {
       // 5. Supabase DB에서 학과 삭제
       const success = await deleteDepartment(departmentId);
       if (success) {
-        alert(`${department.name}이 삭제되었습니다.`);
+        alert(`${department.name}이(가) 삭제되었습니다.`);
         router.replace(`/admin/${schoolId}/department`);
       }
     } catch (err) {
