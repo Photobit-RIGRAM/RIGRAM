@@ -2,13 +2,14 @@
 
 import { Image as ImageIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FileInputProps {
   id?: string;
   name?: string;
   accept?: string;
   multiple?: boolean;
+  value?: File | string | null;
   onChange?: (files: FileList | File | null) => void;
   className?: string;
   size?: 'sm' | 'lg';
@@ -19,6 +20,7 @@ export default function FileInput({
   name = 'fileInput',
   accept = 'image/*, video/*',
   multiple = false,
+  value = null,
   onChange,
   className,
   size = 'sm',
@@ -26,25 +28,37 @@ export default function FileInput({
   const [fileName, setFileName] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  // ✅ value가 바뀔 때마다 previewUrl 동기화
+  useEffect(() => {
+    if (!value) {
+      setPreviewUrl(null);
+      setFileName(null);
+      return;
+    }
+
+    if (typeof value === 'string') {
+      // URL인 경우 (예: 기존 이미지)
+      setPreviewUrl(value);
+      setFileName(value.split('/').pop() ?? 'logo.svg');
+    } else if (value instanceof File) {
+      // File 객체인 경우
+      const objectUrl = URL.createObjectURL(value);
+      setPreviewUrl(objectUrl);
+      setFileName(value.name);
+
+      return () => URL.revokeObjectURL(objectUrl); // cleanup
+    }
+  }, [value]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files && files.length > 0) {
-      setFileName(
-        multiple ? `${files[0].name}외 ${files.length - 1}개 파일 선택됨` : files[0].name
-      );
-
-      if (files[0].type.startsWith('image/')) {
-        const imageUrl = URL.createObjectURL(files[0]);
-        setPreviewUrl(imageUrl);
-      } else {
-        setPreviewUrl(null);
-      }
-      onChange?.(multiple ? files : files[0]);
-    } else {
-      setFileName(null);
-      setPreviewUrl(null);
-      onChange?.(files);
+    if (!files || files.length === 0) {
+      onChange?.(null);
+      return;
     }
+
+    const selected = multiple ? files : files[0];
+    onChange?.(selected);
   };
 
   return (

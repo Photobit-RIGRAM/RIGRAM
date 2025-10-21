@@ -66,7 +66,7 @@ export default function Input({
       name={name || config.defaultName}
       type={config.type}
       placeholder={config.placeholder}
-      defaultValue={value}
+      value={value ?? ''}
       required={required}
       onChange={onChange}
       disabled={disabled}
