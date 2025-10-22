@@ -87,8 +87,8 @@ export default function FileInput({
             <p className="text-16 text-gray-600">{fileName}</p>
           ) : (
             <>
-              <p className="text-16 text-gray-600">여기를 클릭하거나 이미지를 올려주세요</p>
-              <p className="text-14 text-gray-500">파일 형식은 SVG 또는 PNG로 업로드해 주세요</p>
+              <p className="text-16 text-gray-600">여기를 클릭하거나 이미지를 올려주세요.</p>
+              <p className="text-14 text-gray-500">파일명이 영문명으로 된 파일을 업로드해주세요.</p>
             </>
           )}
         </div>
