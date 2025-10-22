@@ -178,6 +178,7 @@ export default function PhotoAddPage() {
               id="media-upload"
               size="lg"
               multiple={false}
+              value={mediaFile}
               onChange={(files) => {
                 if (!files) return;
                 const file = files instanceof FileList ? files[0] : files;
@@ -201,6 +202,7 @@ export default function PhotoAddPage() {
                 id="thumbnail-upload"
                 size="lg"
                 multiple={false}
+                value={thumbnail}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
