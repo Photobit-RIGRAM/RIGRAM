@@ -8,6 +8,8 @@ interface InputProps {
   required?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
+  min?: number;
+  max?: number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -20,6 +22,8 @@ export default function Input({
   className,
   required = false,
   onChange,
+  min,
+  max,
   disabled = false,
   readOnly = false,
 }: InputProps) {
@@ -71,6 +75,8 @@ export default function Input({
       onChange={onChange}
       disabled={disabled}
       readOnly={readOnly}
+      minLength={min}
+      maxLength={max}
       className={`border border-gray-500 rounded-lg px-2.5 py-2 h-[40px] md:px-4.5 md:py-4 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700  
         ${
           purpose === 'id' || purpose === 'password' || purpose === 'search'
