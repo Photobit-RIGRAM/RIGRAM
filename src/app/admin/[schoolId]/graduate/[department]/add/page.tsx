@@ -88,9 +88,14 @@ export default function GraduateAddPage() {
   };
 
   const handleProfileAdd = async () => {
-    if (!studentName || !studentNameEn) return;
-
     try {
+      if (!studentName.trim()) return alert('졸업생 이름을 입력해 주세요.');
+      if (!studentNameEn.trim()) return alert('졸업생 영문 이름을 입력해 주세요.');
+      if (!phone.trim()) return alert('연락처를 입력해 주세요.');
+      if (!email.trim()) return alert('이메일을 입력해 주세요.');
+      if (!profileImg) return alert('프로필 이미지를 업로드해 주세요.');
+      if (!graduationImg) return alert('학사모 이미지를 업로드해 주세요.');
+
       let profileUrl: string | null = null;
       let graduationUrl: string | null = null;
 
@@ -113,7 +118,7 @@ export default function GraduateAddPage() {
         graduationYear
       );
 
-      alert('학생 프로필이 추가되었습니다.');
+      alert(`${studentName}학생의 프로필이 추가되었습니다.`);
       router.replace(`/admin/${school?.id}/graduate/${currentDeptId}`);
     } catch (error) {
       console.error('Unexpected error : ', error);
@@ -159,8 +164,13 @@ export default function GraduateAddPage() {
                 placeholder="졸업생의 이름을 입력해 주세요.(80자 제한)"
                 className="w-full"
                 value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
                 required={true}
+                max={80}
+                onChange={(e) => {
+                  setStudentName(e.target.value);
+                  const onlyKorean = e.target.value.replace(/[^ㄱ-ㅎ가-힣ㆍ ᆢ]/gi, '');
+                  setStudentName(onlyKorean);
+                }}
               />
             </div>
           </div>
@@ -179,7 +189,13 @@ export default function GraduateAddPage() {
                 placeholder="졸업생의 영어 이름을 입력해 주세요.(80자 제한)"
                 className="w-full"
                 value={studentNameEn}
-                onChange={(e) => setStudentNameEn(e.target.value)}
+                required={true}
+                max={80}
+                onChange={(e) => {
+                  setStudentNameEn(e.target.value);
+                  const onlyEnglish = e.target.value.replace(/[^A-Za-z0-9_]/g, '');
+                  setStudentNameEn(onlyEnglish);
+                }}
               />
             </div>
           </div>
@@ -233,7 +249,13 @@ export default function GraduateAddPage() {
                 placeholder="01012345678"
                 className="w-full"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                max={11}
+                required={true}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  const onlyNumber = e.target.value.replace(/[^0-9]/g, '');
+                  setPhone(onlyNumber);
+                }}
               />
             </div>
           </div>
@@ -251,7 +273,10 @@ export default function GraduateAddPage() {
                 placeholder="example@email.com"
                 className="w-full"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                required={true}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
               />
             </div>
           </div>
@@ -268,10 +293,12 @@ export default function GraduateAddPage() {
                 id="profile-img"
                 className="w-full h-full"
                 size="lg"
+                value={profileImg}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
                   handleFileSelect(file, 'profile');
+                  setProfileImg(file);
                 }}
               />
             </div>
@@ -289,10 +316,12 @@ export default function GraduateAddPage() {
                 id="graduation-img"
                 className="w-full h-full"
                 size="lg"
+                value={graduationImg}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
                   handleFileSelect(file, 'graduation');
+                  setGraduationImg(file);
                 }}
               />
             </div>
