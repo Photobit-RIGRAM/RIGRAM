@@ -2,7 +2,7 @@
 
 import Button from '@/components/button';
 import { ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface PageHeaderProps {
   title: string;
@@ -10,7 +10,26 @@ interface PageHeaderProps {
 
 export default function PageHeader({ title }: PageHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const currentPage = segments[2];
+  const searchParams = useSearchParams();
+
+  const schoolId = localStorage.getItem('schoolId');
+
   const handleGoBack = () => {
+    const search = searchParams.toString();
+
+    if (pathname.endsWith('/add')) {
+      router.replace(pathname.replace(/\/add$/, ''));
+      return;
+    }
+
+    if (search.includes('tab=')) {
+      router.replace(`/admin/${schoolId}/${currentPage}`);
+      return;
+    }
+
     router.back();
   };
 
