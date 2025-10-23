@@ -70,6 +70,8 @@ export default function GraduateEditPage() {
       setGraduationYear(department?.graduation_year || '');
       setPhone(student.phone);
       setEmail(student.email);
+      setProfileImg(student.profile_default);
+      setGraduationImg(student.profile_graduate);
     }
   }, [student, department?.id, department?.name, department?.graduation_year]);
 
@@ -135,11 +137,11 @@ export default function GraduateEditPage() {
       });
 
       if (!updated) {
-        alert('학생 프로필 수정 실패');
+        alert(`${studentName} 졸업생 프로필 수정 실패`);
         return;
       }
 
-      alert('학생 프로필 수정이 완료되었습니다.');
+      alert(`${studentName} 졸업생 프로필 수정이 완료되었습니다.`);
       router.back();
     } catch (error) {
       console.error('Unexpected error:', error);
