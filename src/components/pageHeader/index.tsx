@@ -3,6 +3,7 @@
 import Button from '@/components/button';
 import { ArrowLeft } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface PageHeaderProps {
   title: string;
@@ -15,7 +16,12 @@ export default function PageHeader({ title }: PageHeaderProps) {
   const currentPage = segments[2];
   const searchParams = useSearchParams();
 
-  const schoolId = localStorage.getItem('schoolId');
+  const [schoolId, setSchoolId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedId = localStorage.getItem('schoolId');
+    setSchoolId(storedId);
+  }, []);
 
   const handleGoBack = () => {
     const search = searchParams.toString();
