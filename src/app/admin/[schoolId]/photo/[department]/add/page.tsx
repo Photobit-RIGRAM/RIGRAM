@@ -3,6 +3,7 @@
 import Badge from '@/components/badge';
 import Button from '@/components/button';
 import FileInput from '@/components/fileInput';
+import PageHeader from '@/components/pageHeader';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useMediaStore } from '@/store/useMediaStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
@@ -120,99 +121,102 @@ export default function PhotoAddPage() {
   );
 
   return (
-    <section className="relative bg-white w-full p-4 md:p-10 border border-gray-200 rounded-xl shadow-dropdown md:w-[1080px] md:min-h-[753px]">
-      <header className="relative flex flex-col justify-start gap-1">
-        <ol className="flex justify-start items-center">
-          <li>
-            <Badge active>사진 / 동영상 추가</Badge>
-          </li>
-        </ol>
-        <h3 className="text-24 text-gray-900 font-semibold">사진 / 동영상 추가</h3>
-        <div className="absolute right-0 bottom-0 flex items-center gap-2">
-          <Button
-            className="text-white bg-primary-700 rounded-lg px-3 py-1.5"
-            onClick={handleAddMedia()}
-          >
-            추가하기
-          </Button>
-        </div>
-      </header>
-      <span className="inline-block w-full h-px bg-gray-200 my-8" aria-hidden="true"></span>
-      <form className="flex flex-col gap-6">
-        {/* 카테고리 선택 */}
-        <div className="flex justify-start items-center w-full">
-          <label
-            htmlFor="category"
-            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
-          >
-            카테고리
-            <Asterisk className="text-red w-4 h-4" />
-          </label>
-          <div className="flex-1 min-w-0">
-            <select
-              id="category"
-              className="w-full"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as Category)}
+    <>
+      <PageHeader title="사진/동영상 추가하기" />
+      <section className="relative bg-white w-full p-4 md:p-10 border border-gray-200 rounded-xl shadow-dropdown md:w-[1080px] md:min-h-[753px]">
+        <header className="relative flex flex-col justify-start gap-1">
+          <ol className="flex justify-start items-center">
+            <li>
+              <Badge active>사진 / 동영상 추가</Badge>
+            </li>
+          </ol>
+          <h3 className="text-24 text-gray-900 font-semibold">사진 / 동영상 추가</h3>
+          <div className="absolute right-0 bottom-0 flex items-center gap-2">
+            <Button
+              className="text-white bg-primary-700 rounded-lg px-3 py-1.5"
+              onClick={handleAddMedia()}
             >
-              {CATEGORY_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              추가하기
+            </Button>
           </div>
-        </div>
-
-        {/* 사진/동영상 업로드 */}
-        <div className="flex justify-start items-start">
-          <label
-            htmlFor="media-upload"
-            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
-          >
-            사진/동영상 업로드
-            <Asterisk className="text-red w-4 h-4" />
-          </label>
-          <div className="flex-1 min-w-0">
-            <FileInput
-              id="media-upload"
-              size="lg"
-              multiple={false}
-              value={mediaFile}
-              onChange={(files) => {
-                if (!files) return;
-                const file = files instanceof FileList ? files[0] : files;
-                setMediaFile(file);
-              }}
-            />
-          </div>
-        </div>
-
-        {/* 동영상 썸네일 (video일 경우만 보이게) */}
-        {mediaFile && mediaFile.type.startsWith('video') && (
-          <div className="flex justify-start items-start">
+        </header>
+        <span className="inline-block w-full h-px bg-gray-200 my-8" aria-hidden="true"></span>
+        <form className="flex flex-col gap-6">
+          {/* 카테고리 선택 */}
+          <div className="flex justify-start items-center w-full">
             <label
-              htmlFor="thumbnail-upload"
+              htmlFor="category"
               className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
             >
-              동영상 썸네일 이미지
+              카테고리
+              <Asterisk className="text-red w-4 h-4" />
+            </label>
+            <div className="flex-1 min-w-0">
+              <select
+                id="category"
+                className="w-full"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as Category)}
+              >
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* 사진/동영상 업로드 */}
+          <div className="flex justify-start items-start">
+            <label
+              htmlFor="media-upload"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            >
+              사진/동영상 업로드
+              <Asterisk className="text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <FileInput
-                id="thumbnail-upload"
+                id="media-upload"
                 size="lg"
                 multiple={false}
-                value={thumbnail}
+                value={mediaFile}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
-                  setThumbnail(file);
+                  setMediaFile(file);
                 }}
               />
             </div>
           </div>
-        )}
-      </form>
-    </section>
+
+          {/* 동영상 썸네일 (video일 경우만 보이게) */}
+          {mediaFile && mediaFile.type.startsWith('video') && (
+            <div className="flex justify-start items-start">
+              <label
+                htmlFor="thumbnail-upload"
+                className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              >
+                동영상 썸네일 이미지
+              </label>
+              <div className="flex-1 min-w-0">
+                <FileInput
+                  id="thumbnail-upload"
+                  size="lg"
+                  multiple={false}
+                  value={thumbnail}
+                  onChange={(files) => {
+                    if (!files) return;
+                    const file = files instanceof FileList ? files[0] : files;
+                    setThumbnail(file);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </form>
+      </section>
+    </>
   );
 }
