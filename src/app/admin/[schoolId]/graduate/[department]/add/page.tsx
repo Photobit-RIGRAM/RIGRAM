@@ -241,6 +241,7 @@ export default function GraduateAddPage() {
               className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
             >
               연락처
+              <Asterisk className="text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
@@ -265,6 +266,7 @@ export default function GraduateAddPage() {
               className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
             >
               이메일
+              <Asterisk className="text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
