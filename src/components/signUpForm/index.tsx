@@ -59,10 +59,10 @@ export default function SignUpForm() {
   };
 
   return (
-    <form onSubmit={handleSignUp}>
-      <div className="flex flex-col gap-6">
+    <form className="flex flex-col gap-4 md:gap-5" onSubmit={handleSignUp}>
+      <div className="flex flex-col gap-4">
         <div className="flex">
-          <label className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]">
+          <label className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]">
             권한
             <Asterisk className="text-red w-4 h-4" />
           </label>
@@ -88,12 +88,12 @@ export default function SignUpForm() {
                 {role}
               </label>
             ))}
-          </div>{' '}
+          </div>
         </div>
         <div className="flex justify-start items-center w-full">
           <label
             htmlFor="signup-email"
-            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
           >
             이메일
             <Asterisk className="text-red w-4 h-4" />
@@ -113,7 +113,7 @@ export default function SignUpForm() {
         <div className="flex justify-start items-center w-full">
           <label
             htmlFor="signup-password"
-            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
           >
             비밀번호
             <Asterisk className="text-red w-4 h-4" />
@@ -132,8 +132,8 @@ export default function SignUpForm() {
         </div>
         <div className="flex justify-start items-center w-full">
           <label
-            htmlFor="signup-password"
-            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+            htmlFor="signup-repeat-password"
+            className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[120px] md:text-18 md:w-[200px]"
           >
             비밀번호 확인
             <Asterisk className="text-red w-4 h-4" />
@@ -141,7 +141,7 @@ export default function SignUpForm() {
           <div className="flex-1 min-w-0">
             <Input
               purpose="password"
-              id="signup-password"
+              id="signup-repeat-password"
               placeholder="비밀번호를 한 번 더 적어주세요."
               className="w-full"
               value={repeatPassword}
@@ -151,14 +151,16 @@ export default function SignUpForm() {
           </div>
         </div>
         {error && <p className="text-sm text-red-500">{error}</p>}
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="w-full bg-gray-900 text-white text-18 py-4 rounded-lg"
+          disabled={isLoading}
+        >
           {isLoading ? '계정을 생성하는 중 입니다...' : '회원가입'}
         </Button>
         <div className="flex gap-2 mx-auto">
           <p>이미 가입이 되어 있으신가요?</p>
-          <Button href="/auth/login" className="underline">
-            로그인 하러 가기
-          </Button>
+          <Button href="/auth/login">로그인 하러 가기</Button>
         </div>
       </div>
     </form>
