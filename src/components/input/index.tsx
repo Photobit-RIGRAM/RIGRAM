@@ -31,7 +31,7 @@ export default function Input({
     switch (purpose) {
       case 'id':
         return {
-          type: 'text',
+          type: 'email',
           placeholder: '아이디',
           defaultId: 'userId',
           defaultName: 'userId',
