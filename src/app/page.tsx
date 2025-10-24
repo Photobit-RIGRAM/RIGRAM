@@ -14,7 +14,7 @@ export default function Home() {
       if (schoolId) {
         router.replace(`/admin/${schoolId}`);
       } else {
-        router.replace('/login');
+        router.replace('/auth/login');
       }
     }, 2000);
 
