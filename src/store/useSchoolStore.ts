@@ -31,13 +31,34 @@ export const useSchoolStore = create<SchoolStore>()((set) => ({
   // 학교 불러오기
   fetchSchool: async (userId) => {
     set({ isLoading: true });
+
     try {
-      const { data, error } = await supabase.from('schools').select('*').eq('id', userId).single();
-      if (error) throw error;
-      set({ school: data, isLoading: false });
+      // * user테이블에서 user_type과 school_id 가져오기
+      const { data: user, error: userError } = await supabase
+        .from('users')
+        .select('user_type, school_id')
+        .eq('id', userId)
+        .single();
+      if (userError) throw userError;
+
+      // * 실제로 조회할 학교 ID결정
+      const targetSchoolId = user?.user_type === 'student' ? user?.school_id : userId;
+      if (!targetSchoolId) throw new Error('학교 ID를 찾을 수 없습니다.');
+
+      // * schools 테이블에서 학교 데이터 가져오기
+      const { data: school, error: schoolError } = await supabase
+        .from('schools')
+        .select('*')
+        .eq('id', targetSchoolId)
+        .single();
+      if (schoolError) throw schoolError;
+
+      set({ school, isLoading: false });
     } catch (error) {
-      console.error(error);
+      console.error('학교 데이터를 가져오는 중 오류:', error);
       set({ school: null, isLoading: false });
+    } finally {
+      set({ isLoading: false });
     }
   },
   // 학교 추가하기

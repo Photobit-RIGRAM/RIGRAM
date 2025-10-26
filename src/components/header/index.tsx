@@ -4,14 +4,20 @@ import Button from '@/components/button';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const segments = pathname.split('/').filter(Boolean);
+  const userType = segments[0];
+
+  const [isOpen, setIsOpen] = useState(false);
+
   const school = useSchoolStore((state) => state.school);
   const logout = useAuthStore((state) => state.logout);
-  const [isOpen, setIsOpen] = useState(false);
+
   const schoolId = school?.id;
 
   const handleMenuDrop = () => {
@@ -19,12 +25,13 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   };
 
   const handleSchoolPage = () => {
-    router.replace(`/admin/${schoolId}`);
+    router.replace(`/${userType}/${schoolId}`);
     setIsOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('schoolId');
+    localStorage.removeItem('userType');
     logout();
     router.replace('/auth/login');
     setIsOpen(false);

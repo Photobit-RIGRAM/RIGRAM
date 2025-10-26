@@ -14,10 +14,11 @@ const TOP_TAB = [
 export default function TopTab() {
   const pathname = usePathname();
 
-  const { schoolId, currentTab } = useMemo(() => {
+  const { userType, schoolId, currentTab } = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);
 
     return {
+      userType: segments[0],
       schoolId: segments[1],
       currentTab: segments[2],
     };
@@ -29,7 +30,7 @@ export default function TopTab() {
         {TOP_TAB.map((tab) => (
           <li key={tab.id} className="flex whitespace-nowrap" role="presentation">
             <Link
-              href={`/admin/${schoolId}/${tab.url}`}
+              href={`/${userType}/${schoolId}/${tab.url}`}
               className={`text-14 md:text-16 rounded-md px-2 py-2 md:px-4 md:py-2.5 ${
                 currentTab === tab.url
                   ? 'bg-gray-200 text-gray-800 font-bold'
