@@ -3,12 +3,12 @@
 import Button from '@/components/button';
 import Input from '@/components/input';
 import { supabase } from '@/utils/supabase/client';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState<'admin' | 'student'>('admin');
@@ -32,7 +32,7 @@ export default function LoginPage() {
 
       const { data: users, error: usersError } = await supabase
         .from('users')
-        .select('id, school_name_en, user_type')
+        .select('id, school_id, school_name_en, user_type')
         .eq('id', currentUser.id)
         .single();
       if (usersError || !users) throw new Error('사용자 정보를 불러오지 못했습니다.');
@@ -40,21 +40,29 @@ export default function LoginPage() {
       if (users.user_type !== userType)
         throw new Error(`선택한 권한(${userType})이 아닙니다. 다시 한 번 확인해주세요.`);
 
-      localStorage.setItem('schoolId', users.id);
-      localStorage.setItem('userType', users.user_type);
-
-      if (!users.school_name_en) {
-        // 학교 등록이 안된 경우
-        router.replace('/admin/school-register');
-      } else if (users.id && users.school_name_en) {
-        // 유저가 존재하면 유저 페이지로 이동
-        router.replace(`/admin/${users.id}`);
+      if (users.user_type === 'student') {
+        localStorage.setItem('schoolId', users.school_id);
+        localStorage.setItem('userType', users.user_type);
+      } else {
+        localStorage.setItem('schoolId', users.id);
+        localStorage.setItem('userType', users.user_type);
       }
-      // if (!userData.school_name_en) {
-      //   router.replace(`/${userData.role}/school-register`);
-      // } else {
-      //   router.replace(`/${userData.role}/${userData.id}`);
-      // }
+
+      if (users.user_type === 'admin') {
+        if (!users.school_name_en) {
+          // 학교 등록이 안된 경우
+          router.replace('/admin/school-register');
+        } else {
+          router.replace(`/admin/${users.id}`);
+        }
+      }
+
+      if (users.user_type === 'student') {
+        if (!users.school_id) {
+          throw new Error('소속 학교 정보가 없습니다. 학교 관리자에게 문의하세요.');
+        }
+        router.replace(`/student/${users.school_id}`);
+      }
     } catch (error: unknown) {
       console.error(error);
       setError(error instanceof Error ? error.message : '로그인 중 오류가 발생했습니다.');
