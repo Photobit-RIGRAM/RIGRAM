@@ -40,7 +40,7 @@ export default function PhotoListPage() {
   return (
     <>
       <PageHeader title={deptName} />
-      <section className="relative flex flex-col gap-2 w-full h-full bg-white rounded-xl p-5 overflow-y-scroll scrollbar-hide md:p-6">
+      <section className="relative flex flex-col gap-2 w-full h-full bg-white rounded-xl p-5 md:p-6">
         {/* 헤더 */}
         <header className="relative flex justify-between items-center md:px-6 md:py-4">
           <div className="flex flex-col gap-1.5">
@@ -56,7 +56,7 @@ export default function PhotoListPage() {
 
         {/* 미디어 그리드 */}
         <ul
-          className="grid grid-cols-1 gap-1 md:grid-cols-3 md:gap-2 max-h-[500px] w-full"
+          className="grid grid-cols-1 gap-1 max-h-[500px] w-full overflow-y-scroll scrollbar-hide md:grid-cols-3 md:gap-2"
           role="list"
         >
           {RENDER_MEDIA.map((media, index) => {
