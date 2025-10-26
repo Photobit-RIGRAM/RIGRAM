@@ -43,7 +43,10 @@ export const useSchoolStore = create<SchoolStore>()((set) => ({
   // 학교 추가하기
   addSchool: async (data, userId) => {
     try {
-      const { error: schoolError } = await supabase.from('schools').update(data).eq('id', userId);
+      const { error: schoolError } = await supabase
+        .from('schools')
+        .insert([{ ...data, id: userId }]);
+
       if (schoolError) throw schoolError;
 
       const { error: userError } = await supabase

@@ -55,7 +55,7 @@ export default function DepartmentEditPage() {
       if (department) {
         setDeptName(department.name);
         setDeptNameEn(department.name_en);
-        // setDeptDesc(department.desc ?? '');
+        setDeptDesc(department.desc ?? '');
         setImgUrl(department.img_url ?? null);
         setPrevImgUrl(department.img_url ?? null);
         setCollegeName(college ? college.name : '');
@@ -67,8 +67,6 @@ export default function DepartmentEditPage() {
 
   const extractFilePathFromUrl = (url: string): string | null => {
     try {
-      console.log('원본 URL:', url);
-
       let urlParts = url.split('/storage/v1/object/public/dept-img/');
 
       if (urlParts.length === 2) {
@@ -99,12 +97,12 @@ export default function DepartmentEditPage() {
   };
 
   const handleDeptUpdate = async () => {
-    if (!deptName || !deptNameEn) {
-      alert('필수 입력값이 누락되었습니다.');
-      return;
-    }
-
     try {
+      if (!collegeName) return alert('단과대학명을 입력해 주세오.');
+      if (!deptName) return alert('학과명을 입력해 주세오.');
+      if (!deptNameEn) return alert('학과 영문명을 입력해 주세오.');
+      if (!imgUrl) return alert('학과의 대표 이미지를 업로드해 주세오.');
+
       let logoUrl: string | null = null;
 
       if (imgUrl instanceof File) {
@@ -146,7 +144,7 @@ export default function DepartmentEditPage() {
       const updated = await updateDepartment(departmentId, {
         name: deptName,
         name_en: deptNameEn,
-        // desc: deptDesc,
+        desc: deptDesc,
         img_url: logoUrl,
       });
 
@@ -230,6 +228,7 @@ export default function DepartmentEditPage() {
               className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
             >
               학과 영문명
+              <Asterisk className="text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
@@ -255,10 +254,12 @@ export default function DepartmentEditPage() {
                 id="department-image"
                 className="w-full"
                 size="lg"
+                value={imgUrl}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
                   handleFileSelect(file);
+                  setImgUrl(file);
                 }}
               />
             </div>

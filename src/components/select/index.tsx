@@ -8,6 +8,7 @@ interface SelectProps {
   id?: string;
   name?: string;
   label?: string;
+  value?: string;
   defaultValue?: string;
   labelClass?: string;
   SelectClass?: string;
@@ -20,6 +21,7 @@ export default function Select({
   id,
   // name,
   label,
+  value,
   defaultValue,
   labelClass,
   SelectClass,
@@ -48,15 +50,12 @@ export default function Select({
       )}
       <select
         id={id}
-        value={selectedValue}
-        onChange={(e) => {
-          setSelectedValue(e.target.value);
-          onChange?.(e.target.value);
-        }}
+        value={value ?? ''}
+        onChange={(e) => onChange?.(e.target.value)}
         className={`border border-gray-500 rounded-lg text-gray-500 font-medium px-2.5 h-[40px] md:px-4.5 md:h-[50px] hover:border-primary-700 focus:border-primary-700 active:border-primary-700 ${SelectClass || ''}`}
       >
         <option value="" disabled>
-          {defaultValue}
+          {defaultValue || '선택해주세요.'}
         </option>
         {options.map((opt) => (
           <option

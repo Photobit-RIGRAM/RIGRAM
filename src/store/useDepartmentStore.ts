@@ -8,6 +8,7 @@ type Department = {
   name_en: string;
   graduation_year: string;
   img_url: string | null;
+  desc: string;
   created_at: string;
   updated_at: string;
 };
@@ -85,10 +86,10 @@ export const useDepartmentStore = create<DepartmentsState>((set, get) => ({
     }
   },
   // 학과 추가하기(insert)
-  addDepartment: async (collegeId, name, nameEn, graduation_year, img_url) => {
+  addDepartment: async (collegeId, name, nameEn, graduation_year, desc, img_url) => {
     const { data, error } = await supabase
       .from('departments')
-      .insert([{ college_id: collegeId, name, name_en: nameEn, graduation_year, img_url }])
+      .insert([{ college_id: collegeId, name, name_en: nameEn, graduation_year, desc, img_url }])
       .select()
       .single();
 

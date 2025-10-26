@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['oncmhlnvbhsbaijeqstp.supabase.co'],
+    domains: ['bkaufijlqlnywiiiqysd.supabase.co'],
   },
   /* config options here */
   ignoreDuringBuilds: true,

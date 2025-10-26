@@ -26,37 +26,45 @@ export default function SchoolAddPage() {
   const [adminEmail, setAdminEmail] = useState('');
   const addSchool = useSchoolStore((state) => state.addSchool);
 
-  const GO_NEXT_STEP = () => setCurrentStep('admin');
+  const GO_NEXT_STEP = () => {
+    if (!schoolName.trim()) return alert('학교 이름을 입력해 주세요.');
+    if (!schoolNameEn.trim()) return alert('학교 영문명을 입력해 주세요.');
+    if (!graduationYear) return alert('학교 졸업 연도를 선택해 주세요.');
+    if (!schoolLogo) return alert('학교 로고 이미지를 업로드해 주세요.');
+
+    setCurrentStep('admin');
+  };
   const GO_PREV_STEP = () => setCurrentStep('basic');
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
 
   const handleFileSelect = (file: File | null) => {
     if (!file) return;
-    setSchoolLogo(file); // state에 File객체 저장
+    setSchoolLogo(file);
   };
 
   const handleSchoolRegister = async () => {
     try {
+      if (!adminName.trim()) return alert('담당자 이름을 입력해 주세요.');
+      if (!adminPhone.trim()) return alert('담당자 전화번호를 입력해 주세요.');
+      if (!adminEmail.trim()) return alert('담당자 이메일을 입력해 주세요.');
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error('로그인이 필요합니다.');
 
-      // 🔍 중복 체크
-      const { data: existingSchool } = await supabase
-        .from('schools')
-        .select('id')
-        .eq('manager_contact', adminPhone)
-        .single();
-      if (existingSchool) {
-        alert('이미 등록된 담당자 전화번호입니다.');
-        return;
-      }
-
       let logoUrl: string | null = null;
 
       // schoolLogo가 File 타입이면 업로드 실행
       if (schoolLogo instanceof File) {
-        const filePath = `${schoolNameEn}/school-logo`;
+        const fileExt = schoolLogo.name.split('.').pop();
+        const schoolName = slugify(schoolNameEn);
+        const filePath = `${schoolName}/${graduationYear}-logo.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
           .from('school-logos')
@@ -67,7 +75,6 @@ export default function SchoolAddPage() {
         const { data: urlData } = supabase.storage.from('school-logos').getPublicUrl(filePath);
         logoUrl = urlData.publicUrl;
       } else if (typeof schoolLogo === 'string') {
-        // 이미 URL이 있는 경우 (예: 수정 시)
         logoUrl = schoolLogo;
       }
 
@@ -141,6 +148,7 @@ export default function SchoolAddPage() {
                     className="w-full"
                     value={schoolName}
                     onChange={(e) => setSchoolName(e.target.value)}
+                    required={true}
                   />
                 </div>
               </div>
@@ -150,6 +158,7 @@ export default function SchoolAddPage() {
                   className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
                 >
                   학교 영어 이름
+                  <Asterisk className="text-red w-4 h-4" />
                 </label>
                 <div className="flex-1 min-w-0">
                   <Input
@@ -159,6 +168,7 @@ export default function SchoolAddPage() {
                     className="w-full"
                     value={schoolNameEn}
                     onChange={(e) => setSchoolNameEn(e.target.value)}
+                    required={true}
                   />
                 </div>
               </div>
@@ -174,6 +184,7 @@ export default function SchoolAddPage() {
                   <Select
                     purpose="year"
                     defaultValue="졸업 연도를 선택해주세요."
+                    value={graduationYear}
                     SelectClass="w-full"
                     onChange={(value) => setGraduationYear(value)}
                   />
@@ -191,10 +202,12 @@ export default function SchoolAddPage() {
                   <FileInput
                     id="school-logo"
                     className="w-full"
+                    value={schoolLogo}
                     onChange={(files) => {
                       if (!files) return;
                       const file = files instanceof FileList ? files[0] : files;
                       handleFileSelect(file);
+                      setSchoolLogo(file);
                     }}
                   />
                 </div>

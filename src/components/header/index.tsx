@@ -26,7 +26,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   const handleLogout = () => {
     localStorage.removeItem('schoolId');
     logout();
-    router.replace('/login');
+    router.replace('/auth/login');
     setIsOpen(false);
   };
 

@@ -15,6 +15,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 export default function SchoolEditPage() {
   const router = useRouter();
+
   const [form, setForm] = useState({
     schoolName: '',
     schoolNameEn: '',
@@ -24,11 +25,26 @@ export default function SchoolEditPage() {
     adminPhone: '',
     adminEmail: '',
   });
+  const [schoolLogoPreview, setSchoolLogoPreview] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState<'basic' | 'admin'>('basic');
+
   const { school, fetchSchool, editSchool } = useSchoolStore();
 
-  const GO_NEXT_STEP = () => setCurrentStep('admin');
-  // const GO_PREV_STEP = () => setCurrentStep('basic');
+  const GO_NEXT_STEP = () => {
+    if (!form.schoolName.trim()) return alert('학교 이름을 입력해 주세요.');
+    if (!form.schoolNameEn.trim()) return alert('학교 영문명을 입력해 주세요.');
+    if (!form.graduationYear) return alert('학교 졸업 연도를 선택해 주세요.');
+    if (!form.schoolLogo) return alert('학교 로고 이미지를 업로드해 주세요.');
+
+    setCurrentStep('admin');
+  };
+  const GO_PREV_STEP = () => setCurrentStep('basic');
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[\s\W-]+/g, '-');
 
   /* 상태 변경 useCallback으로 최적화 */
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +63,7 @@ export default function SchoolEditPage() {
     if (!school) getData();
   }, [fetchSchool, school]);
 
-  /* form 초기화 */
+  // /* form 초기화 */
   useEffect(() => {
     if (school) {
       setForm({
@@ -63,6 +79,10 @@ export default function SchoolEditPage() {
   }, [school]);
 
   const handleEdit = async () => {
+    if (!form.adminName.trim()) return alert('담당자 이름을 입력해 주세요.');
+    if (!form.adminPhone.trim()) return alert('담당자 전화번호를 입력해 주세요.');
+    if (!form.adminEmail.trim()) return alert('담당자 이메일을 입력해 주세요.');
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -72,8 +92,9 @@ export default function SchoolEditPage() {
 
     if (form.schoolLogo instanceof File) {
       const file = form.schoolLogo;
+      const schoolName = slugify(form.schoolNameEn);
       const fileExt = file.name.split('.').pop();
-      const filePath = `school-logos/${form.schoolNameEn}.${fileExt}`;
+      const filePath = `${schoolName}/${form.graduationYear}-logo.${fileExt}`;
 
       await supabase.storage.from('school-logos').remove([filePath]);
 
@@ -200,11 +221,16 @@ export default function SchoolEditPage() {
                   <FileInput
                     id="school-logo"
                     className="w-full"
+                    value={schoolLogoPreview}
                     onChange={(files) => {
                       if (!files) return;
 
                       const file = files instanceof FileList ? files[0] : files;
-                      setForm((prev) => ({ ...prev, schoolLogo: file }));
+                      if (file instanceof File) {
+                        setForm((prev) => ({ ...prev, schoolLogo: file }));
+
+                        setSchoolLogoPreview(URL.createObjectURL(file));
+                      }
                     }}
                   />
                 </div>
@@ -227,7 +253,10 @@ export default function SchoolEditPage() {
               </ol>
               <h3 className="text-24 text-gray-900 font-semibold">행정 정보</h3>
               <div className="absolute right-0 bottom-0 flex items-center gap-2">
-                <Button className="text-gray-900 bg-white border border-gray-300 rounded-lg px-3 py-1.5">
+                <Button
+                  className="text-gray-900 bg-white border border-gray-300 rounded-lg px-3 py-1.5"
+                  onClick={GO_PREV_STEP}
+                >
                   뒤로 가기
                 </Button>
                 <Button
