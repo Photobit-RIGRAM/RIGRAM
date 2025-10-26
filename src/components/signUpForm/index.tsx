@@ -40,10 +40,29 @@ export default function SignUpForm() {
 
       // 회원가입 시 public.user 생성
       if (data.user) {
+        let schoolId: string | null = null;
+
+        if (userType === 'student') {
+          const { data: matchedStudent, error: studentError } = await supabase
+            .from('students')
+            .select('school_id')
+            .eq('email', email.toLowerCase())
+            .single();
+
+          if (studentError || !matchedStudent) {
+            setError('등록되지 않은 학생입니다. 학교 관리자에게 문의하세요.');
+            setIsLoading(false);
+            return;
+          }
+
+          schoolId = matchedStudent.school_id;
+        }
+
         const { error: insertError } = await supabase.from('users').insert({
           id: data.user.id,
           user_email: data.user.email,
           user_type: userType,
+          school_id: schoolId,
         });
         if (insertError) throw insertError;
       }
