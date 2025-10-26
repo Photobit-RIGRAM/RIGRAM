@@ -17,10 +17,13 @@ export default function PageHeader({ title }: PageHeaderProps) {
   const searchParams = useSearchParams();
 
   const [schoolId, setSchoolId] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
 
   useEffect(() => {
     const storedId = localStorage.getItem('schoolId');
+    const userType = localStorage.getItem('userType');
     setSchoolId(storedId);
+    setType(userType);
   }, []);
 
   const handleGoBack = () => {
@@ -32,7 +35,7 @@ export default function PageHeader({ title }: PageHeaderProps) {
     }
 
     if (search.includes('tab=')) {
-      router.replace(`/admin/${schoolId}/${currentPage}`);
+      router.replace(`/${type}/${schoolId}/${currentPage}`);
       return;
     }
 
