@@ -40,6 +40,22 @@ export default function LoginPage() {
       if (users.user_type !== userType)
         throw new Error(`선택한 권한(${userType})이 아닙니다. 다시 한 번 확인해주세요.`);
 
+      // ✅ API Route를 통해 쿠키 설정
+      const response = await fetch('/api/auth/set-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userType: users.user_type,
+          schoolId: users.user_type === 'student' ? users.school_id : users.id,
+          userId: users.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('세션 설정에 실패했습니다.');
+      }
+
+      // LocalStorage에도 저장 (클라이언트에서 사용)
       if (users.user_type === 'student') {
         localStorage.setItem('schoolId', users.school_id);
         localStorage.setItem('userType', users.user_type);
@@ -48,9 +64,9 @@ export default function LoginPage() {
         localStorage.setItem('userType', users.user_type);
       }
 
+      // 페이지 이동
       if (users.user_type === 'admin') {
         if (!users.school_name_en) {
-          // 학교 등록이 안된 경우
           router.replace('/admin/school-register');
         } else {
           router.replace(`/admin/${users.id}`);

@@ -10,9 +10,10 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       const schoolId = localStorage.getItem('schoolId');
+      const userType = localStorage.getItem('userType');
 
       if (schoolId) {
-        router.replace(`/admin/${schoolId}`);
+        router.replace(`/${userType}/${schoolId}`);
       } else {
         router.replace('/auth/login');
       }
