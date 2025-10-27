@@ -129,7 +129,7 @@ export default function GraduateDepartmentPage() {
             )}
           </div>
         </div>
-        <div className="relative flex flex-col gap-10 justify-start items-start w-full h-full pt-10 px-5 md:px-10 md:pt-35 md:pb-10">
+        <div className="relative flex flex-col gap-4 justify-start items-start w-full h-full pt-20 pb-5 px-5 md:px-10 md:pt-35 md:pb-10">
           <div className="relative flex flex-col justify-center items-center gap-2 w-full md:gap-4 md:justify-start md:items-end md:flex-row">
             <div className="flex justify-start items-center gap-1">
               <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
