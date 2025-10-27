@@ -9,7 +9,7 @@ import { useMediaStore } from '@/store/useMediaStore';
 import { ImageMinus, ImagePlus, Images, Play, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 
 export default function PhotoListPage() {
   const searchParams = useSearchParams();
@@ -77,7 +77,7 @@ export default function PhotoListPage() {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>로딩 중...</div>}>
       <PageHeader title={deptName} />
       <section className="relative flex flex-col gap-2 w-full h-full bg-white rounded-xl p-5 overflow-y-scroll scrollbar-hide md:p-6">
         {/* 헤더 */}
@@ -179,6 +179,6 @@ export default function PhotoListPage() {
         {/* 오버레이 뷰어 */}
         <OverlayViewer media={selectedMedia} onClose={() => setSelectedMedia(null)} />
       </section>
-    </>
+    </Suspense>
   );
 }

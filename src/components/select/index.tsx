@@ -1,7 +1,6 @@
 'use client';
 
 import { Asterisk } from 'lucide-react';
-import { useState } from 'react';
 
 interface SelectProps {
   purpose?: 'year' | 'category';
@@ -31,7 +30,6 @@ export default function Select({
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 30 }, (_, i) => currentYear - 20 + i);
   const categories = ['팀', '단체', '동아리', '행사'];
-  const [selectedValue, setSelectedValue] = useState<string>('');
 
   const options =
     purpose === 'year'
