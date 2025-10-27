@@ -68,7 +68,7 @@ export default function FileInput({
         className="flex justify-start items-center gap-4 w-full p-3 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100"
       >
         <div
-          className={`relative flex justify-center items-center bg-primary-100 p-5 rounded-lg ${size === 'sm' ? '' : 'w-34 h-40'}`}
+          className={`shrink-0 relative flex justify-center items-center bg-primary-100 p-5 rounded-lg ${size === 'sm' ? '' : 'w-34 h-40'}`}
         >
           {previewUrl ? (
             <Image
@@ -82,9 +82,9 @@ export default function FileInput({
             <ImageIcon className="w-6 h-6 text-gray-500" />
           )}
         </div>
-        <div>
+        <div className="overflow-hidden">
           {fileName ? (
-            <p className="text-16 text-gray-600">{fileName}</p>
+            <p className="text-16 text-gray-600 truncate">{fileName}</p>
           ) : (
             <>
               <p className="text-16 text-gray-600">여기를 클릭하거나 이미지를 올려주세요.</p>

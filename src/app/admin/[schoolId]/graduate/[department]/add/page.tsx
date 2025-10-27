@@ -113,8 +113,8 @@ export default function GraduateAddPage() {
         studentNameEn,
         profileUrl,
         graduationUrl,
-        phone,
         email,
+        phone,
         graduationYear
       );
 

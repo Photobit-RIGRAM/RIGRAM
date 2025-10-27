@@ -150,7 +150,7 @@ export default function GraduateEditPage() {
   };
 
   return (
-    <section className="flex flex-col h-full gap-2 md:gap-4">
+    <>
       <PageHeader title="졸업색 수정하기" />
       <div className="bg-white w-full h-full p-5 border border-border-section rounded-xl shadow-dropdown md:w-[1080px] md:min-h-[753px] md:p-10">
         <header className="relative flex flex-col justify-start gap-1">
@@ -174,10 +174,10 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-center w-full">
             <label
               htmlFor="graduate-name"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               이름
-              <Asterisk className="text-red w-4 h-4" />
+              <Asterisk className="shrink-0 text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
@@ -198,10 +198,10 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-center w-full">
             <label
               htmlFor="graduate-en-name"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] whitespace-nowrap md:text-18 md:w-[200px]"
             >
               영어 이름
-              <Asterisk className="text-red w-4 h-4" />
+              <Asterisk className="shrink-0 text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
@@ -222,7 +222,7 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-center w-full">
             <label
               htmlFor="department-name"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               학과
             </label>
@@ -240,7 +240,7 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-center w-full">
             <label
               htmlFor="graduation-year"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               졸업 연도
             </label>
@@ -258,9 +258,10 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-center w-full">
             <label
               htmlFor="contact"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               연락처
+              <Asterisk className="shrink-0 text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
@@ -281,9 +282,10 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-center w-full">
             <label
               htmlFor="email"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               이메일
+              <Asterisk className="shrink-0 text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <Input
@@ -301,10 +303,10 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-start">
             <label
               htmlFor="profile-img"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               프로필 이미지
-              <Asterisk className="text-red w-4 h-4" />
+              <Asterisk className="shrink-0 text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <FileInput
@@ -324,10 +326,10 @@ export default function GraduateEditPage() {
           <div className="flex justify-start items-start">
             <label
               htmlFor="graduation-img"
-              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[100px] md:text-18 md:w-[200px]"
+              className="shrink-0 flex justify-start items-center gap-0.5 text-16 text-gray-800 w-[80px] md:text-18 md:w-[200px]"
             >
               학사모 이미지
-              <Asterisk className="text-red w-4 h-4" />
+              <Asterisk className="shrink-0 text-red w-4 h-4" />
             </label>
             <div className="flex-1 min-w-0">
               <FileInput
@@ -346,6 +348,6 @@ export default function GraduateEditPage() {
           </div>
         </div>
       </div>
-    </section>
+    </>
   );
 }
