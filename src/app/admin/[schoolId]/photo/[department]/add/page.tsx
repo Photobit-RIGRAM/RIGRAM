@@ -2,7 +2,7 @@
 
 import Badge from '@/components/badge';
 import Button from '@/components/button';
-import FileInput from '@/components/fileInput_temp';
+import FileInput from '@/components/fileInput';
 import PageHeader from '@/components/pageHeader';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useMediaStore } from '@/store/useMediaStore';
