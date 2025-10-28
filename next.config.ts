@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     domains: ['bkaufijlqlnywiiiqysd.supabase.co'],
   },
   /* config options here */
-  ignoreDuringBuilds: true,
+  // ignoreDuringBuilds: true,
 };
 
 export default nextConfig;
