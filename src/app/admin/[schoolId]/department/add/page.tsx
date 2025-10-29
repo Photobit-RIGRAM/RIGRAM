@@ -103,7 +103,7 @@ export default function DepartmentAddPage() {
             college_id: newCollege.id,
             name: deptName,
             name_en: deptNameEn,
-            desc: deptDesc,
+            description: deptDesc,
             img_url: logoUrl,
             graduation_year: schoolGraduationYear,
           },
