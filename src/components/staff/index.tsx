@@ -98,6 +98,7 @@ export default function DepartmentStaffPage() {
           </Button>
         </div>
       </div>
+      {staffs.length === 0 && <p>등록된 교직원이 없습니다.</p>}
       <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
         {staffs.map((staff) => {
           const isSelected = selectedStaffIds.includes(staff?.id);

@@ -98,6 +98,7 @@ export default function DepartmentUnionPage() {
           </Button>
         </div>
       </div>
+      {unions.length === 0 && <p>등록된 학생회 학생이 없습니다.</p>}
       <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
         {unions.map((union) => {
           const isSelected = selectedUnionIds.includes(union.id);

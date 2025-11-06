@@ -17,7 +17,7 @@ export default function DepartmentIntroPage({ department }: DepartmentProps) {
       </header>
 
       {department.img_url && (
-        <div className="mb-6 md:mb-15">
+        <div className="mb-6 md:mb-8">
           <div className="relative w-full h-[200px] md:h-[280px] rounded-xl">
             <Image
               src={department.img_url}
@@ -30,7 +30,7 @@ export default function DepartmentIntroPage({ department }: DepartmentProps) {
           </div>
         </div>
       )}
-      <p>{department.description}</p>
+      <p className="overflow-scroll scrollbar-hide md:max-h-[300px]">{department.description}</p>
     </>
   );
 }

@@ -43,7 +43,7 @@ export default function DepartmentPage() {
 
   return (
     <section
-      className="flex flex-col w-full gap-4 md:max-h-[700px]"
+      className="flex flex-col w-full gap-4 min-h-full md:max-h-[700px]"
       aria-labelledby="department-heading"
     >
       <h1

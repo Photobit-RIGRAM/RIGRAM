@@ -35,7 +35,7 @@ export default function DepartmentPage() {
     <Suspense fallback={<div>로딩 중...</div>}>
       <PageHeader title={department.name} />
       <section
-        className="relative w-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10"
+        className="relative w-full h-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10"
         aria-labelledby="department-info"
       >
         {activeTab === 'detail' && <Detail department={department} />}
