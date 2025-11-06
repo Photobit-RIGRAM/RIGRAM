@@ -64,7 +64,7 @@ export const useStaffStore = create<StaffState>((set) => ({
       ])
       .single();
     if (error) {
-      console.error('프로필을 추가하던 중 요류가 발생했습니다. :', error);
+      console.error('프로필을 추가하던 중 오류가 발생했습니다. :', error);
       set({ isLoading: false, error: error.message });
     } else if (data) {
       set((state) => ({

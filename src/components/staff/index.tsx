@@ -31,6 +31,8 @@ export default function DepartmentStaffPage() {
   };
 
   const handleDeleteButton = async () => {
+    setIsLoading(true);
+
     if (!isDeleteMode) {
       setIsDeleteMode(true);
       return;
@@ -72,7 +74,7 @@ export default function DepartmentStaffPage() {
             className="flex items-center gap-1 text-gray-600"
             href={`/admin/${schoolId}/department/${departmentId}/staff/add`}
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4" aria-hidden="true" />
             <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
               추가하기
             </span>
@@ -80,7 +82,7 @@ export default function DepartmentStaffPage() {
           <Button
             className="flex items-center gap-1 text-red"
             onClick={handleDeleteButton}
-            aria-label={isDeleteMode ? '선택한 미디어 삭제' : '삭제 모드 전환'}
+            aria-label={isDeleteMode ? '선택한 교직원 삭제' : '삭제 모드 전환'}
           >
             {isDeleteMode ? (
               <>
