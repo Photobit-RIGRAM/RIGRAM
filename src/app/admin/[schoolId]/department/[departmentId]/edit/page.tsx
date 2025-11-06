@@ -155,7 +155,7 @@ export default function DepartmentEditPage() {
 
       setPrevImgUrl(logoUrl);
       alert('학과가 성공적으로 수정되었습니다!');
-      router.replace(`/admin/${school?.id}/department/${departmentId}`);
+      router.replace(`/admin/${school?.id}/department/${departmentId}?tab=detail`);
     } catch (error) {
       console.error('Unexpected error:', error);
       alert(`예상치 못한 오류: ${error}`);

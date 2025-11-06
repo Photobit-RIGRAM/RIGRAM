@@ -43,7 +43,7 @@ export default function DepartmentPage() {
 
   return (
     <section
-      className="flex flex-col w-full gap-4 md:max-h-[700px]"
+      className="flex flex-col w-full gap-4 min-h-full md:max-h-[700px]"
       aria-labelledby="department-heading"
     >
       <h1
@@ -76,7 +76,7 @@ export default function DepartmentPage() {
             title={dept.name}
             subTitle={dept.name_en}
             imgSrc={dept.img_url as string}
-            href={`${pathname}/${dept.id}`}
+            href={`${pathname}/${dept.id}?tab=detail`}
             aria-label={`${dept.name} 학과 상세보기`}
             role="listitem"
           />
