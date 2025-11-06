@@ -55,7 +55,7 @@ export default function DepartmentEditPage() {
       if (department) {
         setDeptName(department.name);
         setDeptNameEn(department.name_en);
-        setDeptDesc(department.desc ?? '');
+        setDeptDesc(department.description ?? '');
         setImgUrl(department.img_url ?? null);
         setPrevImgUrl(department.img_url ?? null);
         setCollegeName(college ? college.name : '');
@@ -144,7 +144,7 @@ export default function DepartmentEditPage() {
       const updated = await updateDepartment(departmentId, {
         name: deptName,
         name_en: deptNameEn,
-        desc: deptDesc,
+        description: deptDesc,
         img_url: logoUrl,
       });
 
@@ -155,7 +155,7 @@ export default function DepartmentEditPage() {
 
       setPrevImgUrl(logoUrl);
       alert('학과가 성공적으로 수정되었습니다!');
-      router.replace(`/admin/${school?.id}/department/${departmentId}`);
+      router.replace(`/admin/${school?.id}/department/${departmentId}?tab=detail`);
     } catch (error) {
       console.error('Unexpected error:', error);
       alert(`예상치 못한 오류: ${error}`);
