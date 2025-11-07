@@ -35,7 +35,7 @@ const MENU_LIST = [
     id: '3',
     title: '학과 소개 관리',
     subTitle: '전경 / 연혁 / 상진 / 운영진',
-    url: 'introduction',
+    url: 'introduction?tab=vision',
     img_url: '/images/menu04.png',
   },
 ] as const;
