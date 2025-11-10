@@ -35,8 +35,13 @@ export default function History() {
       return;
     }
 
-    if (selectedHistoryIds.length === 0) {
+    if (histories.length === 0) {
       alert('삭제할 연혁이 없습니다.');
+      setIsDeleteMode(false);
+      return;
+    }
+    if (selectedHistoryIds.length === 0) {
+      alert('선택된 연혁이 없습니다.');
       setIsDeleteMode(false);
       return;
     }
