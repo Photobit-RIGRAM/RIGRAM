@@ -1,11 +1,11 @@
 'use client';
 
 import Executive from '@/components/executive';
+import Foreground from '@/components/foreground';
 import History from '@/components/history';
 import PageHeader from '@/components/pageHeader';
 import Symbol from '@/components/symbol';
 import BottomTab from '@/components/tab/bottom';
-import Vision from '@/components/vision';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Suspense, useMemo } from 'react';
@@ -30,7 +30,7 @@ export default function IntroductionPage() {
         className="relative w-full h-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10"
         aria-labelledby="department-info"
       >
-        {activeTab === 'vision' && <Vision />}
+        {activeTab === 'foreground' && <Foreground />}
         {activeTab === 'history' && <History />}
         {activeTab === 'symbol' && <Symbol />}
         {activeTab === 'executive' && <Executive school={school} />}

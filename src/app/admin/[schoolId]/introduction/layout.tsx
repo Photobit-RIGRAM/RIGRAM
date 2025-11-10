@@ -9,7 +9,7 @@ export default function IntroductionLayout({ children }: { children: React.React
 
   const parts = pathname.split('/');
   const section = parts[3];
-  const validPaths = ['vision', 'history', 'symbol', 'executive'];
+  const validPaths = ['foreground', 'history', 'symbol', 'executive'];
   const hasPathname = validPaths.includes(section);
 
   return (
