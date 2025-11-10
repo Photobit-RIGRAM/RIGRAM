@@ -83,7 +83,7 @@ export default function ExecutiveAddPage() {
         await addExecutiveProfile(schoolId, name, category, mediaUrl);
 
         alert('임직원이 성공적으로 추가되었습니다.');
-        router.push(`/admin/${schoolId}/introduction?tab=executive`);
+        router.replace(`/admin/${schoolId}/introduction?tab=executive`);
       } catch (error) {
         console.error('임직원 추가 중 오류가 발생했습니다. : ', error);
         alert('임직원 추가 중 오류가 발생했습니다. 다시 시도해주세요.');
