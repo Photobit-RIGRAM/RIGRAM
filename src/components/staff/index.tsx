@@ -61,6 +61,24 @@ export default function DepartmentStaffPage() {
     }
   };
 
+  const getRoleLabel = (role: string) => {
+    const r = role.toLowerCase();
+    switch (r) {
+      case 'professor':
+        return '교수';
+      case 'associate professor':
+        return '부교수';
+      case 'assistant professor':
+        return '조교수';
+      case 'instructor':
+        return '강사';
+      case 'assistant':
+        return '조교';
+      default:
+        return role;
+    }
+  };
+
   return (
     <>
       <div className="relative flex flex-col gap-1.5 mb-4 md:mb-6">
@@ -126,7 +144,7 @@ export default function DepartmentStaffPage() {
               />
               <figcaption className="flex flex-col gap-1">
                 <h3 className="text-18 font-semibold text-gray-800 truncate">{staff.name}</h3>
-                <span className="text-16 text-gray-600">{staff.position}</span>
+                <span className="text-16 text-gray-600">{getRoleLabel(staff.position)}</span>
               </figcaption>
 
               {isDeleteMode && (

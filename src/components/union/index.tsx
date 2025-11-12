@@ -61,6 +61,24 @@ export default function DepartmentUnionPage() {
     }
   };
 
+  const getRoleLabel = (role: string) => {
+    const r = role.toLowerCase();
+    switch (r) {
+      case 'student council president':
+        return '학생회장';
+      case 'vice student council president':
+        return '부학생회장';
+      case 'manager':
+        return '부장';
+      case 'conductor':
+        return '차장';
+      case 'member':
+        return '부원';
+      default:
+        return role;
+    }
+  };
+
   return (
     <>
       <div className="relative flex flex-col gap-1.5 mb-4 md:mb-6">
@@ -126,7 +144,7 @@ export default function DepartmentUnionPage() {
               />
               <figcaption className="flex flex-col gap-1">
                 <h3 className="text-18 font-semibold text-gray-800 truncate">{union.name}</h3>
-                <span className="text-16 text-gray-600">{union.position}</span>
+                <span className="text-16 text-gray-600">{getRoleLabel(union.position)}</span>
               </figcaption>
 
               {isDeleteMode && (
