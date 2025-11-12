@@ -19,7 +19,7 @@ export default function IntroductionPage() {
       schoolId: segments[1],
       activeTab: searchParams.get('tab'),
     };
-  }, [pathname, searchParams.toString()]);
+  }, [pathname.toString()]);
 
   const { school } = useSchoolStore();
 
@@ -33,7 +33,7 @@ export default function IntroductionPage() {
         {activeTab === 'foreground' && <Foreground />}
         {activeTab === 'history' && <History />}
         {activeTab === 'symbol' && <Symbol />}
-        {activeTab === 'executive' && <Executive school={school} />}
+        {activeTab === 'executive' && <Executive />}
 
         {/* 하단 탭 */}
         <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 min-w-fit">
