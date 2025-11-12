@@ -1,5 +1,5 @@
 interface InputProps {
-  purpose: 'id' | 'password' | 'search' | 'text';
+  purpose: 'id' | 'password' | 'search' | 'text' | 'date';
   id?: string;
   name?: string;
   placeholder?: string;
@@ -51,6 +51,13 @@ export default function Input({
           placeholder: '검색',
           defaultId: 'Search',
           defaultName: 'Search',
+        };
+      case 'date':
+        return {
+          type: 'date',
+          placeholder: placeholder,
+          defaultId: 'date',
+          defaultName: 'date',
         };
       default:
         return {

@@ -11,7 +11,7 @@ import { useSchoolStore } from '@/store/useSchoolStore';
 import { supabase } from '@/utils/supabase/client';
 import { Asterisk, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 export default function SchoolEditPage() {
   const router = useRouter();
@@ -362,9 +362,9 @@ export default function SchoolEditPage() {
   };
 
   return (
-    <>
+    <Suspense fallback={<div>로딩 중...</div>}>
       <PageHeader title="학교 수정하기" />
       <section className="flex flex-col h-full gap-2 md:gap-4">{RenderStep()}</section>
-    </>
+    </Suspense>
   );
 }

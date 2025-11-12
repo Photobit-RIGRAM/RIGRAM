@@ -69,7 +69,7 @@ export const useMediaStore = create<MediaState>((set) => ({
     set({ isLoading: true, error: null });
 
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('media')
         .select('url, video_thumbnail')
         .eq('id', mediaId)

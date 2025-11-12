@@ -27,8 +27,12 @@ export default function GraduateEditPage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [graduationYear, setGraduationYear] = useState('');
+  // const [profileImg, setProfileImg] = useState<File | null>(null);
+  // const [graduationImg, setGraduationImg] = useState<File | null>(null);
   const [profileImg, setProfileImg] = useState<File | null>(null);
+  const [profileImgUrl, setProfileImgUrl] = useState<string>('');
   const [graduationImg, setGraduationImg] = useState<File | null>(null);
+  const [graduationImgUrl, setGraduationImgUrl] = useState<string>('');
 
   const { departments, fetchDepartmentById } = useDepartmentStore();
   const department = departments.find((d) => d.id === departmentId);
@@ -70,8 +74,8 @@ export default function GraduateEditPage() {
       setGraduationYear(department?.graduation_year || '');
       setPhone(student.phone);
       setEmail(student.email);
-      setProfileImg(student.profile_default);
-      setGraduationImg(student.profile_graduate);
+      setProfileImgUrl(student.profile_default || '');
+      setGraduationImgUrl(student.profile_graduate || '');
     }
   }, [student, department?.id, department?.name, department?.graduation_year]);
 
@@ -313,7 +317,7 @@ export default function GraduateEditPage() {
                 id="profile-img"
                 className="w-full h-full"
                 size="lg"
-                value={profileImg}
+                value={profileImg ? URL.createObjectURL(profileImg) : profileImgUrl}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;
@@ -336,7 +340,7 @@ export default function GraduateEditPage() {
                 id="graduation-img"
                 className="w-full h-full"
                 size="lg"
-                value={graduationImg}
+                value={graduationImg ? URL.createObjectURL(graduationImg) : graduationImgUrl}
                 onChange={(files) => {
                   if (!files) return;
                   const file = files instanceof FileList ? files[0] : files;

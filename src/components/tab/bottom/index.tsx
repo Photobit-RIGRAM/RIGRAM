@@ -18,10 +18,10 @@ const BOTTOM_TAB = {
     { id: '4', title: '행사', url: 'event' },
   ],
   school_intro: [
-    { id: '0', title: '전경', url: '#' },
-    { id: '1', title: '연혁', url: '#' },
-    { id: '2', title: '상징', url: '#' },
-    { id: '3', title: '임원진', url: '#' },
+    { id: '0', title: '전경', url: 'foreground' },
+    { id: '1', title: '연혁', url: 'history' },
+    { id: '2', title: '상징', url: 'symbol' },
+    { id: '3', title: '임원진', url: 'executive' },
   ],
 };
 
