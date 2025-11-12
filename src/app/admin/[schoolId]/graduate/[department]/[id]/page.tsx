@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/button';
+import OverlayViewer from '@/components/overlayViewer';
 import PageHeader from '@/components/pageHeader';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
@@ -9,7 +10,7 @@ import { supabase } from '@/utils/supabase/client';
 import { BookOpenText, Calendar, Mail, PencilLine, Phone, Trash, User } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function GraduateDepartmentPage() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function GraduateDepartmentPage() {
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
   const deptId = segments[3];
   const studentId = segments[4];
+
+  const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
 
   const { student, fetchStudentById, isLoading, error, deleteStudentProfile } = useStudentStore();
   const fetchDepartmentById = useDepartmentStore((state) => state.fetchDepartmentById);
@@ -133,27 +136,37 @@ export default function GraduateDepartmentPage() {
           <div className="relative flex flex-col justify-center items-center gap-2 w-full md:gap-4 md:justify-start md:items-end md:flex-row">
             <div className="flex justify-start items-center gap-1">
               <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
-                <div className="relative w-full h-full rounded-4xl">
+                <div
+                  className="relative w-full h-full rounded-4xl"
+                  onClick={() => {
+                    if (student?.profile_default) setSelectedPhoto(student.profile_default);
+                  }}
+                >
                   {student?.profile_default && (
                     <Image
                       src={student?.profile_default}
                       alt="증명사진"
                       fill
                       sizes="(max-width: 768px) 100% 100%"
-                      className="object-cover"
+                      className="object-cover cursor-pointer hover:opacity-70"
                     />
                   )}
                 </div>
               </div>
               <div className="w-30 h-30 bg-white p-1 rounded-4xl overflow-hidden">
-                <div className="relative w-full h-full rounded-4xl">
+                <div
+                  className="relative w-full h-full rounded-4xl"
+                  onClick={() => {
+                    if (student?.profile_graduate) setSelectedPhoto(student.profile_graduate);
+                  }}
+                >
                   {student?.profile_graduate && (
                     <Image
                       src={student?.profile_graduate}
-                      alt="증명사진"
+                      alt="졸업사진"
                       fill
                       sizes="(max-width: 768px) 100% 100%"
-                      className="object-cover"
+                      className="object-cover cursor-pointer hover:opacity-70"
                     />
                   )}
                 </div>
@@ -219,6 +232,7 @@ export default function GraduateDepartmentPage() {
           </div>
         </div>
       </section>
+      <OverlayViewer media={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
     </>
   );
 }
