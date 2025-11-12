@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   const router = useRouter();
@@ -14,6 +14,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
   const userType = segments[0];
 
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLUListElement>(null);
 
   const school = useSchoolStore((state) => state.school);
   const logout = useAuthStore((state) => state.logout);
@@ -36,6 +37,22 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
     router.replace('/auth/login');
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <header
@@ -67,6 +84,7 @@ export default function Header({ hasSchool = false }: { hasSchool?: boolean }) {
         </Button>
 
         <ul
+          ref={dropdownRef}
           id="header-menu"
           role="menu"
           className={`absolute left-1/2 -translate-x-1/2 top-full mt-2 flex flex-col items-center bg-white border border-gray-500 rounded-lg overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
