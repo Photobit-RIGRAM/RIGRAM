@@ -12,6 +12,12 @@ interface OverlayViewerProps {
 export default function OverlayViewer({ media, onClose }: OverlayViewerProps) {
   if (!media) return null;
 
+  const isMediaObject = typeof media === 'object' && media !== null;
+  const mediaUrl = isMediaObject ? media.url : media;
+  const mediaType = isMediaObject ? media.type : 'image';
+  const videoThumbnail =
+    isMediaObject && media.type === 'video' ? media.video_thumbnail : undefined;
+
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
       <button
@@ -21,19 +27,19 @@ export default function OverlayViewer({ media, onClose }: OverlayViewerProps) {
         <X size={24} aria-hidden="true" />
       </button>
 
-      {media.type === 'video' ? (
+      {mediaType === 'video' ? (
         <video
           controls
           autoPlay
           className="max-w-[90vw] max-h-[80vh] rounded-lg shadow-lg"
-          poster={media.video_thumbnail || undefined}
+          poster={videoThumbnail || undefined}
         >
-          <source src={media.url} type="video/mp4" />
+          <source src={mediaUrl} type="video/mp4" />
         </video>
       ) : (
         <div className="relative w-[90vw] h-[80vh] rounded-lg shadow-lg">
           <Image
-            src={media.url}
+            src={mediaUrl}
             alt={'미디어 이미지'}
             className="object-contain"
             fill
