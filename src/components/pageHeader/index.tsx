@@ -34,6 +34,11 @@ export default function PageHeader({ title }: PageHeaderProps) {
       return;
     }
 
+    if (pathname.includes('introduction')) {
+      router.back();
+      return;
+    }
+
     if (search.includes('tab=')) {
       router.replace(`/${type}/${schoolId}/${currentPage}`);
       return;
