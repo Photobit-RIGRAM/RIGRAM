@@ -18,6 +18,7 @@ interface HistoryState {
   histories: History[];
 
   fetchHistories: (schoolId: string) => Promise<void>;
+  fetchHistoryById: (schoolId: string, historyId: string) => Promise<void>;
   addHistory: (
     school_id: string,
     title: string,
@@ -47,6 +48,24 @@ export const useHistoryStore = create<HistoryState>((set) => ({
     } else {
       set({ histories: data || [], isLoading: false });
     }
+  },
+  fetchHistoryById: async (schoolId, historyId) => {
+    set({ isLoading: true, error: null });
+
+    const { data, error } = await supabase
+      .from('history')
+      .select('*')
+      .eq('school_id', schoolId)
+      .eq('id', historyId)
+      .single();
+
+    if (error) {
+      console.error('연혁 단일 조회 중 오류가 발생했습니다. : ', error);
+      set({ isLoading: false, error: error.message });
+      return;
+    }
+
+    set({ history: data, isLoading: false });
   },
   addHistory: async (school_id, title, background_url, description, date) => {
     const formattedDate = date;

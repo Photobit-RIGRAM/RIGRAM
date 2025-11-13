@@ -64,7 +64,7 @@ export default function History() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <>
       <div className="relative flex flex-col gap-1.5 mb-4 md:mb-6 shrink-0">
         <h3 className="text-18 font-semibold md:text-24 md:text-gray-900">연혁</h3>
         <div className="flex justify-start items-center gap-1">
@@ -106,43 +106,51 @@ export default function History() {
           {histories.map((history) => {
             const isSelected = selectedHistoryIds.includes(history?.id);
 
-            return (
-              <figure
-                key={history.id}
-                className={`relative flex flex-col gap-2.5 cursor-pointer w-full h-[120px]
-                ${
-                  isDeleteMode
-                    ? isSelected
-                      ? 'ring-4 ring-red-500'
-                      : 'hover:opacity-70'
-                    : 'hover:opacity-70'
-                }`}
-                onClick={() => isDeleteMode && toggleSelect(history.id)}
-              >
-                <Image
-                  src={history.background_url || ''}
-                  alt={`${history.title} 프로필 사진`}
-                  width={120}
-                  height={160}
-                  className="absolute top-0 right-0 bottom-0 left-0 border border-gray-300 rounded-xl object-cover w-full h-full"
-                  priority={false}
-                />
-                <figcaption className="absolute top-6 left-6 z-50 flex flex-col gap-1">
-                  <h3 className="text-18 font-semibold text-white truncate">{history.title}</h3>
-                  <span className="text-16 text-white">{history.date}</span>
-                </figcaption>
+            const handleClick = () => {
+              if (isDeleteMode) {
+                toggleSelect(history.id);
+              } else {
+                router.push(`/admin/${schoolId}/introduction/history/${history.id}`);
+              }
+            };
 
-                {isDeleteMode && (
-                  <div
-                    className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center 
-                  ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}
+            return (
+              <Button key={history.id} onClick={handleClick}>
+                <figure
+                  className={`relative flex flex-col gap-2.5 cursor-pointer w-full h-[120px]
+                  ${
+                    isDeleteMode
+                      ? isSelected
+                        ? 'ring-4 ring-red-500'
+                        : 'hover:opacity-70'
+                      : 'hover:opacity-70'
+                  }`}
+                >
+                  <Image
+                    src={history.background_url || ''}
+                    alt={`${history.title} 프로필 사진`}
+                    width={120}
+                    height={160}
+                    className="absolute top-0 right-0 bottom-0 left-0 border border-gray-300 rounded-xl object-cover w-full h-full"
+                    priority={false}
                   />
-                )}
-              </figure>
+                  <figcaption className="absolute top-6 left-6 z-50 flex flex-col gap-1">
+                    <h3 className="text-18 font-semibold text-white truncate">{history.title}</h3>
+                    <span className="text-16 text-white">{history.date}</span>
+                  </figcaption>
+
+                  {isDeleteMode && (
+                    <div
+                      className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center 
+                    ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}
+                    />
+                  )}
+                </figure>
+              </Button>
             );
           })}
         </div>
       </div>
-    </div>
+    </>
   );
 }
