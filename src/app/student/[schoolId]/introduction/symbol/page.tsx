@@ -1,5 +1,5 @@
 import Symbol from '@/components/symbol';
 
 export default function SymbolPage() {
-  return <Symbol mode="admin" />;
+  return <Symbol mode="student" />;
 }

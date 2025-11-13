@@ -1,11 +1,16 @@
 import Button from '@/components/button';
 import { useHistoryStore } from '@/store/useHistoryStore';
+import type { Mode } from '@/types/mode';
 import { Image as ImageIcon, Minus, Plus, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function History() {
+interface HistoryProps {
+  mode: Mode;
+}
+
+export default function History({ mode }: HistoryProps) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
@@ -71,36 +76,38 @@ export default function History() {
           <ImageIcon className="w-4 h-4" aria-hidden="true" />
           <span>연혁 {histories.length}개</span>
         </div>
-        <div className="absolute top-0 right-0 flex gap-2">
-          <Button
-            className="flex items-center gap-1 text-gray-600"
-            href={`/admin/${schoolId}/introduction/history/add`}
-          >
-            <Plus className="w-4 h-4" aria-hidden="true" />
-            <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
-              추가하기
-            </span>
-          </Button>
-          <Button
-            className="flex items-center gap-1 text-red"
-            onClick={handleDeleteButton}
-            aria-label={isDeleteMode ? '선택한 연혁 삭제' : '삭제 모드 전환'}
-          >
-            {isDeleteMode ? (
-              <>
-                <Trash className="w-4 h-4" aria-hidden="true" />
-                <span>선택된 연혁 삭제하기</span>
-              </>
-            ) : (
-              <>
-                <Minus className="w-4 h-4" aria-hidden="true" />
-                <span>삭제하기</span>
-              </>
-            )}
-          </Button>
-        </div>
+        {mode === 'admin' && (
+          <div className="absolute top-0 right-0 flex gap-2">
+            <Button
+              className="flex items-center gap-1 text-gray-600"
+              href={`/admin/${schoolId}/introduction/history/add`}
+            >
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
+                추가하기
+              </span>
+            </Button>
+            <Button
+              className="flex items-center gap-1 text-red"
+              onClick={handleDeleteButton}
+              aria-label={isDeleteMode ? '선택한 연혁 삭제' : '삭제 모드 전환'}
+            >
+              {isDeleteMode ? (
+                <>
+                  <Trash className="w-4 h-4" aria-hidden="true" />
+                  <span>선택된 연혁 삭제하기</span>
+                </>
+              ) : (
+                <>
+                  <Minus className="w-4 h-4" aria-hidden="true" />
+                  <span>삭제하기</span>
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
-      <div className="flex-1 overflow-y-auto pr-1 md:max-h-[500px] scrollbar-hide">
+      <div className="flex-1 overflow-y-auto scrollbar-hide md:max-h-[520px]">
         {histories.length === 0 && <p>등록된 연혁이 없습니다.</p>}
         <div className="grid grid-cols-1 gap-2 md:gap-6">
           {histories.map((history) => {
@@ -110,7 +117,9 @@ export default function History() {
               if (isDeleteMode) {
                 toggleSelect(history.id);
               } else {
-                router.push(`/admin/${schoolId}/introduction/history/${history.id}`);
+                router.push(
+                  `/${mode === 'admin' ? 'admin' : 'student'}/${schoolId}/introduction/history/${history.id}`
+                );
               }
             };
 

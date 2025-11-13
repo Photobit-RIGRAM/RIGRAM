@@ -3,12 +3,17 @@
 import OverlayViewer from '../overlayViewer';
 import Button from '@/components/button';
 import { useSymbolStore } from '@/store/useSymbolStore';
+import type { Mode } from '@/types/mode';
 import { Image as ImageIcon, Minus, Plus, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function Symbol() {
+interface SymbolProps {
+  mode: Mode;
+}
+
+export default function Symbol({ mode }: SymbolProps) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
@@ -68,41 +73,40 @@ export default function Symbol() {
           <ImageIcon className="w-4 h-4" aria-hidden="true" />
           <span>{symbolList.length}개의 상징</span>
         </div>
-        <div className="absolute top-0 right-0 flex gap-2">
-          <Button
-            className="flex items-center gap-1 text-gray-600"
-            href={`/admin/${schoolId}/introduction/symbol/add`}
-          >
-            <Plus className="w-4 h-4" aria-hidden="true" />
-            <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
-              추가하기
-            </span>
-          </Button>
-          <Button
-            className="flex items-center gap-1 text-red"
-            onClick={handleDeleteButton}
-            aria-label={isDeleteMode ? '선택한 상징 삭제' : '삭제 모드 전환'}
-          >
-            {isDeleteMode ? (
-              <>
-                <Trash className="w-4 h-4" aria-hidden="true" />
-                <span>선택된 상징 삭제하기</span>
-              </>
-            ) : (
-              <>
-                <Minus className="w-4 h-4" aria-hidden="true" />
-                <span>삭제하기</span>
-              </>
-            )}
-          </Button>
-        </div>
+        {mode === 'admin' && (
+          <div className="absolute top-0 right-0 flex gap-2">
+            <Button
+              className="flex items-center gap-1 text-gray-600"
+              href={`/admin/${schoolId}/introduction/symbol/add`}
+            >
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
+                추가하기
+              </span>
+            </Button>
+            <Button
+              className="flex items-center gap-1 text-red"
+              onClick={handleDeleteButton}
+              aria-label={isDeleteMode ? '선택한 상징 삭제' : '삭제 모드 전환'}
+            >
+              {isDeleteMode ? (
+                <>
+                  <Trash className="w-4 h-4" aria-hidden="true" />
+                  <span>선택된 상징 삭제하기</span>
+                </>
+              ) : (
+                <>
+                  <Minus className="w-4 h-4" aria-hidden="true" />
+                  <span>삭제하기</span>
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
-      <div className="flex-1 overflow-y-auto pr-1 md:max-h-[500px] scrollbar-hide">
+      <div className="flex-1 overflow-y-auto scrollbar-hide md:max-h-[520px] ">
         {symbolList.length === 0 && <p>등록된 상징이 없습니다.</p>}
-        <ul
-          className="grid grid-cols-1 gap-1 md:grid-cols-3 md:gap-2 max-h-[500px] w-full"
-          role="list"
-        >
+        <ul className="grid grid-cols-1 gap-1 w-full md:grid-cols-3 md:gap-2" role="list">
           {symbolList.map((symbol) => {
             const isSelected = selectSymbolIds.includes(symbol?.id);
 

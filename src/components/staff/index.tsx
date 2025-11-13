@@ -2,12 +2,17 @@
 
 import Button from '@/components/button';
 import { useStaffStore } from '@/store/useStaffStore';
+import type { Mode } from '@/types/mode';
 import { Image as ImageIcon, Minus, Plus, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function DepartmentStaffPage() {
+interface StaffProps {
+  mode: Mode;
+}
+
+export default function DepartmentStaffPage({ mode }: StaffProps) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
@@ -87,44 +92,47 @@ export default function DepartmentStaffPage() {
           <ImageIcon className="w-4 h-4" aria-hidden="true" />
           <span>{staffs.length}명의 교직원</span>
         </div>
-        <div className="absolute top-0 right-0 flex gap-2">
-          <Button
-            className="flex items-center gap-1 text-gray-600"
-            href={`/admin/${schoolId}/department/${departmentId}/staff/add`}
-          >
-            <Plus className="w-4 h-4" aria-hidden="true" />
-            <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
-              추가하기
-            </span>
-          </Button>
-          <Button
-            className="flex items-center gap-1 text-red"
-            onClick={handleDeleteButton}
-            aria-label={isDeleteMode ? '선택한 교직원 삭제' : '삭제 모드 전환'}
-          >
-            {isDeleteMode ? (
-              <>
-                <Trash className="w-4 h-4" aria-hidden="true" />
-                <span>선택된 교직원 삭제하기</span>
-              </>
-            ) : (
-              <>
-                <Minus className="w-4 h-4" aria-hidden="true" />
-                <span>삭제하기</span>
-              </>
-            )}
-          </Button>
-        </div>
+        {mode === 'admin' && (
+          <div className="absolute top-0 right-0 flex gap-2">
+            <Button
+              className="flex items-center gap-1 text-gray-600"
+              href={`/admin/${schoolId}/department/${departmentId}/staff/add`}
+            >
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
+                추가하기
+              </span>
+            </Button>
+            <Button
+              className="flex items-center gap-1 text-red"
+              onClick={handleDeleteButton}
+              aria-label={isDeleteMode ? '선택한 교직원 삭제' : '삭제 모드 전환'}
+            >
+              {isDeleteMode ? (
+                <>
+                  <Trash className="w-4 h-4" aria-hidden="true" />
+                  <span>선택된 교직원 삭제하기</span>
+                </>
+              ) : (
+                <>
+                  <Minus className="w-4 h-4" aria-hidden="true" />
+                  <span>삭제하기</span>
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
-      {staffs.length === 0 && <p>등록된 교직원이 없습니다.</p>}
-      <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
-        {staffs.map((staff) => {
-          const isSelected = selectedStaffIds.includes(staff?.id);
+      <div className="flex-1 overflow-y-auto scrollbar-hide md:max-h-[520px] ">
+        {staffs.length === 0 && <p>등록된 교직원이 없습니다.</p>}
+        <div className="grid grid-cols-3 gap-2 md:grid-cols-7 md:gap-6">
+          {staffs.map((staff) => {
+            const isSelected = selectedStaffIds.includes(staff?.id);
 
-          return (
-            <figure
-              key={staff.id}
-              className={`flex flex-col gap-2.5 cursor-pointer relative
+            return (
+              <figure
+                key={staff.id}
+                className={`flex flex-col gap-2.5 cursor-pointer relative
                 ${
                   isDeleteMode
                     ? isSelected
@@ -132,30 +140,31 @@ export default function DepartmentStaffPage() {
                       : 'hover:opacity-70'
                     : 'hover:scale-105 hover:opacity-70'
                 }`}
-              onClick={() => isDeleteMode && toggleSelect(staff.id)}
-            >
-              <Image
-                src={staff.profile_url || ''}
-                alt={`${staff.name} 프로필 사진`}
-                width={120}
-                height={160}
-                className="border border-gray-300 rounded-xl object-cover w-[120px] h-[160px]"
-                priority={false}
-              />
-              <figcaption className="flex flex-col gap-1">
-                <h3 className="text-18 font-semibold text-gray-800 truncate">{staff.name}</h3>
-                <span className="text-16 text-gray-600">{getRoleLabel(staff.position)}</span>
-              </figcaption>
-
-              {isDeleteMode && (
-                <div
-                  className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center 
-                  ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}
+                onClick={() => isDeleteMode && toggleSelect(staff.id)}
+              >
+                <Image
+                  src={staff.profile_url || ''}
+                  alt={`${staff.name} 프로필 사진`}
+                  width={120}
+                  height={160}
+                  className="border border-gray-300 rounded-xl object-cover w-[120px] h-[160px]"
+                  priority={false}
                 />
-              )}
-            </figure>
-          );
-        })}
+                <figcaption className="flex flex-col gap-1">
+                  <h3 className="text-18 font-semibold text-gray-800 truncate">{staff.name}</h3>
+                  <span className="text-16 text-gray-600">{getRoleLabel(staff.position)}</span>
+                </figcaption>
+
+                {isDeleteMode && (
+                  <div
+                    className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center 
+                  ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}
+                  />
+                )}
+              </figure>
+            );
+          })}
+        </div>
       </div>
     </>
   );

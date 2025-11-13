@@ -5,17 +5,19 @@ import { useCollegeStore } from '@/store/useCollegeStore';
 import { useDepartmentStore } from '@/store/useDepartmentStore';
 import { useSchoolStore } from '@/store/useSchoolStore';
 import type { Department } from '@/types/department';
+import type { Mode } from '@/types/mode';
 import { supabase } from '@/utils/supabase/client';
 import { Calendar, GraduationCap, PencilLine, Tag, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-interface DepartmentProps {
+interface DetailTypes {
   department: Department;
+  mode: Mode;
 }
 
-export default function Detail({ department }: DepartmentProps) {
+export default function Detail({ department, mode }: DetailTypes) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
@@ -57,7 +59,6 @@ export default function Detail({ department }: DepartmentProps) {
       const deptName = slugify(department.name_en);
       const deptPath = `${schoolName}/${deptName}`;
 
-      // 1. 해당 학과 폴더 안의 파일 목록 조회
       const { data: files, error: listError } = await supabase.storage
         .from('dept-img')
         .list(deptPath);
@@ -67,7 +68,6 @@ export default function Detail({ department }: DepartmentProps) {
         throw listError;
       }
 
-      // 2. 학과 폴더 내 파일 모두 삭제
       if (files && files.length > 0) {
         const filePaths = files.map((f) => `${deptPath}/${f.name}`);
         const { error: removeError } = await supabase.storage.from('dept-img').remove(filePaths);
@@ -77,16 +77,13 @@ export default function Detail({ department }: DepartmentProps) {
         }
       }
 
-      // 3. 동일 학교의 다른 학과가 존재하는지 확인
       const otherDepartments = departments.filter(
         (d) => d.id !== department.id && d.college_id === department.college_id
       );
 
-      // 4. 만약 학교의 다른 학과가 없다면 → 학교 폴더 자체 삭제
       if (otherDepartments.length === 0) {
         const { data: schoolFiles } = await supabase.storage.from('dept-img').list(schoolName);
         if (schoolFiles && schoolFiles.length === 0) {
-          // 폴더 안 비어있으면 루트 폴더 정리
           const { error: cleanError } = await supabase.storage
             .from('dept-img')
             .remove([schoolName]);
@@ -94,7 +91,6 @@ export default function Detail({ department }: DepartmentProps) {
         }
       }
 
-      // 5. Supabase DB에서 학과 삭제
       const success = await deleteDepartment(departmentId);
       if (success) {
         alert(`${department.name}이(가) 삭제되었습니다.`);
@@ -145,24 +141,26 @@ export default function Detail({ department }: DepartmentProps) {
         <h2 className="text-20 text-gray-900 font-semibold" id="department-info">
           기본 정보
         </h2>
-        <div className="flex flex-row gap-2">
-          <Button
-            className="flex items-center gap-1 text-gray-600"
-            href={`${pathname}/edit`}
-            aria-label="학과 수정하기"
-          >
-            <PencilLine className="w-4 h-4" />
-            <span>학과 수정하기</span>
-          </Button>
-          <Button
-            className="flex items-center gap-1 text-red"
-            onClick={handleDelete}
-            aria-label="학과 삭제하기"
-          >
-            <Trash className="w-4 h-4" />
-            <span>학과 삭제하기</span>
-          </Button>
-        </div>
+        {mode === 'admin' && (
+          <div className="flex flex-row gap-2">
+            <Button
+              className="flex items-center gap-1 text-gray-600"
+              href={`${pathname}/edit`}
+              aria-label="학과 수정하기"
+            >
+              <PencilLine className="w-4 h-4" />
+              <span>학과 수정하기</span>
+            </Button>
+            <Button
+              className="flex items-center gap-1 text-red"
+              onClick={handleDelete}
+              aria-label="학과 삭제하기"
+            >
+              <Trash className="w-4 h-4" />
+              <span>학과 삭제하기</span>
+            </Button>
+          </div>
+        )}
       </header>
 
       {department.img_url && (

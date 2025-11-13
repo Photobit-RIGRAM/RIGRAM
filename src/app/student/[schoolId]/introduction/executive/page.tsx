@@ -1,5 +1,5 @@
 import Executive from '@/components/executive';
 
 export default function ExecutivePage() {
-  return <Executive mode="admin" />;
+  return <Executive mode="student" />;
 }
