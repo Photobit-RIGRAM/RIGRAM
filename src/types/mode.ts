@@ -1,3 +1,1 @@
-export type Mode = {
-  mode: 'admin' | 'student';
-};
+export type Mode = 'admin' | 'student';

@@ -6,7 +6,11 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function History({ mode }: Mode) {
+interface HistoryProps {
+  mode: Mode;
+}
+
+export default function History({ mode }: HistoryProps) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);

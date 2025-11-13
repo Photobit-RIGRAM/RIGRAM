@@ -67,7 +67,7 @@ export default function DepartmentPage() {
             title={dept.name}
             subTitle={dept.name_en}
             imgSrc={dept.img_url as string}
-            href={`${pathname}/${dept.id}`}
+            href={`${pathname}/${dept.id}?tab=detail`}
             aria-label={`${dept.name} 학과 상세보기`}
             role="listitem"
           />

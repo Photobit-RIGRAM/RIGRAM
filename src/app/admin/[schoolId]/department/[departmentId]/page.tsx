@@ -38,10 +38,10 @@ export default function DepartmentPage() {
         className="relative w-full h-full bg-white rounded-xl p-4 border border-border md:max-h-[728px] md:p-10"
         aria-labelledby="department-info"
       >
-        {activeTab === 'detail' && <Detail department={department} />}
+        {activeTab === 'detail' && <Detail department={department} mode="admin" />}
         {activeTab === 'intro' && <Intro department={department} />}
-        {activeTab === 'staff' && <Staff />}
-        {activeTab === 'union' && <Union />}
+        {activeTab === 'staff' && <Staff mode="admin" />}
+        {activeTab === 'union' && <Union mode="admin" />}
 
         {/* 하단 탭 */}
         <footer className="fixed bottom-0 left-1/2 -translate-x-1/2 min-w-fit">

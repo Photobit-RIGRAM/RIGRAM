@@ -8,7 +8,11 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function Executive({ mode }: Mode) {
+interface ExecutiveProps {
+  mode: Mode;
+}
+
+export default function Executive({ mode }: ExecutiveProps) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
@@ -118,7 +122,7 @@ export default function Executive({ mode }: Mode) {
       </div>
       <div className="flex-1 overflow-y-auto scrollbar-hide md:max-h-[520px] ">
         {executives.length === 0 && <p>등록된 임원진이 없습니다.</p>}
-        <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
+        <div className="grid grid-cols-3 gap-2 md:grid-cols-7 md:gap-6">
           {executives.map((executive) => {
             const isSelected = selectedExecutiveIds.includes(executive?.id);
 
