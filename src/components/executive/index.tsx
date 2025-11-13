@@ -2,12 +2,13 @@
 
 import Button from '@/components/button';
 import { useExecutiveStore } from '@/store/useExecutive';
+import type { Mode } from '@/types/mode';
 import { Image as ImageIcon, Minus, Plus, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function Executive() {
+export default function Executive({ mode }: Mode) {
   const router = useRouter();
   const pathname = usePathname();
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
@@ -84,75 +85,79 @@ export default function Executive() {
           <ImageIcon className="w-4 h-4" aria-hidden="true" />
           <span>{executives.length}명의 임직원</span>
         </div>
-        <div className="absolute top-0 right-0 flex gap-2">
-          <Button
-            className="flex items-center gap-1 text-gray-600"
-            href={`/admin/${schoolId}/introduction/executive/add`}
-          >
-            <Plus className="w-4 h-4" aria-hidden="true" />
-            <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
-              추가하기
-            </span>
-          </Button>
-          <Button
-            className="flex items-center gap-1 text-red"
-            onClick={handleDeleteButton}
-            aria-label={isDeleteMode ? '선택한 임직원 삭제' : '삭제 모드 전환'}
-          >
-            {isDeleteMode ? (
-              <>
-                <Trash className="w-4 h-4" aria-hidden="true" />
-                <span>선택된 임직원 삭제하기</span>
-              </>
-            ) : (
-              <>
-                <Minus className="w-4 h-4" aria-hidden="true" />
-                <span>삭제하기</span>
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-      {executives.length === 0 && <p>등록된 임직원이 없습니다.</p>}
-      <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
-        {executives.map((executive) => {
-          const isSelected = selectedExecutiveIds.includes(executive?.id);
-
-          return (
-            <figure
-              key={executive.id}
-              className={`flex flex-col gap-2.5 cursor-pointer relative
-                ${
-                  isDeleteMode
-                    ? isSelected
-                      ? 'ring-4 ring-red-500'
-                      : 'hover:opacity-70'
-                    : 'hover:scale-105 hover:opacity-70'
-                }`}
-              onClick={() => isDeleteMode && toggleSelect(executive.id)}
+        {mode === 'admin' && (
+          <div className="absolute top-0 right-0 flex gap-2">
+            <Button
+              className="flex items-center gap-1 text-gray-600"
+              href={`/admin/${schoolId}/introduction/executive/add`}
             >
-              <Image
-                src={executive.profile_url || ''}
-                alt={`${executive.name} 프로필 사진`}
-                width={120}
-                height={160}
-                className="border border-gray-300 rounded-xl object-cover w-[120px] h-[160px]"
-                priority={false}
-              />
-              <figcaption className="flex flex-col gap-1">
-                <h3 className="text-18 font-semibold text-gray-800 truncate">{executive.name}</h3>
-                <span className="text-16 text-gray-600">{getRoleLabel(executive.position)}</span>
-              </figcaption>
-
-              {isDeleteMode && (
-                <div
-                  className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center 
-                  ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}
-                />
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              <span className="font-medium hover:font-bold focus:font-bold active:font-bold">
+                추가하기
+              </span>
+            </Button>
+            <Button
+              className="flex items-center gap-1 text-red"
+              onClick={handleDeleteButton}
+              aria-label={isDeleteMode ? '선택한 임직원 삭제' : '삭제 모드 전환'}
+            >
+              {isDeleteMode ? (
+                <>
+                  <Trash className="w-4 h-4" aria-hidden="true" />
+                  <span>선택된 임직원 삭제하기</span>
+                </>
+              ) : (
+                <>
+                  <Minus className="w-4 h-4" aria-hidden="true" />
+                  <span>삭제하기</span>
+                </>
               )}
-            </figure>
-          );
-        })}
+            </Button>
+          </div>
+        )}
+      </div>
+      <div className="flex-1 overflow-y-auto scrollbar-hide md:max-h-[520px] ">
+        {executives.length === 0 && <p>등록된 임직원이 없습니다.</p>}
+        <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
+          {executives.map((executive) => {
+            const isSelected = selectedExecutiveIds.includes(executive?.id);
+
+            return (
+              <figure
+                key={executive.id}
+                className={`flex flex-col gap-2.5 cursor-pointer relative
+                  ${
+                    isDeleteMode
+                      ? isSelected
+                        ? 'ring-4 ring-red-500'
+                        : 'hover:opacity-70'
+                      : 'hover:scale-105 hover:opacity-70'
+                  }`}
+                onClick={() => isDeleteMode && toggleSelect(executive.id)}
+              >
+                <Image
+                  src={executive.profile_url || ''}
+                  alt={`${executive.name} 프로필 사진`}
+                  width={120}
+                  height={160}
+                  className="border border-gray-300 rounded-xl object-cover w-[120px] h-[160px]"
+                  priority={false}
+                />
+                <figcaption className="flex flex-col gap-1">
+                  <h3 className="text-18 font-semibold text-gray-800 truncate">{executive.name}</h3>
+                  <span className="text-16 text-gray-600">{getRoleLabel(executive.position)}</span>
+                </figcaption>
+
+                {isDeleteMode && (
+                  <div
+                    className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center 
+                    ${isSelected ? 'bg-red-500 border-red-500' : 'bg-white border-gray-400'}`}
+                  />
+                )}
+              </figure>
+            );
+          })}
+        </div>
       </div>
     </>
   );
