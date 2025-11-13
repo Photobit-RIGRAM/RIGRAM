@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@/components/button';
 import { useHistoryStore } from '@/store/useHistoryStore';
 import type { Mode } from '@/types/mode';
@@ -16,7 +18,6 @@ export default function History({ mode }: HistoryProps) {
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
   const schoolId = segments[1];
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedHistoryIds, setSelectedHistoryIds] = useState<string[]>([]);
 
@@ -33,8 +34,6 @@ export default function History({ mode }: HistoryProps) {
   };
 
   const handleDeleteButton = async () => {
-    setIsLoading(true);
-
     if (!isDeleteMode) {
       setIsDeleteMode(true);
       return;
@@ -64,7 +63,6 @@ export default function History({ mode }: HistoryProps) {
     } catch (error) {
       console.error('연혁 삭제 중 오류가 발생했습니다. : ', error);
       alert('연혁 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
-      setIsLoading(false);
     }
   };
 

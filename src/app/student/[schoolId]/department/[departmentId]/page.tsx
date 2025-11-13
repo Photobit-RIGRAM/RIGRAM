@@ -13,13 +13,15 @@ import { Suspense, useMemo } from 'react';
 export default function DepartmentPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  const tabParam = searchParams.get('tab');
   const { departmentId, activeTab } = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);
     return {
       departmentId: segments[3],
-      activeTab: searchParams.get('tab'),
+      activeTab: tabParam,
     };
-  }, [pathname, searchParams.toString()]);
+  }, [pathname, tabParam]);
 
   const { departments, isLoading } = useDepartmentStore();
 

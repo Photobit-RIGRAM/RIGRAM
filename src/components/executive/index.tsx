@@ -18,7 +18,6 @@ export default function Executive({ mode }: ExecutiveProps) {
   const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname]);
   const schoolId = segments[1];
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedExecutiveIds, setSelectedExecutiveIds] = useState<string[]>([]);
 
@@ -35,8 +34,6 @@ export default function Executive({ mode }: ExecutiveProps) {
   };
 
   const handleDeleteButton = async () => {
-    setIsLoading(true);
-
     if (!isDeleteMode) {
       setIsDeleteMode(true);
       return;
@@ -61,7 +58,6 @@ export default function Executive({ mode }: ExecutiveProps) {
     } catch (error) {
       console.error('임원진 삭제 중 오류가 발생했습니다. : ', error);
       alert('임원진 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
-      setIsLoading(false);
     }
   };
 

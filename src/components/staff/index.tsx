@@ -19,7 +19,6 @@ export default function DepartmentStaffPage({ mode }: StaffProps) {
   const schoolId = segments[1];
   const departmentId = segments[3];
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedStaffIds, setSelectedStaffIds] = useState<string[]>([]);
 
@@ -36,8 +35,6 @@ export default function DepartmentStaffPage({ mode }: StaffProps) {
   };
 
   const handleDeleteButton = async () => {
-    setIsLoading(true);
-
     if (!isDeleteMode) {
       setIsDeleteMode(true);
       return;
@@ -62,7 +59,6 @@ export default function DepartmentStaffPage({ mode }: StaffProps) {
     } catch (error) {
       console.error('교직원 삭제 중 오류가 발생했습니다. : ', error);
       alert('교직원 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
-      setIsLoading(false);
     }
   };
 

@@ -13,13 +13,15 @@ import { Suspense, useMemo } from 'react';
 export default function IntroductionPage() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  const tabParam = searchParams.get('tab');
   const { activeTab } = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);
     return {
       schoolId: segments[1],
-      activeTab: searchParams.get('tab'),
+      activeTab: tabParam,
     };
-  }, [pathname, searchParams.toString()]);
+  }, [pathname, tabParam]);
 
   const { school } = useSchoolStore();
 

@@ -19,7 +19,6 @@ export default function DepartmentUnionPage({ mode }: UnionProps) {
   const schoolId = segments[1];
   const departmentId = segments[3];
 
-  const [isLaoding, setIsLoading] = useState(false);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedUnionIds, setSelectedUnionIds] = useState<string[]>([]);
 
@@ -36,8 +35,6 @@ export default function DepartmentUnionPage({ mode }: UnionProps) {
   };
 
   const handleDeleteButton = async () => {
-    setIsLoading(true);
-
     if (!isDeleteMode) {
       setIsDeleteMode(true);
       return;
@@ -62,7 +59,6 @@ export default function DepartmentUnionPage({ mode }: UnionProps) {
     } catch (error) {
       console.error('학생회 삭제 중 오류가 발생했습니다. : ', error);
       alert('학생회 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
-      setIsLoading(false);
     }
   };
 
