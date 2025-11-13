@@ -39,24 +39,24 @@ export default function Executive({ mode }: Mode) {
     }
 
     if (selectedExecutiveIds.length === 0) {
-      alert('삭제할 임직원이 없습니다.');
+      alert('삭제할 임원진이 없습니다.');
       setIsDeleteMode(false);
       return;
     }
-    if (!confirm(`${selectedExecutiveIds.length}명의 임직원을 정말 삭제하시겠습니까?`)) return;
+    if (!confirm(`${selectedExecutiveIds.length}명의 임원진을 정말 삭제하시겠습니까?`)) return;
 
     try {
       await Promise.all(selectedExecutiveIds.map((id) => deleteExecutive(schoolId, id)));
 
       await fetchExecutives(schoolId);
-      alert('선택된 임직원이 삭제되었습니다.');
+      alert('선택된 임원진이 삭제되었습니다.');
 
       setSelectedExecutiveIds([]);
       setIsDeleteMode(false);
       router.refresh();
     } catch (error) {
-      console.error('임직원 삭제 중 오류가 발생했습니다. : ', error);
-      alert('임직원 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+      console.error('임원진 삭제 중 오류가 발생했습니다. : ', error);
+      alert('임원진 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsLoading(false);
     }
   };
@@ -80,10 +80,10 @@ export default function Executive({ mode }: Mode) {
   return (
     <>
       <div className="relative flex flex-col gap-1.5 mb-4 md:mb-6">
-        <h3 className="text-18 font-semibold md:text-24 md:text-gray-900">임직원</h3>
+        <h3 className="text-18 font-semibold md:text-24 md:text-gray-900">임원진</h3>
         <div className="flex justify-start items-center gap-1">
           <ImageIcon className="w-4 h-4" aria-hidden="true" />
-          <span>{executives.length}명의 임직원</span>
+          <span>{executives.length}명의 임원진</span>
         </div>
         {mode === 'admin' && (
           <div className="absolute top-0 right-0 flex gap-2">
@@ -99,12 +99,12 @@ export default function Executive({ mode }: Mode) {
             <Button
               className="flex items-center gap-1 text-red"
               onClick={handleDeleteButton}
-              aria-label={isDeleteMode ? '선택한 임직원 삭제' : '삭제 모드 전환'}
+              aria-label={isDeleteMode ? '선택한 임원진 삭제' : '삭제 모드 전환'}
             >
               {isDeleteMode ? (
                 <>
                   <Trash className="w-4 h-4" aria-hidden="true" />
-                  <span>선택된 임직원 삭제하기</span>
+                  <span>선택된 임원진 삭제하기</span>
                 </>
               ) : (
                 <>
@@ -117,7 +117,7 @@ export default function Executive({ mode }: Mode) {
         )}
       </div>
       <div className="flex-1 overflow-y-auto scrollbar-hide md:max-h-[520px] ">
-        {executives.length === 0 && <p>등록된 임직원이 없습니다.</p>}
+        {executives.length === 0 && <p>등록된 임원진이 없습니다.</p>}
         <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-6">
           {executives.map((executive) => {
             const isSelected = selectedExecutiveIds.includes(executive?.id);
