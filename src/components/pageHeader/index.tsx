@@ -2,8 +2,8 @@
 
 import Button from '@/components/button';
 import { ArrowLeft } from 'lucide-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface PageHeaderProps {
   title: string;
@@ -12,37 +12,41 @@ interface PageHeaderProps {
 export default function PageHeader({ title }: PageHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const segments = pathname.split('/').filter(Boolean);
-  const currentPage = segments[2];
-  const searchParams = useSearchParams();
+  // const segments = pathname.split('/').filter(Boolean);
+  // const currentPage = segments[2];
+  // const searchParams = useSearchParams();
 
-  const [schoolId, setSchoolId] = useState<string | null>(null);
-  const [type, setType] = useState<string | null>(null);
+  // const [schoolId, setSchoolId] = useState<string | null>(null);
+  // const [type, setType] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedId = localStorage.getItem('schoolId');
-    const userType = localStorage.getItem('userType');
-    setSchoolId(storedId);
-    setType(userType);
+    // const storedId = localStorage.getItem('schoolId');
+    // const userType = localStorage.getItem('userType');
+    // setSchoolId(storedId);
+    // setType(userType);
   }, []);
 
   const handleGoBack = () => {
-    const search = searchParams.toString();
+    // const search = searchParams.toString();
 
-    if (pathname.endsWith('/add')) {
-      router.replace(pathname.replace(/\/add$/, ''));
-      return;
-    }
+    // if (pathname.endsWith('/add')) {
+    //   router.replace(pathname.replace(/\/add$/, ''));
+    //   return;
+    // }
 
     if (pathname.includes('introduction')) {
       router.back();
       return;
     }
-
-    if (search.includes('tab=')) {
-      router.replace(`/${type}/${schoolId}/${currentPage}`);
+    if (pathname.includes('department')) {
+      router.back();
       return;
     }
+
+    // if (search.includes('tab=')) {
+    //   router.replace(`/${type}/${schoolId}/${currentPage}`);
+    //   return;
+    // }
 
     router.back();
   };

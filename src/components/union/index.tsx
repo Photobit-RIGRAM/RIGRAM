@@ -40,8 +40,13 @@ export default function DepartmentUnionPage({ mode }: UnionProps) {
       return;
     }
 
-    if (selectedUnionIds.length === 0) {
+    if (unions.length === 0) {
       alert('삭제할 학생회의 학생이 없습니다.');
+      setIsDeleteMode(false);
+      return;
+    }
+    if (selectedUnionIds.length === 0) {
+      alert('선택된 학생회의 학생이 없습니다.');
       setIsDeleteMode(false);
       return;
     }

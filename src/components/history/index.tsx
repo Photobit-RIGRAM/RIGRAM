@@ -135,13 +135,13 @@ export default function History({ mode }: HistoryProps) {
                 >
                   <Image
                     src={history.background_url || ''}
-                    alt={`${history.title} 프로필 사진`}
+                    alt={`${history.title}`}
                     width={120}
                     height={160}
                     className="absolute top-0 right-0 bottom-0 left-0 border border-gray-300 rounded-xl object-cover w-full h-full"
                     priority={false}
                   />
-                  <figcaption className="absolute top-6 left-6 z-50 flex flex-col gap-1">
+                  <figcaption className="absolute top-6 left-6 z-50 flex flex-col items-start gap-1">
                     <h3 className="text-18 font-semibold text-white truncate">{history.title}</h3>
                     <span className="text-16 text-white">{history.date}</span>
                   </figcaption>

@@ -93,6 +93,14 @@ export default function UnionAddPage() {
 
   const handleAddProfile = useCallback(
     () => async () => {
+      if (!category) {
+        alert('카테고리를 선택해 주세요.');
+        return;
+      }
+      if (!name) {
+        alert('이름을 입력해 주세요.');
+        return;
+      }
       if (!mediaFile) {
         alert('프로필 이미지를 업로드해 주세요.');
         return;

@@ -40,8 +40,13 @@ export default function DepartmentStaffPage({ mode }: StaffProps) {
       return;
     }
 
-    if (selectedStaffIds.length === 0) {
+    if (staffs.length === 0) {
       alert('삭제할 교직원이 없습니다.');
+      setIsDeleteMode(false);
+      return;
+    }
+    if (selectedStaffIds.length === 0) {
+      alert('선택된 교직원이 없습니다.');
       setIsDeleteMode(false);
       return;
     }
